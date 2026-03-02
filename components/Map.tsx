@@ -1,17 +1,9 @@
 'use client'
 
-import { useRef, useCallback, useState } from 'react'
+import { useRef, useCallback, useState, useEffect } from 'react'
 import ReactMapGL, { Marker, Popup, NavigationControl, MapRef } from 'react-map-gl/maplibre'
 import 'maplibre-gl/dist/maplibre-gl.css'
-
-interface Spot {
-  id: string
-  name: string
-  description: string
-  category: 'camping' | 'fishing' | 'diving' | 'surfing' | 'hiking' | 'carcamp'
-  latitude: number
-  longitude: number
-}
+import { supabase, type Spot } from '@/lib/supabase'
 
 const CATEGORY_EMOJI: Record<Spot['category'], string> = {
   camping: '🏕️',
@@ -31,35 +23,6 @@ const CATEGORY_LABEL: Record<Spot['category'], string> = {
   carcamp: '車宿',
 }
 
-// 初始測試資料
-const MOCK_SPOTS: Spot[] = [
-  {
-    id: '1',
-    name: '福隆海水浴場',
-    description: '東北角熱門衝浪點，夏天人多',
-    category: 'surfing',
-    latitude: 25.0229,
-    longitude: 121.9422,
-  },
-  {
-    id: '2',
-    name: '武陵農場露營區',
-    description: '高山露營，氣候涼爽，需提早訂位',
-    category: 'camping',
-    latitude: 24.3618,
-    longitude: 121.2747,
-  },
-  {
-    id: '3',
-    name: '碧砂漁港',
-    description: '基隆熱門釣魚點，有多種魚種',
-    category: 'fishing',
-    latitude: 25.1489,
-    longitude: 121.7906,
-  },
-]
-
-// OpenStreetMap 免費地圖樣式
 const MAP_STYLE = {
   version: 8 as const,
   sources: {
@@ -81,12 +44,24 @@ const MAP_STYLE = {
 
 export default function Map() {
   const mapRef = useRef<MapRef>(null)
+  const [spots, setSpots] = useState<Spot[]>([])
   const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null)
+  const [loading, setLoading] = useState(true)
   const [viewState, setViewState] = useState({
     longitude: 121.0,
     latitude: 23.8,
     zoom: 7,
   })
+
+  // 從 Supabase 載入地標
+  useEffect(() => {
+    async function fetchSpots() {
+      const { data, error } = await supabase.from('spots').select('*')
+      if (!error && data) setSpots(data as Spot[])
+      setLoading(false)
+    }
+    fetchSpots()
+  }, [])
 
   const handleMarkerClick = useCallback((spot: Spot) => {
     setSelectedSpot(spot)
@@ -97,7 +72,9 @@ export default function Map() {
       {/* Header */}
       <div className="absolute top-0 left-0 right-0 z-10 bg-white/90 backdrop-blur-sm shadow-sm px-4 py-3 flex items-center justify-between">
         <h1 className="text-xl font-bold text-green-700">🗺️ Wildmap</h1>
-        <p className="text-sm text-gray-500">台灣戶外活動地點地圖</p>
+        <p className="text-sm text-gray-500">
+          {loading ? '載入中...' : `${spots.length} 個地點`}
+        </p>
       </div>
 
       {/* Category Legend */}
@@ -122,7 +99,7 @@ export default function Map() {
       >
         <NavigationControl position="top-right" />
 
-        {MOCK_SPOTS.map((spot) => (
+        {spots.map((spot) => (
           <Marker
             key={spot.id}
             longitude={spot.longitude}
