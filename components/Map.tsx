@@ -1,8 +1,8 @@
 'use client'
 
 import { useRef, useCallback, useState } from 'react'
-import ReactMapGL, { Marker, Popup, NavigationControl, MapRef } from 'react-map-gl'
-import 'mapbox-gl/dist/mapbox-gl.css'
+import ReactMapGL, { Marker, Popup, NavigationControl, MapRef } from 'react-map-gl/maplibre'
+import 'maplibre-gl/dist/maplibre-gl.css'
 
 interface Spot {
   id: string
@@ -20,6 +20,15 @@ const CATEGORY_EMOJI: Record<Spot['category'], string> = {
   surfing: '🏄',
   hiking: '🏔️',
   carcamp: '🚐',
+}
+
+const CATEGORY_LABEL: Record<Spot['category'], string> = {
+  camping: '露營',
+  fishing: '釣魚',
+  diving: '潛水',
+  surfing: '衝浪',
+  hiking: '登山',
+  carcamp: '車宿',
 }
 
 // 初始測試資料
@@ -50,6 +59,26 @@ const MOCK_SPOTS: Spot[] = [
   },
 ]
 
+// OpenStreetMap 免費地圖樣式
+const MAP_STYLE = {
+  version: 8 as const,
+  sources: {
+    osm: {
+      type: 'raster' as const,
+      tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+      tileSize: 256,
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    },
+  },
+  layers: [
+    {
+      id: 'osm',
+      type: 'raster' as const,
+      source: 'osm',
+    },
+  ],
+}
+
 export default function Map() {
   const mapRef = useRef<MapRef>(null)
   const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null)
@@ -78,14 +107,7 @@ export default function Map() {
           {Object.entries(CATEGORY_EMOJI).map(([key, emoji]) => (
             <div key={key} className="flex items-center gap-2 text-sm">
               <span>{emoji}</span>
-              <span className="text-gray-700">
-                {key === 'camping' && '露營'}
-                {key === 'fishing' && '釣魚'}
-                {key === 'diving' && '潛水'}
-                {key === 'surfing' && '衝浪'}
-                {key === 'hiking' && '登山'}
-                {key === 'carcamp' && '車宿'}
-              </span>
+              <span className="text-gray-700">{CATEGORY_LABEL[key as Spot['category']]}</span>
             </div>
           ))}
         </div>
@@ -96,8 +118,7 @@ export default function Map() {
         {...viewState}
         onMove={(evt) => setViewState(evt.viewState)}
         style={{ width: '100%', height: '100%' }}
-        mapStyle="mapbox://styles/mapbox/outdoors-v12"
-        mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+        mapStyle={MAP_STYLE}
       >
         <NavigationControl position="top-right" />
 
