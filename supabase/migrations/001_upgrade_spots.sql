@@ -69,6 +69,13 @@ END $$;
 CREATE INDEX IF NOT EXISTS idx_spots_category ON spots(category);
 CREATE INDEX IF NOT EXISTS idx_spots_status ON spots(status);
 CREATE INDEX IF NOT EXISTS idx_spots_created_by ON spots(created_by);
-CREATE INDEX IF NOT EXISTS idx_spots_location ON spots USING GIST (
-  ST_SetSRID(ST_MakePoint(longitude, latitude), 4326)
-);
+
+-- 地理位置索引（需要 PostGIS，Supabase 預設已安裝）
+-- 如果 PostGIS 未啟用，取消下一行的註解先啟用：
+-- CREATE EXTENSION IF NOT EXISTS postgis;
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_extension WHERE extname = 'postgis') THEN
+    EXECUTE 'CREATE INDEX IF NOT EXISTS idx_spots_location ON spots USING GIST (ST_SetSRID(ST_MakePoint(longitude, latitude), 4326))';
+  END IF;
+END $$;
