@@ -1,0 +1,418 @@
+[
+  {
+    "name": "地福露安休閒露營區",
+    "address": "屏東縣泰武鄉良武巷132號",
+    "phone": "",
+    "latitude": 22.6637,
+    "longitude": 120.6428,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "墾丁遊憩學苑露營場",
+    "address": "屏東縣恆春鎮屏東縣恆春鎮德和里9鄰德和路702巷12號",
+    "phone": "",
+    "latitude": 22.004,
+    "longitude": 120.7408,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "邦古河那彎露營區",
+    "address": "臺中市和平區和平區東關路一段松鶴三巷199-11號",
+    "phone": "",
+    "latitude": 24.2282,
+    "longitude": 121.0703,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "山海楝露營區",
+    "address": "臺東縣成功鎮信義里9鄰新村路22之5號",
+    "phone": "0922518796",
+    "latitude": 22.7583,
+    "longitude": 121.1444,
+    "geo_source": "fallback_county"
+  },
+  {
+    "name": "蟬說：溪頭生態露營區",
+    "address": "南投縣鹿谷鄉森林巷9號",
+    "phone": "0497008136",
+    "latitude": 23.7073,
+    "longitude": 120.8,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "貴梅A露營場",
+    "address": "高雄市那瑪夏區高雄市那瑪夏區瑪雅村5鄰平和巷147號",
+    "phone": "",
+    "latitude": 23.2369,
+    "longitude": 120.7215,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "鹿林濤營地",
+    "address": "新竹縣五峰鄉",
+    "phone": "",
+    "latitude": 24.632985,
+    "longitude": 121.119308,
+    "geo_source": "nominatim"
+  },
+  {
+    "name": "舒心露營區",
+    "address": "桃園市龜山區兔子坑段1377地號",
+    "phone": "0952371070",
+    "latitude": 25.0336,
+    "longitude": 121.351,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "1233放空露營區",
+    "address": "高雄市六龜區高雄市六龜區裕農路81巷",
+    "phone": "0928721425",
+    "latitude": 23.067,
+    "longitude": 120.6532,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "亮山川休閒農場",
+    "address": "新北市萬里區中福路1之3號",
+    "phone": "0224921130",
+    "latitude": 25.1867,
+    "longitude": 121.686,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "烘爐地休閒農場",
+    "address": "新北市中和區中和區烘爐地段789-2、792等2筆土地",
+    "phone": "022528909",
+    "latitude": 24.9985,
+    "longitude": 121.4888,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "大坪頂露營區",
+    "address": "高雄市小港區坪北段463地號",
+    "phone": "",
+    "latitude": 22.5706,
+    "longitude": 120.3477,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "聚元營地(原四分之三露營區)",
+    "address": "臺中市新社區新社區崑山里崑南街29巷5號",
+    "phone": "",
+    "latitude": 24.218,
+    "longitude": 120.807,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "和華園休閒農場",
+    "address": "屏東縣萬巒鄉五溝村東興路66之1號",
+    "phone": "",
+    "latitude": 22.645,
+    "longitude": 120.5888,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "星月秘境休閒農場",
+    "address": "南投縣竹山鎮南投縣竹山鎮桂林里中山路888號",
+    "phone": "",
+    "latitude": 23.7543,
+    "longitude": 120.6761,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "西洪露營場",
+    "address": "金門縣金湖鎮安民1之15號",
+    "phone": "082318823",
+    "latitude": 24.4223,
+    "longitude": 118.3974,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "富興休閒農場",
+    "address": "花蓮縣瑞穗鄉富興村8鄰富興73之1號",
+    "phone": "",
+    "latitude": 23.5066,
+    "longitude": 121.4371,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "湖櫻養生休閒農場",
+    "address": "苗栗縣西湖鄉苗栗縣西湖鄉金獅村8鄰杜石地10號",
+    "phone": "",
+    "latitude": 24.5046,
+    "longitude": 120.8612,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "飛牛牧場休閒農場",
+    "address": "苗栗縣通霄鎮苗栗縣通霄鎮南和里166號",
+    "phone": "037782999",
+    "latitude": 24.4748,
+    "longitude": 120.6924,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "老爺的家露營區",
+    "address": "高雄市內門區高雄市內門區永興里埤後1-1號",
+    "phone": "",
+    "latitude": 22.9234,
+    "longitude": 120.4652,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "烏巴克藝術空間",
+    "address": "高雄市茂林區高雄市茂林區茂林巷116號",
+    "phone": "",
+    "latitude": 22.8864,
+    "longitude": 120.6632,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "南園清心園林休閒農場",
+    "address": "新竹縣新埔鎮新埔鎮照門里6鄰九芎湖32號",
+    "phone": "035890011",
+    "latitude": 24.8367,
+    "longitude": 121.0673,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "卜谷嵐露營區",
+    "address": "高雄市那瑪夏區高雄市那瑪夏區瑪雅里平和巷13號",
+    "phone": "076701006",
+    "latitude": 23.2369,
+    "longitude": 120.7215,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "蘋果農莊",
+    "address": "桃園市復興區色霧鬧7鄰10-20號",
+    "phone": "",
+    "latitude": 24.8034,
+    "longitude": 121.3518,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "大山背休閒農場",
+    "address": "新竹縣橫山鄉新竹縣橫山鄉豐鄉村4鄰大山背52號",
+    "phone": "",
+    "latitude": 24.6957,
+    "longitude": 121.1347,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "福濃休閒農場露營區",
+    "address": "高雄市六龜區高雄市六龜區荖濃里裕濃路81巷12-30號",
+    "phone": "0933163506",
+    "latitude": 23.067,
+    "longitude": 120.6532,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "梅嶺神秘氣場露營區",
+    "address": "臺南市楠西區715台南市楠西區香蕉山51之6號",
+    "phone": "0933914636",
+    "latitude": 23.1742,
+    "longitude": 120.543,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "走馬瀨農場",
+    "address": "臺南市大內區臺南市大內區二溪里唭哩瓦60號",
+    "phone": "065760121",
+    "latitude": 23.1085,
+    "longitude": 120.4265,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "茂林谷露營場",
+    "address": "高雄市茂林區",
+    "phone": "",
+    "latitude": 22.8862483,
+    "longitude": 120.6632165,
+    "geo_source": "nominatim"
+  },
+  {
+    "name": "山度空間",
+    "address": "花蓮縣壽豐鄉",
+    "phone": "",
+    "latitude": 23.8706675,
+    "longitude": 121.508943,
+    "geo_source": "nominatim"
+  },
+  {
+    "name": "瓦浪露營區",
+    "address": "臺中市和平區和平區東關路一段台電巷124-5號",
+    "phone": "",
+    "latitude": 24.2282,
+    "longitude": 121.0703,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "旺角好望角露營區",
+    "address": "苗栗縣後龍鎮苗栗縣後龍鎮中和里12鄰崎頂123之8號",
+    "phone": "037631166",
+    "latitude": 24.5936,
+    "longitude": 120.7973,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "大山拾光露營地",
+    "address": "高雄市六龜區高雄市六龜區和平路130-35號",
+    "phone": "0911158173",
+    "latitude": 23.067,
+    "longitude": 120.6532,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "輕風椰林露營區",
+    "address": "高雄市六龜區高雄市六龜區三民路70號",
+    "phone": "0921541425",
+    "latitude": 23.067,
+    "longitude": 120.6532,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "谷露瑪哈露營區",
+    "address": "高雄市那瑪夏區南沙魯段133-2地號",
+    "phone": "0906115059",
+    "latitude": 23.2369,
+    "longitude": 120.7215,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "銓昶露營區",
+    "address": "高雄市田寮區牛稠埔段258-6地號",
+    "phone": "",
+    "latitude": 22.8832,
+    "longitude": 120.4047,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "星空幽谷休閒露營農莊",
+    "address": "高雄市六龜區高雄市六龜區新寮里三民路107號",
+    "phone": "0955162589",
+    "latitude": 23.067,
+    "longitude": 120.6532,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "仁山逸境露營場",
+    "address": "宜蘭縣冬山鄉宜蘭縣冬山鄉中山村新寮路225號",
+    "phone": "",
+    "latitude": 24.6362,
+    "longitude": 121.7297,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "流星花園樂活露營區",
+    "address": "臺中市豐原區",
+    "phone": "",
+    "latitude": 24.24219,
+    "longitude": 120.71846,
+    "geo_source": "nominatim"
+  },
+  {
+    "name": "流星花園幸福路營區",
+    "address": "臺中市豐原區",
+    "phone": "",
+    "latitude": 24.24219,
+    "longitude": 120.71846,
+    "geo_source": "nominatim"
+  },
+  {
+    "name": "花岩山林休閒農場",
+    "address": "新北市三峽區有木106之8號",
+    "phone": "0226720888",
+    "latitude": 24.9331,
+    "longitude": 121.37,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "虹毓露營場",
+    "address": "新北市石碇區新北市石碇區中民里番子坑17號",
+    "phone": "",
+    "latitude": 25.0013,
+    "longitude": 121.6554,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "中華民國農會休閒綜合農牧場",
+    "address": "臺中市外埔區二崁路700號",
+    "phone": "0426805581",
+    "latitude": 24.3218,
+    "longitude": 120.6279,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "裡冷溪探索園區",
+    "address": "臺中市和平區和平區博愛里裡冷巷69號",
+    "phone": "",
+    "latitude": 24.2282,
+    "longitude": 121.0703,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "1-2號營地",
+    "address": "南投縣魚池鄉南投縣魚池鄉東池村文武巷1-2號",
+    "phone": "",
+    "latitude": 23.8997,
+    "longitude": 120.9343,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "海稻米露營區",
+    "address": "花蓮縣豐濱鄉東興段109地號",
+    "phone": "0963529958",
+    "latitude": 23.4842,
+    "longitude": 121.5116,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "瞰海露營區",
+    "address": "花蓮縣壽豐鄉鹽寮200之7號",
+    "phone": "0935540056",
+    "latitude": 23.8706,
+    "longitude": 121.5089,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "同學農場-大角天文小鎮",
+    "address": "屏東縣里港鄉土庫村東榮巷32-10號",
+    "phone": "076831115",
+    "latitude": 22.7843,
+    "longitude": 120.5144,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "大樹下露營區",
+    "address": "桃園市復興區32號",
+    "phone": "",
+    "latitude": 24.8034,
+    "longitude": 121.3518,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "鳳梨屋休閒農場",
+    "address": "宜蘭縣員山鄉宜蘭縣員山嫏中華村長嶺路195號",
+    "phone": "",
+    "latitude": 24.7501,
+    "longitude": 121.6497,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "OâGLAMPING墾丁貓鼻頭露營莊園",
+    "address": "屏東縣恆春鎮94645屏東縣恆春鎮下泉路90號",
+    "phone": "088866669",
+    "latitude": 22.004,
+    "longitude": 120.7408,
+    "geo_source": "fallback_area"
+  },
+  {
+    "name": "梅花湖休閒農場",
+    "address": "宜蘭縣冬山鄉宜蘭縣冬山鄉得安村環湖路66號",
+    "phone": "",
+    "latitude": 24.6362,
+    "longitude": 121.7297,
+    "geo_source": "fallback_area"
+  }
+]
