@@ -2,115 +2,107 @@
  * Font Awesome icon mapping for all feature keys, categories, and navigation.
  * Replaces emoji icons in the UI (except map markers which keep emoji).
  * All icons are from @fortawesome/free-solid-svg-icons.
+ * Updated for 106-feature 6-category final definition (2026-03-05).
  */
 import { type IconDefinition } from '@fortawesome/fontawesome-svg-core'
 import {
-  // === 營地特性 (campsite_features) ===
-  faMoneyBill,
-  faMoon,
-  faDog,
-  faCar,
-  faCalendarCheck,
-  faPersonWalking,
-  faTruckPickup,
-  faUserTie,
-  faPeopleGroup,
-  faCampground,
-  faHouseChimney,
-  faTent,
-  faSuitcase,
-  faDrumstickBite,
-  faFire,
+  // === 營地特性 (camp_traits) ===
+  faMoneyBill,          // free_site
+  faCalendarCheck,      // reservation_required
+  faMoon,               // night_arrival
+  faFire,               // campfire_allowed
+  faHouseChimney,       // accommodation
+  faSuitcase,           // equipment_rental
+  faCartShopping,       // food_delivery
+  faCampground,         // glamping
+  faPeopleGroup,        // small_group_area
+  faWarehouse,          // covered_area
+  faCar,                // car_beside_tent / car_ok
+  faPlug,               // power_outlet
+  faUserTie,            // managed_site
+  faBan,                // no_smoking / no_alcohol
+  faVolumeXmark,        // no_loud_equipment
+  faBaby,               // child_friendly
+  faWheelchair,         // disability_friendly
+  faDog,                // pet_friendly
+  faWifi,               // wifi
+  faMobileScreenButton, // mobile_signal
 
-  // === 營區設施 (campsite_facilities) ===
-  faToilet,
-  faRestroom,
-  faShower,
-  faTemperatureHigh,
-  faPlug,
-  faWifi,
-  faFaucetDrip,
-  faPumpSoap,
-  faTrashCan,
-  faRecycle,
-  // laundry → faShirt
-  faShirt,
-  faChildReaching,
-  faPersonSwimming,
-  faStore,
-  faChair,
-  faWarehouse,
-  faUtensils,
-  faSquareParking,
+  // === 設施與服務 (facilities) ===
+  faFaucetDrip,         // tap_water
+  faDroplet,            // water_dispenser / waterfall
+  faTemperatureHigh,    // hot_water
+  faToilet,             // flush_toilet
+  faRestroom,           // squat_toilet
+  faShower,             // shower
+  faBath,               // private_bathroom
+  faHotTubPerson,       // hot_spring / wild_hot_spring
+  faWind,               // hair_dryer
+  faShirt,              // washing_machine
+  faRotate,             // spin_dryer
+  faPumpSoap,           // sink
+  faIcicles,            // refrigerator
+  faUtensils,           // shared_kitchen
+  faConciergeBell,      // food_service
+  faStore,              // convenience_store
+  faChair,              // outdoor_seating
+  faTrashCan,           // trash_bin
+  faChildReaching,      // playground
+  faBasketball,         // basketball_court
+  faUmbrellaBeach,      // sandbox / sandy_beach
+  faPersonSwimming,     // swimming_pool / swimming
 
   // === 周邊環境 (environment) ===
-  faWater,
-  // lake → faWater (reuse)
-  // ocean_view → faWater (reuse)
-  faMountain,
-  faTree,
-  // shaded → faTree (reuse)
-  faLeaf,
-  faGem,
-  faSquare,
-  faSun,
-  faStar,
-  faWandMagicSparkles,
-  faHotTubPerson,
-  faDroplet,
-  // coral_reef → faFishFins
-  faFishFins,
-  faUmbrellaBeach,
+  faTree,               // shaded / forest / national_park
+  faLeaf,               // grassland / nature_reserve / autumn_leaves
+  faWater,              // river_stream / lake / ocean_view / river_tracing
+  faMountain,           // mountain_view / high_mountain / gravel_ground
+  faCloud,              // sea_of_clouds
+  faBinoculars,         // panoramic_view
+  faSun,                // sunrise_view
+  faCity,               // night_view
+  faStar,               // stargazing
+  faWandMagicSparkles,  // fireflies
+  faPaw,                // wildlife
+  faDove,               // bird_watching
+  faSeedling,           // seasonal_flowers
 
   // === 可進行活動 (activities) ===
-  // swimming → faPersonSwimming (imported above)
-  faFish,
-  faPersonHiking,
-  faBicycle,
-  // kayaking → faSailboat
-  faSailboat,
-  // rock_climbing → faHandFist
-  faHandFist,
-  faDove,
-  faMask,
-  // scuba_diving → faMask (reuse)
-  // freediving → faPersonSwimming (reuse)
-  // sup → faPersonSwimming (reuse)
-  // surfing_available → faWater (reuse)
-  // night_fishing → faMoon (reuse)
-  // shore_fishing → faFish (reuse)
-  faShip,
-  // fly_fishing → faFish (reuse)
+  faPersonHiking,       // hiking_trails
+  faBicycle,            // cycling
+  faHandFist,           // rock_climbing / high_ropes
+  faPersonSkiing,       // grass_sledding
+  faSailboat,           // water_sports
+  faFish,               // fishing
+  faBullseye,           // paintball
+  faLightbulb,          // sky_lantern
+  faScissors,           // craft_workshop
+  faMicroscope,         // ecology_tour / science_experience
+  faWheatAwn,           // farm_experience
+  faCow,                // ranch_experience
+  faMasksTheater,       // cultural_experience
+  faDrum,               // indigenous_activity
 
-  // === 區域限制 (restrictions) ===
-  faTruckMonster,
-  faRoad,
-  faVolumeXmark,
-  faBan,
-  faPaw,
-  faClipboardList,
-  faCalendarDays,
-  faRuler,
-  faFireFlameCurved,
-  faIdCard,
-  faCertificate,
-  faClock,
+  // === 區域與限制 (restrictions) ===
+  faMap,                // indigenous_area
+  faClipboardList,      // permit_required
+  faCalendarDays,       // seasonal_access
+  faBus,                // public_transit
+  faMotorcycle,         // motorcycle_ok
+  faTruckPickup,        // rv_ok / trailer_ok
+  faTruckMonster,       // 4wd_required
+  faRoad,               // unpaved_road
+  faTent,               // tent_allowed
 
   // === 注意事項 (warnings) ===
-  faSignal,
-  faMobileScreenButton,
-  faBugs,
-  faWorm,
-  // snakes → faBugs (reuse)
-  // wild_boar → faSkull
-  faSkull,
-  // strong_current → faWater (reuse)
-  faMountainSun,
-  faCloudShowersHeavy,
-  // jellyfish → faBugs (reuse)
+  faTriangleExclamation, // near_highway
+  faCloudShowersHeavy,   // poor_drainage
+  faMountainSun,         // steep_terrain
+  faBugs,                // biting_midges / mosquitoes / snakes / bees_wasps
+  faWorm,                // leeches
+  faSkull,               // venomous_creatures / wild_boar
 
   // === Navigation ===
-  faMap,
   faUser,
   faMagnifyingGlass,
   faPlus,
@@ -126,7 +118,6 @@ import {
   faSpinner,
   faEnvelope,
   faLock,
-  faTriangleExclamation,
   faChevronDown,
   faChevronUp,
   faChevronRight,
@@ -135,129 +126,148 @@ import {
 
 // === Feature key → Font Awesome icon ===
 export const FEATURE_ICON_MAP: Record<string, IconDefinition> = {
-  // 營地特性 (campsite_features)
+  // 1. 營地特性 (camp_traits)
   free_site:            faMoneyBill,
-  night_arrival:        faMoon,
-  pet_friendly:         faDog,
-  car_beside_tent:      faCar,
   reservation_required: faCalendarCheck,
-  walk_in_ok:           faPersonWalking,
-  rv_friendly:          faTruckPickup,
-  managed_site:         faUserTie,
-  group_site:           faPeopleGroup,
-  individual_site:      faCampground,
-  glamping:             faHouseChimney,
-  tent_rental:          faTent,
-  equipment_rental:     faSuitcase,
-  bbq_allowed:          faDrumstickBite,
+  night_arrival:        faMoon,
   campfire_allowed:     faFire,
+  accommodation:        faHouseChimney,
+  equipment_rental:     faSuitcase,
+  food_delivery:        faCartShopping,
+  glamping:             faCampground,
+  small_group_area:     faPeopleGroup,
+  covered_area:         faWarehouse,
+  car_beside_tent:      faCar,
+  power_outlet:         faPlug,
+  managed_site:         faUserTie,
+  no_smoking:           faBan,
+  no_loud_equipment:    faVolumeXmark,
+  no_alcohol:           faBan,
+  child_friendly:       faBaby,
+  disability_friendly:  faWheelchair,
+  pet_friendly:         faDog,
+  wifi:                 faWifi,
+  mobile_signal:        faMobileScreenButton,
 
-  // 營區設施 (campsite_facilities)
-  flush_toilet:   faToilet,
-  squat_toilet:   faRestroom,
-  shower:         faShower,
-  hot_water:      faTemperatureHigh,
-  power_outlet:   faPlug,
-  wifi:           faWifi,
-  drinking_water: faFaucetDrip,
-  sink:           faPumpSoap,
-  trash_bin:      faTrashCan,
-  recycling:      faRecycle,
-  laundry:        faShirt,
-  playground:     faChildReaching,
-  swimming_pool:  faPersonSwimming,
-  camp_store:     faStore,
-  picnic_table:   faChair,
-  covered_area:   faWarehouse,
-  kitchen:        faUtensils,
-  parking:        faSquareParking,
+  // 2. 設施與服務 (facilities)
+  tap_water:          faFaucetDrip,
+  water_dispenser:    faDroplet,
+  hot_water:          faTemperatureHigh,
+  flush_toilet:       faToilet,
+  squat_toilet:       faRestroom,
+  shower:             faShower,
+  private_bathroom:   faBath,
+  hot_spring:         faHotTubPerson,
+  hair_dryer:         faWind,
+  washing_machine:    faShirt,
+  spin_dryer:         faRotate,
+  sink:               faPumpSoap,
+  refrigerator:       faIcicles,
+  shared_kitchen:     faUtensils,
+  food_service:       faConciergeBell,
+  convenience_store:  faStore,
+  outdoor_seating:    faChair,
+  trash_bin:          faTrashCan,
+  playground:         faChildReaching,
+  basketball_court:   faBasketball,
+  sandbox:            faUmbrellaBeach,
+  swimming_pool:      faPersonSwimming,
 
-  // 周邊環境 (environment)
-  river_stream:      faWater,
-  lake:              faWater,
-  ocean_view:        faWater,
-  mountain_view:     faMountain,
-  forest:            faTree,
-  shaded:            faTree,
-  grassland:         faLeaf,
-  gravel_site:       faGem,
-  flat_ground:       faSquare,
-  sunrise_view:      faSun,
-  stargazing:        faStar,
-  fireflies:         faWandMagicSparkles,
-  hot_spring_nearby: faHotTubPerson,
-  waterfall:         faDroplet,
-  coral_reef:        faFishFins,
-  sandy_beach:       faUmbrellaBeach,
+  // 3. 周邊環境 (environment)
+  shaded:           faTree,
+  grassland:        faLeaf,
+  forest:           faTree,
+  river_stream:     faWater,
+  lake:             faWater,
+  sandy_beach:      faUmbrellaBeach,
+  waterfall:        faDroplet,
+  wild_hot_spring:  faHotTubPerson,
+  mountain_view:    faMountain,
+  ocean_view:       faWater,
+  sea_of_clouds:    faCloud,
+  panoramic_view:   faBinoculars,
+  sunrise_view:     faSun,
+  night_view:       faCity,
+  stargazing:       faStar,
+  fireflies:        faWandMagicSparkles,
+  wildlife:         faPaw,
+  bird_watching:    faDove,
+  seasonal_flowers: faSeedling,
+  autumn_leaves:    faLeaf,
 
-  // 可進行活動 (activities)
-  swimming:            faPersonSwimming,
-  fishing_available:   faFish,
+  // 4. 可進行活動 (activities)
   hiking_trails:       faPersonHiking,
   cycling:             faBicycle,
-  kayaking:            faSailboat,
   rock_climbing:       faHandFist,
-  bird_watching:       faDove,
-  snorkeling:          faMask,
-  scuba_diving:        faMask,
-  freediving:          faPersonSwimming,
-  sup:                 faPersonSwimming,
-  surfing_available:   faWater,
-  night_fishing:       faMoon,
-  shore_fishing:       faFish,
-  boat_fishing:        faShip,
-  fly_fishing:         faFish,
+  high_ropes:          faHandFist,
+  grass_sledding:      faPersonSkiing,
+  swimming:            faPersonSwimming,
+  river_tracing:       faWater,
+  water_sports:        faSailboat,
+  fishing:             faFish,
+  paintball:           faBullseye,
+  sky_lantern:         faLightbulb,
+  craft_workshop:      faScissors,
+  ecology_tour:        faMicroscope,
+  farm_experience:     faWheatAwn,
+  ranch_experience:    faCow,
+  science_experience:  faMicroscope,
+  cultural_experience: faMasksTheater,
+  indigenous_activity: faDrum,
 
-  // 區域限制 (restrictions)
-  '4wd_required':      faTruckMonster,
-  paved_road:          faRoad,
-  no_noise_after_10:   faVolumeXmark,
-  no_alcohol:          faBan,
-  no_pets:             faPaw,
-  permit_required:     faClipboardList,
-  seasonal_access:     faCalendarDays,
-  size_limit:          faRuler,
-  no_campfire:         faFireFlameCurved,
-  fishing_license:     faIdCard,
-  dive_cert_required:  faCertificate,
-  booking_essential:   faClock,
+  // 5. 區域與限制 (restrictions)
+  indigenous_area:  faMap,
+  high_mountain:    faMountain,
+  national_park:    faTree,
+  nature_reserve:   faLeaf,
+  permit_required:  faClipboardList,
+  seasonal_access:  faCalendarDays,
+  public_transit:   faBus,
+  motorcycle_ok:    faMotorcycle,
+  car_ok:           faCar,
+  rv_ok:            faTruckPickup,
+  trailer_ok:       faTruckPickup,
+  '4wd_required':   faTruckMonster,
+  unpaved_road:     faRoad,
+  tent_allowed:     faTent,
 
-  // 注意事項 (warnings)
-  no_cell_signal:      faSignal,
-  limited_cell_signal: faMobileScreenButton,
+  // 6. 注意事項 (warnings)
+  near_highway:        faTriangleExclamation,
+  poor_drainage:       faCloudShowersHeavy,
+  steep_terrain:       faMountainSun,
+  gravel_ground:       faMountain,
+  biting_midges:       faBugs,
   mosquitoes:          faBugs,
   leeches:             faWorm,
   snakes:              faBugs,
+  bees_wasps:          faBugs,
+  venomous_creatures:  faSkull,
   wild_boar:           faSkull,
-  strong_current:      faWater,
-  steep_terrain:       faMountainSun,
-  flash_flood_risk:    faCloudShowersHeavy,
-  jellyfish:           faBugs,
 }
 
 // === Navigation icons (re-exported for convenience) ===
 export const NAV_ICONS = {
-  map:       faMap,
-  user:      faUser,
-  search:    faMagnifyingGlass,
-  plus:      faPlus,
-  logout:    faRightFromBracket,
-  back:      faArrowLeft,
-  location:  faLocationDot,
-  info:      faCircleInfo,
-  thumbsUp:  faThumbsUp,
-  thumbsDown: faThumbsDown,
-  filter:    faFilter,
-  close:     faXmark,
-  check:     faCheck,
-  spinner:   faSpinner,
-  envelope:  faEnvelope,
-  lock:      faLock,
-  warning:   faTriangleExclamation,
+  map:         faMap,
+  user:        faUser,
+  search:      faMagnifyingGlass,
+  plus:        faPlus,
+  logout:      faRightFromBracket,
+  back:        faArrowLeft,
+  location:    faLocationDot,
+  info:        faCircleInfo,
+  thumbsUp:    faThumbsUp,
+  thumbsDown:  faThumbsDown,
+  filter:      faFilter,
+  close:       faXmark,
+  check:       faCheck,
+  spinner:     faSpinner,
+  envelope:    faEnvelope,
+  lock:        faLock,
+  warning:     faTriangleExclamation,
   chevronDown: faChevronDown,
-  chevronUp: faChevronUp,
+  chevronUp:   faChevronUp,
   chevronRight: faChevronRight,
-  eye:       faEye,
+  eye:         faEye,
 } as const
 
 // Helper to get an icon for a feature key, with fallback

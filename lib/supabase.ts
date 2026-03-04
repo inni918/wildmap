@@ -38,7 +38,7 @@ export type Spot = {
   updated_at: string
 }
 
-export type FeatureGroup = 'campsite_features' | 'campsite_facilities' | 'environment' | 'activities' | 'restrictions' | 'warnings'
+export type FeatureGroup = 'camp_traits' | 'facilities' | 'environment' | 'activities' | 'restrictions' | 'warnings'
 
 export type FeatureDefinition = {
   id: string
@@ -76,12 +76,12 @@ export type UserProfile = {
 
 // === Feature group display config ===
 export const FEATURE_GROUP_CONFIG: Record<FeatureGroup, { name: string; color: string }> = {
-  campsite_features: { name: '營地特性', color: '#FF6347' },    // tomato
-  campsite_facilities: { name: '營區設施', color: '#40E0D0' },  // turquoise
-  environment: { name: '周邊環境', color: '#228B22' },          // forestgreen
-  activities: { name: '可進行活動', color: '#000080' },         // navy
-  restrictions: { name: '區域限制', color: '#FF00FF' },         // fuchsia
-  warnings: { name: '注意事項', color: '#800000' },             // maroon
+  camp_traits:  { name: '營地特性', color: '#FF6347' },    // tomato
+  facilities:   { name: '設施與服務', color: '#40E0D0' },  // turquoise
+  environment:  { name: '周邊環境', color: '#228B22' },    // forestgreen
+  activities:   { name: '可進行活動', color: '#000080' },  // navy
+  restrictions: { name: '區域與限制', color: '#FF00FF' },  // fuchsia
+  warnings:     { name: '注意事項', color: '#800000' },    // maroon
 }
 
 export const CATEGORY_EMOJI: Record<SpotCategory, string> = {
