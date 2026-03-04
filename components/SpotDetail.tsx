@@ -6,7 +6,8 @@ import { fetchSpotFeatures, type GroupedFeatures } from '@/lib/features'
 import { useAuth } from '@/lib/auth-context'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS, getFeatureIcon } from '@/lib/icons'
-import { faCircleQuestion, faCircleCheck } from '@fortawesome/free-solid-svg-icons'
+import { faCircleQuestion, faCircleCheck, faPhone, faGlobe, faComment, faEnvelope, faMapLocationDot, faShieldHalved } from '@fortawesome/free-solid-svg-icons'
+import { faFacebookF, faInstagram } from '@fortawesome/free-brands-svg-icons'
 import FeatureIcons from './FeatureIcons'
 import FeatureVoting from './FeatureVoting'
 
@@ -73,7 +74,7 @@ export default function SpotDetail({ spot, onClose }: Props) {
               </span>
               <div className="min-w-0">
                 <h2 className="text-lg font-bold text-text-main truncate">{spot.name}</h2>
-                <div className="flex items-center gap-2 mt-0.5">
+                <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                   <span className="text-xs font-medium text-primary">
                     {CATEGORY_LABEL[spot.category]}
                   </span>
@@ -86,6 +87,18 @@ export default function SpotDetail({ spot, onClose }: Props) {
                   >
                     {qualityConfig.label}
                   </span>
+                  {spot.gov_certified && (
+                    <span
+                      className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full"
+                      style={{
+                        backgroundColor: '#2D6A4F',
+                        color: '#FFFFFF',
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faShieldHalved} className="text-[10px]" />
+                      政府登記 ✓
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -107,6 +120,9 @@ export default function SpotDetail({ spot, onClose }: Props) {
             <FontAwesomeIcon icon={NAV_ICONS.location} className="text-primary text-[10px]" />
             {spot.latitude.toFixed(4)}, {spot.longitude.toFixed(4)}
           </p>
+
+          {/* Contact icons */}
+          <ContactIcons spot={spot} />
 
           {/* Compact feature icons */}
           {!loading && groups.length > 0 && (
@@ -160,6 +176,83 @@ export default function SpotDetail({ spot, onClose }: Props) {
           )}
         </div>
       </div>
+    </div>
+  )
+}
+
+// === Contact Icons ===
+
+function ContactIcons({ spot }: { spot: Spot }) {
+  const [showLineId, setShowLineId] = useState(false)
+
+  const contacts: { key: string; icon: typeof faPhone; href?: string; label: string; onClick?: () => void }[] = []
+
+  if (spot.phone) {
+    contacts.push({ key: 'phone', icon: faPhone, href: `tel:${spot.phone}`, label: '電話' })
+  }
+  if (spot.website) {
+    contacts.push({ key: 'website', icon: faGlobe, href: spot.website, label: '網站' })
+  }
+  if (spot.facebook) {
+    contacts.push({ key: 'facebook', icon: faFacebookF, href: spot.facebook, label: 'Facebook' })
+  }
+  if (spot.instagram) {
+    contacts.push({ key: 'instagram', icon: faInstagram, href: spot.instagram, label: 'Instagram' })
+  }
+  if (spot.line_id) {
+    contacts.push({ key: 'line', icon: faComment, label: `LINE: ${spot.line_id}`, onClick: () => setShowLineId(!showLineId) })
+  }
+  if (spot.email) {
+    contacts.push({ key: 'email', icon: faEnvelope, href: `mailto:${spot.email}`, label: 'Email' })
+  }
+  if (spot.google_maps_url) {
+    contacts.push({ key: 'maps', icon: faMapLocationDot, href: spot.google_maps_url, label: 'Google Maps' })
+  }
+
+  if (contacts.length === 0) return null
+
+  return (
+    <div className="mt-2.5">
+      <div className="flex items-center gap-3 flex-wrap">
+        {contacts.map((c) => {
+          const iconEl = (
+            <div
+              key={c.key}
+              className="w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer"
+              style={{
+                backgroundColor: '#2D6A4F15',
+                color: '#2D6A4F',
+              }}
+              title={c.label}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#2D6A4F'
+                e.currentTarget.style.color = '#FFFFFF'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#2D6A4F15'
+                e.currentTarget.style.color = '#2D6A4F'
+              }}
+              onClick={c.onClick}
+            >
+              <FontAwesomeIcon icon={c.icon} className="text-sm" />
+            </div>
+          )
+
+          if (c.href) {
+            return (
+              <a key={c.key} href={c.href} target="_blank" rel="noopener noreferrer">
+                {iconEl}
+              </a>
+            )
+          }
+          return iconEl
+        })}
+      </div>
+      {showLineId && spot.line_id && (
+        <p className="text-xs text-text-secondary mt-1.5 pl-0.5">
+          LINE ID：<span className="font-medium text-text-main">{spot.line_id}</span>
+        </p>
+      )}
     </div>
   )
 }

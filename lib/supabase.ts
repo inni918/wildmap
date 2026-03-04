@@ -25,6 +25,14 @@ export type Spot = {
   is_private: boolean
   created_by?: string
   managed_by?: string
+  phone?: string
+  website?: string
+  facebook?: string
+  instagram?: string
+  line_id?: string
+  email?: string
+  google_maps_url?: string
+  gov_certified?: boolean
   view_count: number
   created_at: string
   updated_at: string
