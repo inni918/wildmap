@@ -89,14 +89,11 @@ export default function SpotDetail({ spot, onClose }: Props) {
                   </span>
                   {spot.gov_certified && (
                     <span
-                      className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full"
-                      style={{
-                        backgroundColor: '#2D6A4F',
-                        color: '#FFFFFF',
-                      }}
+                      className="inline-flex items-center justify-center w-5 h-5 rounded-full cursor-help"
+                      style={{ backgroundColor: '#2D6A4F20', color: '#2D6A4F' }}
+                      title="政府登記露營場"
                     >
-                      <FontAwesomeIcon icon={faShieldHalved} className="text-[10px]" />
-                      政府登記 ✓
+                      <FontAwesomeIcon icon={faShieldHalved} className="text-[11px]" />
                     </span>
                   )}
                 </div>
