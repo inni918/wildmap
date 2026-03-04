@@ -122,6 +122,8 @@ import {
   faChevronUp,
   faChevronRight,
   faEye,
+  faList,
+  faMapLocationDot,
 } from '@fortawesome/free-solid-svg-icons'
 
 // === Feature key → Font Awesome icon ===
@@ -268,6 +270,8 @@ export const NAV_ICONS = {
   chevronUp:   faChevronUp,
   chevronRight: faChevronRight,
   eye:         faEye,
+  list:        faList,
+  mapView:     faMapLocationDot,
 } as const
 
 // Helper to get an icon for a feature key, with fallback
