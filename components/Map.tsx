@@ -3,26 +3,11 @@
 import { useRef, useCallback, useState, useEffect } from 'react'
 import ReactMapGL, { Marker, Popup, NavigationControl, MapRef, MapMouseEvent } from 'react-map-gl/maplibre'
 import 'maplibre-gl/dist/maplibre-gl.css'
-import { supabase, type Spot } from '@/lib/supabase'
+import { supabase, type Spot, type SpotCategory, CATEGORY_EMOJI, CATEGORY_LABEL } from '@/lib/supabase'
 import AddSpotModal from './AddSpotModal'
-
-const CATEGORY_EMOJI: Record<Spot['category'], string> = {
-  camping: '🏕️',
-  fishing: '🎣',
-  diving: '🤿',
-  surfing: '🏄',
-  hiking: '🏔️',
-  carcamp: '🚐',
-}
-
-const CATEGORY_LABEL: Record<Spot['category'], string> = {
-  camping: '露營',
-  fishing: '釣魚',
-  diving: '潛水',
-  surfing: '衝浪',
-  hiking: '登山',
-  carcamp: '車宿',
-}
+import SpotDetail from './SpotDetail'
+import Header from './Header'
+import FeatureFilter from './FeatureFilter'
 
 const MAP_STYLE = {
   version: 8 as const,
@@ -37,13 +22,24 @@ const MAP_STYLE = {
   layers: [{ id: 'osm', type: 'raster' as const, source: 'osm' }],
 }
 
+const QUALITY_BADGE: Record<string, { label: string; color: string }> = {
+  excellent: { label: '精選', color: 'bg-yellow-400 text-yellow-900' },
+  good: { label: '優質', color: 'bg-green-400 text-green-900' },
+  fair: { label: '普通', color: 'bg-gray-300 text-gray-700' },
+  poor: { label: '待改善', color: 'bg-red-300 text-red-900' },
+  unrated: { label: '', color: '' },
+}
+
 export default function Map() {
   const mapRef = useRef<MapRef>(null)
   const [spots, setSpots] = useState<Spot[]>([])
   const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null)
   const [loading, setLoading] = useState(true)
-  const [activeFilter, setActiveFilter] = useState<Spot['category'] | 'all'>('all')
+  const [activeFilter, setActiveFilter] = useState<SpotCategory | 'all'>('all')
+  const [selectedFeatures, setSelectedFeatures] = useState<string[]>([])
+  const [featureSpotIds, setFeatureSpotIds] = useState<Set<string> | null>(null)
   const [addModal, setAddModal] = useState<{ lat: number; lng: number } | null>(null)
+  const [detailSpot, setDetailSpot] = useState<Spot | null>(null)
   const [viewState, setViewState] = useState({
     longitude: 121.0,
     latitude: 23.8,
@@ -51,7 +47,9 @@ export default function Map() {
   })
 
   const fetchSpots = useCallback(async () => {
-    const { data, error } = await supabase.from('spots').select('*')
+    const { data, error } = await supabase
+      .from('spots')
+      .select('id, name, name_en, description, description_en, category, latitude, longitude, address, status, quality, is_free, is_private, created_by, managed_by, view_count, created_at, updated_at')
     if (!error && data) setSpots(data as Spot[])
     setLoading(false)
   }, [])
@@ -60,26 +58,87 @@ export default function Map() {
     fetchSpots()
   }, [fetchSpots])
 
+  // 當選擇特性篩選時，查詢符合條件的 spot ids
+  useEffect(() => {
+    if (selectedFeatures.length === 0) {
+      setFeatureSpotIds(null)
+      return
+    }
+
+    async function fetchFeatureFilteredSpots() {
+      // 對每個選中的 feature，找到 vote ≥ 60% 的 spot_ids
+      // 策略：查出所有相關的 feature_votes，在前端計算比例
+      const { data: votes, error } = await supabase
+        .from('feature_votes')
+        .select('spot_id, feature_id, vote')
+        .in('feature_id', selectedFeatures)
+
+      if (error || !votes) {
+        setFeatureSpotIds(new Set())
+        return
+      }
+
+      // 按 (spot_id, feature_id) 分組計算投票比例
+      const voteMap = new globalThis.Map<string, { yes: number; total: number }>()
+      for (const v of votes) {
+        const key = `${v.spot_id}::${v.feature_id}`
+        if (!voteMap.has(key)) voteMap.set(key, { yes: 0, total: 0 })
+        const entry = voteMap.get(key)!
+        entry.total++
+        if (v.vote) entry.yes++
+      }
+
+      // 對每個 feature，找到 ≥ 60% 的 spot_ids
+      const perFeatureSpots = new globalThis.Map<string, Set<string>>()
+      for (const fId of selectedFeatures) {
+        perFeatureSpots.set(fId, new Set())
+      }
+
+      for (const [key, counts] of voteMap.entries()) {
+        const [spotId, featureId] = key.split('::')
+        const ratio = counts.yes / counts.total
+        if (ratio >= 0.6) {
+          perFeatureSpots.get(featureId)?.add(spotId)
+        }
+      }
+
+      // 取交集：spot 必須滿足所有選中的特性
+      let result: Set<string> | null = null
+      for (const spotSet of perFeatureSpots.values()) {
+        if (result === null) {
+          result = new Set(spotSet)
+        } else {
+          for (const id of result) {
+            if (!spotSet.has(id)) result.delete(id)
+          }
+        }
+      }
+
+      setFeatureSpotIds(result || new Set())
+    }
+
+    fetchFeatureFilteredSpots()
+  }, [selectedFeatures])
+
   const handleMapClick = useCallback((e: MapMouseEvent) => {
     setSelectedSpot(null)
     setAddModal({ lat: e.lngLat.lat, lng: e.lngLat.lng })
   }, [])
 
-  const filteredSpots = activeFilter === 'all'
-    ? spots
-    : spots.filter(s => s.category === activeFilter)
+  const filteredSpots = spots.filter(s => {
+    // 類型篩選
+    if (activeFilter !== 'all' && s.category !== activeFilter) return false
+    // 特性篩選
+    if (featureSpotIds !== null && !featureSpotIds.has(s.id)) return false
+    return true
+  })
 
   return (
     <div className="relative w-full h-full">
-      {/* Header */}
-      <div className="absolute top-0 left-0 right-0 z-10 bg-white/90 backdrop-blur-sm shadow-sm px-4 py-3 flex items-center justify-between">
-        <h1 className="text-xl font-bold text-green-700">🗺️ Wildmap</h1>
-        <p className="text-sm text-gray-500">
-          {loading ? '載入中...' : `${filteredSpots.length} 個地點`}
-        </p>
-      </div>
+      {/* Header（由另一個 sub-agent 維護） */}
+      <Header spotCount={filteredSpots.length} loading={loading} />
 
-      {/* Filter Bar */}
+      {/* Category Filter Bar */}
       <div className="absolute top-14 left-0 right-0 z-10 px-3 py-2 flex gap-2 overflow-x-auto bg-white/80 backdrop-blur-sm">
         <button
           onClick={() => setActiveFilter('all')}
@@ -89,7 +148,7 @@ export default function Map() {
         >
           全部
         </button>
-        {(Object.keys(CATEGORY_EMOJI) as Spot['category'][]).map(cat => (
+        {(Object.keys(CATEGORY_EMOJI) as SpotCategory[]).map(cat => (
           <button
             key={cat}
             onClick={() => setActiveFilter(cat)}
@@ -101,6 +160,12 @@ export default function Map() {
           </button>
         ))}
       </div>
+
+      {/* Feature Filter */}
+      <FeatureFilter
+        selectedFeatures={selectedFeatures}
+        onFeaturesChange={setSelectedFeatures}
+      />
 
       {/* Add Spot Hint */}
       <div className="absolute bottom-8 right-4 z-10 bg-green-600 text-white rounded-xl shadow-md px-4 py-2 text-sm">
@@ -143,20 +208,52 @@ export default function Map() {
             anchor="bottom"
             onClose={() => setSelectedSpot(null)}
             closeOnClick={false}
-            maxWidth="240px"
+            maxWidth="260px"
           >
             <div className="p-3">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-2xl">{CATEGORY_EMOJI[selectedSpot.category]}</span>
-                <div>
-                  <h3 className="font-bold text-gray-800 text-base">{selectedSpot.name}</h3>
-                  <span className="text-xs text-green-600 font-medium">{CATEGORY_LABEL[selectedSpot.category]}</span>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-bold text-gray-800 text-base truncate">{selectedSpot.name}</h3>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-xs text-green-600 font-medium">
+                      {CATEGORY_LABEL[selectedSpot.category]}
+                    </span>
+                    {selectedSpot.quality && selectedSpot.quality !== 'unrated' && QUALITY_BADGE[selectedSpot.quality] && (
+                      <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium ${QUALITY_BADGE[selectedSpot.quality].color}`}>
+                        {QUALITY_BADGE[selectedSpot.quality].label}
+                      </span>
+                    )}
+                    {selectedSpot.is_free !== undefined && selectedSpot.is_free !== null && (
+                      <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium ${
+                        selectedSpot.is_free
+                          ? 'bg-emerald-100 text-emerald-700'
+                          : 'bg-orange-100 text-orange-700'
+                      }`}>
+                        {selectedSpot.is_free ? '免費' : '付費'}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
-              <p className="text-sm text-gray-600">{selectedSpot.description}</p>
-              <p className="text-xs text-gray-400 mt-2">
-                📍 {selectedSpot.latitude.toFixed(4)}, {selectedSpot.longitude.toFixed(4)}
+              {selectedSpot.description && (
+                <p className="text-sm text-gray-600 mb-1">{selectedSpot.description}</p>
+              )}
+              {selectedSpot.address && (
+                <p className="text-xs text-gray-500 mb-1">📍 {selectedSpot.address}</p>
+              )}
+              <p className="text-xs text-gray-400 mt-1">
+                🧭 {selectedSpot.latitude.toFixed(4)}, {selectedSpot.longitude.toFixed(4)}
               </p>
+              <button
+                onClick={() => {
+                  setDetailSpot(selectedSpot)
+                  setSelectedSpot(null)
+                }}
+                className="mt-2 w-full text-center text-sm font-medium text-green-600 hover:text-green-700 py-1.5 rounded-lg hover:bg-green-50 transition-colors cursor-pointer"
+              >
+                查看特性詳情 →
+              </button>
             </div>
           </Popup>
         )}
@@ -172,6 +269,14 @@ export default function Map() {
             setAddModal(null)
             fetchSpots()
           }}
+        />
+      )}
+
+      {/* Spot Detail Panel */}
+      {detailSpot && (
+        <SpotDetail
+          spot={detailSpot}
+          onClose={() => setDetailSpot(null)}
         />
       )}
     </div>
