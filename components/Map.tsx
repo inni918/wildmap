@@ -144,7 +144,7 @@ export default function Map() {
         >
           全部
         </button>
-        {(Object.keys(CATEGORY_EMOJI) as SpotCategory[]).map(cat => (
+        {(['camping', 'carcamp'] as SpotCategory[]).map(cat => (
           <button
             key={cat}
             onClick={() => setActiveFilter(cat)}

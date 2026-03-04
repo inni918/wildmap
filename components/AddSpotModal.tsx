@@ -17,13 +17,15 @@ interface Props {
   onAdded: () => void
 }
 
+// MVP 先只開放露營和車宿，其他分類之後再開放
 const CATEGORIES: { value: Spot['category']; label: string; emoji: string; icon: IconDefinition }[] = [
   { value: 'camping', label: '露營', emoji: '🏕️', icon: faCampground },
   { value: 'carcamp', label: '車宿', emoji: '🚐', icon: faVanShuttle },
-  { value: 'fishing', label: '釣魚', emoji: '🎣', icon: faFish },
-  { value: 'diving', label: '潛水', emoji: '🤿', icon: faMask },
-  { value: 'surfing', label: '衝浪', emoji: '🏄', icon: faWater },
-  { value: 'hiking', label: '登山', emoji: '🏔️', icon: faMountain },
+  // TODO: 之後開放
+  // { value: 'fishing', label: '釣魚', emoji: '🎣', icon: faFish },
+  // { value: 'diving', label: '潛水', emoji: '🤿', icon: faMask },
+  // { value: 'surfing', label: '衝浪', emoji: '🏄', icon: faWater },
+  // { value: 'hiking', label: '登山', emoji: '🏔️', icon: faMountain },
 ]
 
 export default function AddSpotModal({ lat, lng, onClose, onAdded }: Props) {
