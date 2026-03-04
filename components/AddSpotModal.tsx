@@ -3,6 +3,12 @@
 import { useState } from 'react'
 import { supabase, type Spot } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth-context'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { NAV_ICONS } from '@/lib/icons'
+import {
+  faCampground, faVanShuttle, faFish, faMask, faWater, faMountain,
+} from '@fortawesome/free-solid-svg-icons'
+import type { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 
 interface Props {
   lat: number
@@ -11,13 +17,13 @@ interface Props {
   onAdded: () => void
 }
 
-const CATEGORIES: { value: Spot['category']; label: string; emoji: string }[] = [
-  { value: 'camping', label: '露營', emoji: '🏕️' },
-  { value: 'carcamp', label: '車宿', emoji: '🚐' },
-  { value: 'fishing', label: '釣魚', emoji: '🎣' },
-  { value: 'diving', label: '潛水', emoji: '🤿' },
-  { value: 'surfing', label: '衝浪', emoji: '🏄' },
-  { value: 'hiking', label: '登山', emoji: '🏔️' },
+const CATEGORIES: { value: Spot['category']; label: string; emoji: string; icon: IconDefinition }[] = [
+  { value: 'camping', label: '露營', emoji: '🏕️', icon: faCampground },
+  { value: 'carcamp', label: '車宿', emoji: '🚐', icon: faVanShuttle },
+  { value: 'fishing', label: '釣魚', emoji: '🎣', icon: faFish },
+  { value: 'diving', label: '潛水', emoji: '🤿', icon: faMask },
+  { value: 'surfing', label: '衝浪', emoji: '🏄', icon: faWater },
+  { value: 'hiking', label: '登山', emoji: '🏔️', icon: faMountain },
 ]
 
 export default function AddSpotModal({ lat, lng, onClose, onAdded }: Props) {
@@ -68,15 +74,17 @@ export default function AddSpotModal({ lat, lng, onClose, onAdded }: Props) {
         className="absolute inset-0 z-20 flex items-end sm:items-center justify-center bg-black/30 backdrop-blur-sm"
         onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
       >
-        <div className="bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md shadow-2xl p-6 text-center">
-          <div className="text-4xl mb-3">🔒</div>
-          <h2 className="text-lg font-bold text-gray-800 mb-2">需要登入</h2>
-          <p className="text-sm text-gray-500 mb-4">
+        <div className="bg-surface rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md shadow-2xl p-6 text-center">
+          <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-primary-light/20 flex items-center justify-center">
+            <FontAwesomeIcon icon={NAV_ICONS.lock} className="text-primary text-xl" />
+          </div>
+          <h2 className="text-lg font-bold text-text-main mb-2">需要登入</h2>
+          <p className="text-sm text-text-secondary mb-4">
             登入後即可新增地點、投票與累積積分
           </p>
           <button
             onClick={signInWithGoogle}
-            className="flex items-center justify-center gap-2 w-full bg-white border border-gray-300 rounded-xl px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 shadow-sm cursor-pointer"
+            className="flex items-center justify-center gap-2 w-full bg-surface border border-border rounded-xl px-4 py-3 text-sm font-medium text-text-main hover:bg-surface-alt shadow-sm cursor-pointer"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
@@ -88,7 +96,7 @@ export default function AddSpotModal({ lat, lng, onClose, onAdded }: Props) {
           </button>
           <button
             onClick={onClose}
-            className="mt-3 text-sm text-gray-400 hover:text-gray-600"
+            className="mt-3 text-sm text-text-secondary hover:text-text-main"
           >
             先不要
           </button>
@@ -102,20 +110,23 @@ export default function AddSpotModal({ lat, lng, onClose, onAdded }: Props) {
       className="absolute inset-0 z-20 flex items-end sm:items-center justify-center bg-black/30 backdrop-blur-sm"
       onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
     >
-      <div className="bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md shadow-2xl p-6 max-h-[85vh] overflow-y-auto">
+      <div className="bg-surface rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md shadow-2xl p-6 max-h-[85vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-gray-800">新增地點</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">×</button>
+          <h2 className="text-lg font-bold text-text-main">新增地點</h2>
+          <button onClick={onClose} className="text-text-secondary hover:text-text-main text-2xl leading-none">
+            <FontAwesomeIcon icon={NAV_ICONS.close} className="text-base" />
+          </button>
         </div>
 
-        <p className="text-xs text-gray-400 mb-4">
-          📍 {lat.toFixed(5)}, {lng.toFixed(5)}
+        <p className="text-xs text-text-secondary mb-4 flex items-center gap-1">
+          <FontAwesomeIcon icon={NAV_ICONS.location} className="text-primary" />
+          {lat.toFixed(5)}, {lng.toFixed(5)}
         </p>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           {/* 類型選擇 */}
           <div>
-            <label className="text-sm font-medium text-gray-700 mb-2 block">地點類型</label>
+            <label className="text-sm font-medium text-text-main mb-2 block">地點類型</label>
             <div className="grid grid-cols-3 gap-2">
               {CATEGORIES.map(cat => (
                 <button
@@ -124,11 +135,11 @@ export default function AddSpotModal({ lat, lng, onClose, onAdded }: Props) {
                   onClick={() => setCategory(cat.value)}
                   className={`flex flex-col items-center py-2 px-1 rounded-xl border-2 text-sm transition-colors ${
                     category === cat.value
-                      ? 'border-green-500 bg-green-50 text-green-700'
-                      : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                      ? 'border-primary bg-primary-light/10 text-primary-dark'
+                      : 'border-border text-text-secondary hover:border-primary-light'
                   }`}
                 >
-                  <span className="text-xl mb-1">{cat.emoji}</span>
+                  <FontAwesomeIcon icon={cat.icon} className="text-xl mb-1" />
                   <span className="text-xs">{cat.label}</span>
                 </button>
               ))}
@@ -137,76 +148,92 @@ export default function AddSpotModal({ lat, lng, onClose, onAdded }: Props) {
 
           {/* 名稱 */}
           <div>
-            <label className="text-sm font-medium text-gray-700 mb-1 block">地點名稱 *</label>
+            <label className="text-sm font-medium text-text-main mb-1 block">地點名稱 *</label>
             <input
               type="text"
               value={name}
               onChange={e => setName(e.target.value)}
               placeholder="例如：秘境小溪露營地"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
+              className="w-full border border-border rounded-[10px] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-light bg-surface"
             />
           </div>
 
           {/* 描述 */}
           <div>
-            <label className="text-sm font-medium text-gray-700 mb-1 block">簡介（選填）</label>
+            <label className="text-sm font-medium text-text-main mb-1 block">簡介（選填）</label>
             <textarea
               value={description}
               onChange={e => setDescription(e.target.value)}
               placeholder="分享這個地點的特色、注意事項..."
               rows={3}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400 resize-none"
+              className="w-full border border-border rounded-[10px] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-light resize-none bg-surface"
             />
           </div>
 
           {/* 地址 */}
           <div>
-            <label className="text-sm font-medium text-gray-700 mb-1 block">地址（選填）</label>
+            <label className="text-sm font-medium text-text-main mb-1 block">地址（選填）</label>
             <input
               type="text"
               value={address}
               onChange={e => setAddress(e.target.value)}
               placeholder="例如：新北市烏來區某某路"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
+              className="w-full border border-border rounded-[10px] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-light bg-surface"
             />
           </div>
 
           {/* 電話 */}
           <div>
-            <label className="text-sm font-medium text-gray-700 mb-1 block">聯絡電話（選填）</label>
+            <label className="text-sm font-medium text-text-main mb-1 block">聯絡電話（選填）</label>
             <input
               type="tel"
               value={phone}
               onChange={e => setPhone(e.target.value)}
               placeholder="例如：02-1234-5678"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
+              className="w-full border border-border rounded-[10px] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-light bg-surface"
             />
           </div>
 
           {/* 社群連結 */}
           <div>
-            <label className="text-sm font-medium text-gray-700 mb-1 block">社群連結（選填）</label>
+            <label className="text-sm font-medium text-text-main mb-1 block">社群連結（選填）</label>
             <input
               type="url"
               value={socialLink}
               onChange={e => setSocialLink(e.target.value)}
               placeholder="Facebook、Instagram 或官方網站"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
+              className="w-full border border-border rounded-[10px] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-light bg-surface"
             />
           </div>
 
-          <p className="text-xs text-gray-400">
-            💡 地點建立後，可以在詳情頁為各項特性投票
+          <p className="text-xs text-text-secondary flex items-center gap-1">
+            <FontAwesomeIcon icon={NAV_ICONS.info} className="text-primary" />
+            地點建立後，可以在詳情頁為各項特性投票
           </p>
 
-          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {error && (
+            <p className="text-error text-sm flex items-center gap-1">
+              <FontAwesomeIcon icon={NAV_ICONS.warning} className="text-xs" />
+              {error}
+            </p>
+          )}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-300 text-white font-medium py-3 rounded-xl transition-colors"
+            className="w-full bg-primary hover:bg-primary-dark disabled:bg-border text-text-on-primary font-semibold py-3 rounded-xl transition-colors flex items-center justify-center gap-2"
           >
-            {loading ? '新增中...' : '✅ 新增地點'}
+            {loading ? (
+              <>
+                <FontAwesomeIcon icon={NAV_ICONS.spinner} className="animate-spin" />
+                新增中...
+              </>
+            ) : (
+              <>
+                <FontAwesomeIcon icon={NAV_ICONS.check} />
+                新增地點
+              </>
+            )}
           </button>
         </form>
       </div>

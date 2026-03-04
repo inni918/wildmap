@@ -1,6 +1,8 @@
 'use client'
 
-import type { GroupedFeatures, FeatureWithVotes } from '@/lib/features'
+import type { GroupedFeatures } from '@/lib/features'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { getFeatureIcon } from '@/lib/icons'
 
 interface Props {
   groups: GroupedFeatures[]
@@ -9,16 +11,16 @@ interface Props {
 
 /**
  * Compact feature icons display (for spot card / popup).
- * Shows only confirmed features as colored dots.
+ * Shows only confirmed features as colored Font Awesome icons.
  */
 export default function FeatureIcons({ groups, compact = true }: Props) {
-  const confirmedFeatures: { icon: string; color: string; name: string }[] = []
+  const confirmedFeatures: { key: string; icon: string; color: string; name: string }[] = []
   const pendingCount = { count: 0 }
 
   for (const group of groups) {
     for (const f of group.features) {
       if (f.status === 'confirmed') {
-        confirmedFeatures.push({ icon: f.icon, color: group.color, name: f.name_zh })
+        confirmedFeatures.push({ key: f.key, icon: f.icon, color: group.color, name: f.name_zh })
       } else if (f.status === 'pending') {
         pendingCount.count++
       }
@@ -26,25 +28,32 @@ export default function FeatureIcons({ groups, compact = true }: Props) {
   }
 
   if (confirmedFeatures.length === 0 && pendingCount.count === 0) {
-    return <p className="text-xs text-gray-400">尚無特性資料</p>
+    return <p className="text-xs text-text-secondary/60">尚無特性資料</p>
   }
 
   if (compact) {
     return (
       <div className="flex flex-wrap gap-1">
-        {confirmedFeatures.map((f, i) => (
-          <span
-            key={i}
-            title={f.name}
-            className="inline-flex items-center justify-center w-6 h-6 rounded-full text-sm cursor-default"
-            style={{ backgroundColor: f.color + '20', color: f.color }}
-          >
-            {f.icon}
-          </span>
-        ))}
+        {confirmedFeatures.map((f, i) => {
+          const faIcon = getFeatureIcon(f.key)
+          return (
+            <span
+              key={i}
+              title={f.name}
+              className="inline-flex items-center justify-center w-6 h-6 rounded-full text-sm cursor-default"
+              style={{ backgroundColor: f.color + '20', color: f.color }}
+            >
+              {faIcon ? (
+                <FontAwesomeIcon icon={faIcon} className="text-[10px]" />
+              ) : (
+                f.icon
+              )}
+            </span>
+          )
+        })}
         {pendingCount.count > 0 && (
-          <span className="inline-flex items-center justify-center px-1.5 h-6 rounded-full text-xs bg-gray-100 text-gray-400">
-            +{pendingCount.count} ❓
+          <span className="inline-flex items-center justify-center px-1.5 h-6 rounded-full text-xs bg-surface-alt text-text-secondary/60">
+            +{pendingCount.count}
           </span>
         )}
       </div>
@@ -53,16 +62,24 @@ export default function FeatureIcons({ groups, compact = true }: Props) {
 
   return (
     <div className="flex flex-wrap gap-1.5">
-      {confirmedFeatures.map((f, i) => (
-        <span
-          key={i}
-          title={f.name}
-          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium"
-          style={{ backgroundColor: f.color + '15', color: f.color, border: `1px solid ${f.color}40` }}
-        >
-          {f.icon} {f.name}
-        </span>
-      ))}
+      {confirmedFeatures.map((f, i) => {
+        const faIcon = getFeatureIcon(f.key)
+        return (
+          <span
+            key={i}
+            title={f.name}
+            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium"
+            style={{ backgroundColor: f.color + '15', color: f.color, border: `1px solid ${f.color}40` }}
+          >
+            {faIcon ? (
+              <FontAwesomeIcon icon={faIcon} className="text-[10px]" />
+            ) : (
+              f.icon
+            )}
+            {f.name}
+          </span>
+        )
+      })}
     </div>
   )
 }

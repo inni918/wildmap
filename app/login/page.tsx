@@ -4,6 +4,9 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
 import Link from 'next/link'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { NAV_ICONS } from '@/lib/icons'
+import { faPhone } from '@fortawesome/free-solid-svg-icons'
 
 type Tab = 'login' | 'register'
 
@@ -74,10 +77,10 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-b from-primary-light/10 to-bg flex items-center justify-center px-4">
       {/* Toast */}
       {toast && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-gray-800 text-white px-6 py-3 rounded-xl shadow-lg text-sm animate-fade-in">
+        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-primary-dark text-text-on-primary px-6 py-3 rounded-xl shadow-lg text-sm animate-fade-in">
           {toast}
         </div>
       )}
@@ -85,22 +88,23 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-block">
-            <h1 className="text-3xl font-bold text-green-700">🗺️ Wildmap</h1>
+          <Link href="/" className="inline-flex items-center gap-2 no-underline">
+            <FontAwesomeIcon icon={NAV_ICONS.map} className="text-primary text-2xl" />
+            <h1 className="text-3xl font-bold text-primary-dark">Wildmap</h1>
           </Link>
-          <p className="text-gray-500 mt-2">探索台灣最棒的戶外秘境</p>
+          <p className="text-text-secondary mt-2">探索台灣最棒的戶外秘境</p>
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+        <div className="bg-surface rounded-2xl shadow-lg border border-border overflow-hidden">
           {/* Tabs */}
-          <div className="flex border-b border-gray-100">
+          <div className="flex border-b border-border">
             <button
               onClick={() => { setTab('login'); setError('') }}
               className={`flex-1 py-3.5 text-sm font-medium transition-colors cursor-pointer ${
                 tab === 'login'
-                  ? 'text-green-700 border-b-2 border-green-600 bg-green-50/50'
-                  : 'text-gray-400 hover:text-gray-600'
+                  ? 'text-primary-dark border-b-2 border-primary bg-primary-light/5'
+                  : 'text-text-secondary hover:text-text-main'
               }`}
             >
               登入
@@ -109,8 +113,8 @@ export default function LoginPage() {
               onClick={() => { setTab('register'); setError('') }}
               className={`flex-1 py-3.5 text-sm font-medium transition-colors cursor-pointer ${
                 tab === 'register'
-                  ? 'text-green-700 border-b-2 border-green-600 bg-green-50/50'
-                  : 'text-gray-400 hover:text-gray-600'
+                  ? 'text-primary-dark border-b-2 border-primary bg-primary-light/5'
+                  : 'text-text-secondary hover:text-text-main'
               }`}
             >
               註冊
@@ -120,7 +124,8 @@ export default function LoginPage() {
           {/* Form */}
           <div className="p-6">
             {error && (
-              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+              <div className="mb-4 p-3 bg-error/10 border border-error/30 rounded-[10px] text-error text-sm flex items-center gap-2">
+                <FontAwesomeIcon icon={NAV_ICONS.warning} className="text-xs flex-shrink-0" />
                 {error}
               </div>
             )}
@@ -128,36 +133,36 @@ export default function LoginPage() {
             {tab === 'login' ? (
               <form onSubmit={handleLogin} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                  <label className="block text-sm font-medium text-text-main mb-1">Email</label>
                   <input
                     type="email"
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                     required
                     placeholder="your@email.com"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-sm transition-shadow"
+                    className="w-full px-4 py-2.5 border border-border rounded-[10px] focus:ring-2 focus:ring-primary-light focus:border-primary outline-none text-sm transition-shadow bg-surface"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">密碼</label>
+                  <label className="block text-sm font-medium text-text-main mb-1">密碼</label>
                   <input
                     type="password"
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                     required
                     placeholder="••••••••"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-sm transition-shadow"
+                    className="w-full px-4 py-2.5 border border-border rounded-[10px] focus:ring-2 focus:ring-primary-light focus:border-primary outline-none text-sm transition-shadow bg-surface"
                   />
                 </div>
                 <div className="flex justify-end">
-                  <Link href="/forgot-password" className="text-sm text-green-600 hover:text-green-700">
+                  <Link href="/forgot-password" className="text-sm text-primary hover:text-primary-dark">
                     忘記密碼？
                   </Link>
                 </div>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="w-full bg-primary hover:bg-primary-dark text-text-on-primary font-semibold py-2.5 rounded-[10px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {loading ? '登入中...' : '登入'}
                 </button>
@@ -165,53 +170,53 @@ export default function LoginPage() {
             ) : (
               <form onSubmit={handleRegister} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">顯示名稱</label>
+                  <label className="block text-sm font-medium text-text-main mb-1">顯示名稱</label>
                   <input
                     type="text"
                     value={displayName}
                     onChange={e => setDisplayName(e.target.value)}
                     required
                     placeholder="你的暱稱"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-sm transition-shadow"
+                    className="w-full px-4 py-2.5 border border-border rounded-[10px] focus:ring-2 focus:ring-primary-light focus:border-primary outline-none text-sm transition-shadow bg-surface"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                  <label className="block text-sm font-medium text-text-main mb-1">Email</label>
                   <input
                     type="email"
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                     required
                     placeholder="your@email.com"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-sm transition-shadow"
+                    className="w-full px-4 py-2.5 border border-border rounded-[10px] focus:ring-2 focus:ring-primary-light focus:border-primary outline-none text-sm transition-shadow bg-surface"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">密碼</label>
+                  <label className="block text-sm font-medium text-text-main mb-1">密碼</label>
                   <input
                     type="password"
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                     required
                     placeholder="至少 6 個字元"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-sm transition-shadow"
+                    className="w-full px-4 py-2.5 border border-border rounded-[10px] focus:ring-2 focus:ring-primary-light focus:border-primary outline-none text-sm transition-shadow bg-surface"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">確認密碼</label>
+                  <label className="block text-sm font-medium text-text-main mb-1">確認密碼</label>
                   <input
                     type="password"
                     value={confirmPassword}
                     onChange={e => setConfirmPassword(e.target.value)}
                     required
                     placeholder="再輸入一次密碼"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-sm transition-shadow"
+                    className="w-full px-4 py-2.5 border border-border rounded-[10px] focus:ring-2 focus:ring-primary-light focus:border-primary outline-none text-sm transition-shadow bg-surface"
                   />
                 </div>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="w-full bg-primary hover:bg-primary-dark text-text-on-primary font-semibold py-2.5 rounded-[10px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {loading ? '註冊中...' : '建立帳號'}
                 </button>
@@ -221,10 +226,10 @@ export default function LoginPage() {
             {/* Divider */}
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200" />
+                <div className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-3 bg-white text-gray-400">或使用其他方式</span>
+                <span className="px-3 bg-surface text-text-secondary">或使用其他方式</span>
               </div>
             </div>
 
@@ -233,7 +238,7 @@ export default function LoginPage() {
               {/* Google */}
               <button
                 onClick={signInWithGoogle}
-                className="w-full flex items-center justify-center gap-2.5 bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 shadow-sm transition-colors cursor-pointer"
+                className="w-full flex items-center justify-center gap-2.5 bg-surface border border-border rounded-[10px] px-4 py-2.5 text-sm font-medium text-text-main hover:bg-surface-alt shadow-sm transition-colors cursor-pointer"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path
@@ -259,11 +264,9 @@ export default function LoginPage() {
               {/* Phone */}
               <button
                 onClick={handlePhoneLogin}
-                className="w-full flex items-center justify-center gap-2.5 bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 shadow-sm transition-colors cursor-pointer"
+                className="w-full flex items-center justify-center gap-2.5 bg-surface border border-border rounded-[10px] px-4 py-2.5 text-sm font-medium text-text-main hover:bg-surface-alt shadow-sm transition-colors cursor-pointer"
               >
-                <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                </svg>
+                <FontAwesomeIcon icon={faPhone} className="text-text-secondary" />
                 使用手機號碼登入
               </button>
             </div>
@@ -272,8 +275,9 @@ export default function LoginPage() {
 
         {/* Back to map */}
         <div className="text-center mt-6">
-          <Link href="/" className="text-sm text-gray-400 hover:text-gray-600 transition-colors">
-            ← 返回地圖
+          <Link href="/" className="text-sm text-text-secondary hover:text-primary transition-colors inline-flex items-center gap-1">
+            <FontAwesomeIcon icon={NAV_ICONS.back} className="text-xs" />
+            返回地圖
           </Link>
         </div>
       </div>

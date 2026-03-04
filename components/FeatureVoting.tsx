@@ -3,6 +3,9 @@
 import { useState } from 'react'
 import type { GroupedFeatures, FeatureWithVotes } from '@/lib/features'
 import { castVote } from '@/lib/features'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { NAV_ICONS, getFeatureIcon } from '@/lib/icons'
+import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons'
 
 interface Props {
   spotId: string
@@ -38,31 +41,36 @@ function FeatureRow({
 
   const isConfirmed = feature.status === 'confirmed'
   const isPending = feature.status === 'pending'
+  const faIcon = getFeatureIcon(feature.key)
 
   return (
     <div
       className={`flex items-center justify-between py-2 px-3 rounded-lg transition-colors ${
-        isConfirmed ? 'bg-white' : 'bg-gray-50'
+        isConfirmed ? 'bg-surface' : 'bg-surface-alt/50'
       }`}
     >
       <div className="flex items-center gap-2 min-w-0">
         <span
           className="text-base flex-shrink-0"
-          style={{ opacity: isConfirmed ? 1 : 0.4 }}
+          style={{ opacity: isConfirmed ? 1 : 0.4, color: isConfirmed ? groupColor : undefined }}
         >
-          {feature.icon}
+          {faIcon ? (
+            <FontAwesomeIcon icon={faIcon} className="text-sm" />
+          ) : (
+            feature.icon
+          )}
         </span>
         <span
-          className={`text-sm truncate ${isConfirmed ? 'font-medium' : 'text-gray-400'}`}
+          className={`text-sm truncate ${isConfirmed ? 'font-medium' : 'text-text-secondary/60'}`}
           style={isConfirmed ? { color: groupColor } : {}}
         >
           {feature.name_zh}
         </span>
         {isPending && (
-          <span className="text-xs text-gray-400 flex-shrink-0">❓</span>
+          <FontAwesomeIcon icon={faCircleQuestion} className="text-xs text-text-secondary/60 flex-shrink-0" />
         )}
         {isConfirmed && (
-          <span className="text-xs text-gray-400 flex-shrink-0">
+          <span className="text-xs text-text-secondary/60 flex-shrink-0">
             {feature.yes_count}人確認
           </span>
         )}
@@ -75,28 +83,28 @@ function FeatureRow({
             <button
               onClick={() => handleVote(true)}
               disabled={voting}
-              className={`px-2 py-1 rounded text-xs font-medium transition-colors cursor-pointer ${
+              className={`px-2 py-1 rounded text-xs font-medium transition-colors cursor-pointer flex items-center gap-1 ${
                 feature.user_vote === true
-                  ? 'bg-green-500 text-white'
-                  : 'bg-gray-100 text-gray-500 hover:bg-green-100 hover:text-green-700'
+                  ? 'bg-primary text-text-on-primary'
+                  : 'bg-surface-alt text-text-secondary hover:bg-primary-light/20 hover:text-primary-dark'
               }`}
             >
-              ✅ 有
+              <FontAwesomeIcon icon={NAV_ICONS.thumbsUp} className="text-[10px]" /> 有
             </button>
             <button
               onClick={() => handleVote(false)}
               disabled={voting}
-              className={`px-2 py-1 rounded text-xs font-medium transition-colors cursor-pointer ${
+              className={`px-2 py-1 rounded text-xs font-medium transition-colors cursor-pointer flex items-center gap-1 ${
                 feature.user_vote === false
-                  ? 'bg-red-500 text-white'
-                  : 'bg-gray-100 text-gray-500 hover:bg-red-100 hover:text-red-700'
+                  ? 'bg-error text-white'
+                  : 'bg-surface-alt text-text-secondary hover:bg-error/10 hover:text-error'
               }`}
             >
-              ❌ 沒有
+              <FontAwesomeIcon icon={NAV_ICONS.thumbsDown} className="text-[10px]" /> 沒有
             </button>
           </>
         ) : (
-          <span className="text-xs text-gray-400">登入投票</span>
+          <span className="text-xs text-text-secondary/60">登入投票</span>
         )}
       </div>
     </div>
@@ -113,11 +121,11 @@ export default function FeatureVoting({ spotId, groups, userId, onVoted }: Props
         const isExpanded = expandedGroup === group.group_key
 
         return (
-          <div key={group.group_key} className="rounded-xl border overflow-hidden">
+          <div key={group.group_key} className="rounded-xl border border-border overflow-hidden">
             {/* Group header */}
             <button
               onClick={() => setExpandedGroup(isExpanded ? null : group.group_key)}
-              className="w-full flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors"
+              className="w-full flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-surface-alt/50 transition-colors"
               style={{ borderLeft: `4px solid ${group.color}` }}
             >
               <div className="flex items-center gap-2">
@@ -125,10 +133,10 @@ export default function FeatureVoting({ spotId, groups, userId, onVoted }: Props
                   className="w-3 h-3 rounded-full flex-shrink-0"
                   style={{ backgroundColor: group.color }}
                 />
-                <span className="font-medium text-sm text-gray-800">
+                <span className="font-medium text-sm text-text-main">
                   {group.group_name}
                 </span>
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-text-secondary/60">
                   {confirmedCount}/{group.features.length}
                 </span>
               </div>
@@ -139,22 +147,32 @@ export default function FeatureVoting({ spotId, groups, userId, onVoted }: Props
                   {group.features
                     .filter(f => f.status === 'confirmed')
                     .slice(0, 6)
-                    .map((f, i) => (
-                      <span key={i} className="text-sm">{f.icon}</span>
-                    ))}
+                    .map((f, i) => {
+                      const faIcon = getFeatureIcon(f.key)
+                      return (
+                        <span key={i} className="text-sm" style={{ color: group.color }}>
+                          {faIcon ? (
+                            <FontAwesomeIcon icon={faIcon} className="text-xs" />
+                          ) : (
+                            f.icon
+                          )}
+                        </span>
+                      )
+                    })}
                   {confirmedCount > 6 && (
-                    <span className="text-xs text-gray-400">+{confirmedCount - 6}</span>
+                    <span className="text-xs text-text-secondary/60">+{confirmedCount - 6}</span>
                   )}
                 </div>
-                <span className="text-gray-400 text-sm">
-                  {isExpanded ? '▲' : '▼'}
-                </span>
+                <FontAwesomeIcon
+                  icon={isExpanded ? NAV_ICONS.chevronUp : NAV_ICONS.chevronDown}
+                  className="text-text-secondary text-xs"
+                />
               </div>
             </button>
 
             {/* Expanded feature list */}
             {isExpanded && (
-              <div className="px-2 pb-2 space-y-1 border-t bg-gray-50/50">
+              <div className="px-2 pb-2 space-y-1 border-t border-border bg-surface-alt/30">
                 {group.features.map((feature) => (
                   <FeatureRow
                     key={feature.id}

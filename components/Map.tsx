@@ -4,6 +4,8 @@ import { useRef, useCallback, useState, useEffect } from 'react'
 import ReactMapGL, { Marker, Popup, NavigationControl, MapRef, MapMouseEvent } from 'react-map-gl/maplibre'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { supabase, type Spot, type SpotCategory, CATEGORY_EMOJI, CATEGORY_LABEL } from '@/lib/supabase'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { NAV_ICONS } from '@/lib/icons'
 import AddSpotModal from './AddSpotModal'
 import SpotDetail from './SpotDetail'
 import Header from './Header'
@@ -23,10 +25,10 @@ const MAP_STYLE = {
 }
 
 const QUALITY_BADGE: Record<string, { label: string; color: string }> = {
-  excellent: { label: '精選', color: 'bg-yellow-400 text-yellow-900' },
-  good: { label: '優質', color: 'bg-green-400 text-green-900' },
-  fair: { label: '普通', color: 'bg-gray-300 text-gray-700' },
-  poor: { label: '待改善', color: 'bg-red-300 text-red-900' },
+  excellent: { label: '精選', color: 'bg-accent/20 text-secondary' },
+  good: { label: '優質', color: 'bg-primary-light/20 text-primary-dark' },
+  fair: { label: '普通', color: 'bg-surface-alt text-text-secondary' },
+  poor: { label: '待改善', color: 'bg-error/10 text-error' },
   unrated: { label: '', color: '' },
 }
 
@@ -66,8 +68,6 @@ export default function Map() {
     }
 
     async function fetchFeatureFilteredSpots() {
-      // 對每個選中的 feature，找到 vote ≥ 60% 的 spot_ids
-      // 策略：查出所有相關的 feature_votes，在前端計算比例
       const { data: votes, error } = await supabase
         .from('feature_votes')
         .select('spot_id, feature_id, vote')
@@ -78,7 +78,6 @@ export default function Map() {
         return
       }
 
-      // 按 (spot_id, feature_id) 分組計算投票比例
       const voteMap = new globalThis.Map<string, { yes: number; total: number }>()
       for (const v of votes) {
         const key = `${v.spot_id}::${v.feature_id}`
@@ -88,7 +87,6 @@ export default function Map() {
         if (v.vote) entry.yes++
       }
 
-      // 對每個 feature，找到 ≥ 60% 的 spot_ids
       const perFeatureSpots = new globalThis.Map<string, Set<string>>()
       for (const fId of selectedFeatures) {
         perFeatureSpots.set(fId, new Set())
@@ -102,7 +100,6 @@ export default function Map() {
         }
       }
 
-      // 取交集：spot 必須滿足所有選中的特性
       let result: Set<string> | null = null
       for (const spotSet of perFeatureSpots.values()) {
         if (result === null) {
@@ -126,24 +123,23 @@ export default function Map() {
   }, [])
 
   const filteredSpots = spots.filter(s => {
-    // 類型篩選
     if (activeFilter !== 'all' && s.category !== activeFilter) return false
-    // 特性篩選
     if (featureSpotIds !== null && !featureSpotIds.has(s.id)) return false
     return true
   })
 
   return (
     <div className="relative w-full h-full">
-      {/* Header（由另一個 sub-agent 維護） */}
       <Header spotCount={filteredSpots.length} loading={loading} />
 
       {/* Category Filter Bar */}
-      <div className="absolute top-14 left-0 right-0 z-10 px-3 py-2 flex gap-2 overflow-x-auto bg-white/80 backdrop-blur-sm">
+      <div className="absolute top-14 left-0 right-0 z-10 px-3 py-2 flex gap-2 overflow-x-auto bg-surface/80 backdrop-blur-sm">
         <button
           onClick={() => setActiveFilter('all')}
           className={`flex-shrink-0 px-3 py-1 rounded-full text-sm font-medium border transition-colors ${
-            activeFilter === 'all' ? 'bg-green-600 text-white border-green-600' : 'bg-white text-gray-600 border-gray-300'
+            activeFilter === 'all'
+              ? 'bg-primary text-text-on-primary border-primary'
+              : 'bg-surface text-text-secondary border-border'
           }`}
         >
           全部
@@ -153,7 +149,9 @@ export default function Map() {
             key={cat}
             onClick={() => setActiveFilter(cat)}
             className={`flex-shrink-0 px-3 py-1 rounded-full text-sm font-medium border transition-colors ${
-              activeFilter === cat ? 'bg-green-600 text-white border-green-600' : 'bg-white text-gray-600 border-gray-300'
+              activeFilter === cat
+                ? 'bg-primary text-text-on-primary border-primary'
+                : 'bg-surface text-text-secondary border-border'
             }`}
           >
             {CATEGORY_EMOJI[cat]} {CATEGORY_LABEL[cat]}
@@ -168,8 +166,9 @@ export default function Map() {
       />
 
       {/* Add Spot Hint */}
-      <div className="absolute bottom-8 right-4 z-10 bg-green-600 text-white rounded-xl shadow-md px-4 py-2 text-sm">
-        點地圖新增地點 ➕
+      <div className="absolute bottom-8 right-4 z-10 bg-primary text-text-on-primary rounded-xl shadow-md px-4 py-2 text-sm flex items-center gap-2">
+        點地圖新增地點
+        <FontAwesomeIcon icon={NAV_ICONS.plus} className="text-xs" />
       </div>
 
       <ReactMapGL
@@ -183,6 +182,7 @@ export default function Map() {
       >
         <NavigationControl position="top-right" />
 
+        {/* Map Markers keep emoji for better visibility */}
         {filteredSpots.map((spot) => (
           <Marker
             key={spot.id}
@@ -214,9 +214,9 @@ export default function Map() {
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-2xl">{CATEGORY_EMOJI[selectedSpot.category]}</span>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-bold text-gray-800 text-base truncate">{selectedSpot.name}</h3>
+                  <h3 className="font-bold text-text-main text-base truncate">{selectedSpot.name}</h3>
                   <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="text-xs text-green-600 font-medium">
+                    <span className="text-xs text-primary font-medium">
                       {CATEGORY_LABEL[selectedSpot.category]}
                     </span>
                     {selectedSpot.quality && selectedSpot.quality !== 'unrated' && QUALITY_BADGE[selectedSpot.quality] && (
@@ -227,8 +227,8 @@ export default function Map() {
                     {selectedSpot.is_free !== undefined && selectedSpot.is_free !== null && (
                       <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium ${
                         selectedSpot.is_free
-                          ? 'bg-emerald-100 text-emerald-700'
-                          : 'bg-orange-100 text-orange-700'
+                          ? 'bg-primary-light/20 text-primary-dark'
+                          : 'bg-accent/20 text-secondary'
                       }`}>
                         {selectedSpot.is_free ? '免費' : '付費'}
                       </span>
@@ -237,29 +237,32 @@ export default function Map() {
                 </div>
               </div>
               {selectedSpot.description && (
-                <p className="text-sm text-gray-600 mb-1">{selectedSpot.description}</p>
+                <p className="text-sm text-text-secondary mb-1">{selectedSpot.description}</p>
               )}
               {selectedSpot.address && (
-                <p className="text-xs text-gray-500 mb-1">📍 {selectedSpot.address}</p>
+                <p className="text-xs text-text-secondary mb-1 flex items-center gap-1">
+                  <FontAwesomeIcon icon={NAV_ICONS.location} className="text-primary" />
+                  {selectedSpot.address}
+                </p>
               )}
-              <p className="text-xs text-gray-400 mt-1">
-                🧭 {selectedSpot.latitude.toFixed(4)}, {selectedSpot.longitude.toFixed(4)}
+              <p className="text-xs text-text-secondary/60 mt-1">
+                {selectedSpot.latitude.toFixed(4)}, {selectedSpot.longitude.toFixed(4)}
               </p>
               <button
                 onClick={() => {
                   setDetailSpot(selectedSpot)
                   setSelectedSpot(null)
                 }}
-                className="mt-2 w-full text-center text-sm font-medium text-green-600 hover:text-green-700 py-1.5 rounded-lg hover:bg-green-50 transition-colors cursor-pointer"
+                className="mt-2 w-full text-center text-sm font-medium text-primary hover:text-primary-dark py-1.5 rounded-lg hover:bg-primary-light/10 transition-colors cursor-pointer flex items-center justify-center gap-1"
               >
-                查看特性詳情 →
+                查看特性詳情
+                <FontAwesomeIcon icon={NAV_ICONS.chevronRight} className="text-xs" />
               </button>
             </div>
           </Popup>
         )}
       </ReactMapGL>
 
-      {/* Add Spot Modal */}
       {addModal && (
         <AddSpotModal
           lat={addModal.lat}
@@ -272,7 +275,6 @@ export default function Map() {
         />
       )}
 
-      {/* Spot Detail Panel */}
       {detailSpot && (
         <SpotDetail
           spot={detailSpot}
