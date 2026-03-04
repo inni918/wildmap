@@ -1,0 +1,6002 @@
+{
+  "source": "https://www.easycamp.com.tw",
+  "scraped_at": "2026-03-05",
+  "features": [
+    {
+      "feature": "小包區",
+      "key": "small_group_area",
+      "easycamp_feature_id": "345",
+      "total_camps": 158,
+      "matched_spots": 53,
+      "camps": [
+        {
+          "store_id": "1451",
+          "name": "宜蘭大同 天際線茶園營地",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2082",
+          "name": "宜蘭大同 松蘿園林露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "1909",
+          "name": "台中和平 吉娃斯景觀咖啡露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "1720",
+          "name": "苗栗泰安 UP露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "1743",
+          "name": "苗栗泰安 藍天嶺露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2661",
+          "name": "宜蘭大同 飛亞蘭",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2666",
+          "name": "雲林虎尾 富士春休閒景莊",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2502",
+          "name": "宜蘭大同 斯揚莫那休閒莊園",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2509",
+          "name": "新竹尖石 夢田露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2145",
+          "name": "嘉義竹崎 天一露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2516",
+          "name": "新竹尖石 晴空森林露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2175",
+          "name": "桃園中壢 水樂活親子農場",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "1278",
+          "name": "嘉義阿里山 受不寮露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2584",
+          "name": "桃園復興 拉拉山 塔曼之光露營區",
+          "elevation": "1501m以上"
+        },
+        {
+          "store_id": "1813",
+          "name": "苗栗南庄 長青露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2668",
+          "name": "新竹關西 石牛山露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2639",
+          "name": "苗栗南庄 向天湖露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2660",
+          "name": "南投魚池 日月潭 富城河紅茶體驗館",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2670",
+          "name": "宜蘭礁溪 充電莊露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2636",
+          "name": "南投魚池 魚宙露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2435",
+          "name": "桃園復興 可飛鹿營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2642",
+          "name": "嘉義番路 天長地久露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "974",
+          "name": "苗栗泰安 馬嘟溪露營基地",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "837",
+          "name": "新竹尖石 高台山露營區(一般營位/輕露營)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "700",
+          "name": "桃園復興 拉拉山 雲河露營農場",
+          "elevation": "1501m以上"
+        },
+        {
+          "store_id": "1981",
+          "name": "苗栗大湖 四季非露不可 (豪華野營/一般營位)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2155",
+          "name": "苗栗大湖 四季非露不可 (露營屋)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "1702",
+          "name": "苗栗卓蘭 逸香園農場",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "1779",
+          "name": "新竹尖石 小尖石露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "958",
+          "name": "苗栗泰安 綠野雲仙露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "661",
+          "name": "桃園復興 拉拉山 夢想家園露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "1644",
+          "name": "苗栗南庄 紅毛印象露營窩",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2059",
+          "name": "南投國姓 水中月民宿露營",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "899",
+          "name": "苗栗南庄 林泉休閒露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "798",
+          "name": "新竹尖石 恩典露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2154",
+          "name": "新竹五峰 楠桂坊露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "693",
+          "name": "桃園復興 拉拉山 遠見之星露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "674",
+          "name": "桃園復興 拉拉山 木村的家露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "1498",
+          "name": "花蓮玉里 森林露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "698",
+          "name": "桃園復興 拉拉山 雅比斯露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2055",
+          "name": "新竹五峰 KT露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2076",
+          "name": "南投魚池 涵香小屋露營驛站",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "1441",
+          "name": "宜蘭冬山 梅花湖休閒農場",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2158",
+          "name": "桃園復興 卡普休閒農莊",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2160",
+          "name": "苗栗三義 景庭露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "835",
+          "name": "新竹尖石  馬胎仙境(自搭帳/輕露營)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2283",
+          "name": "苗栗大湖 福人居露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2444",
+          "name": "新竹五峰 戀戀天湖",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2555",
+          "name": "苗栗通霄 南窩綠丘",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2646",
+          "name": "苗栗大湖 夢之谷露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2650",
+          "name": "嘉義阿里山 牧匠露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2302",
+          "name": "新竹五峰 梅后蔓露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2464",
+          "name": "苗栗泰安 星樂親子露營",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2568",
+          "name": "宜蘭大同 露營樂7號店(狩獵帳)圓頂館",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2658",
+          "name": "南投國姓 金青松露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2312",
+          "name": "南投中寮 鶴里翁露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2473",
+          "name": "新竹尖石 馬胎227露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2575",
+          "name": "苗栗南庄 清景農場(肖楠美地)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2591",
+          "name": "嘉義梅山 鷺野之家",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2319",
+          "name": "嘉義竹崎 仙腳趾景觀露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2480",
+          "name": "南投鹿谷 三生園生態露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2496",
+          "name": "新竹五峰 輪園秘境",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2598",
+          "name": "苗栗公館 橄欖莊園",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2338",
+          "name": "苗栗泰安 朵悠露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2609",
+          "name": "新竹尖石 景色天地露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2671",
+          "name": "嘉義梅山 1696露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2344",
+          "name": "苗栗 杜石地一號",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2378",
+          "name": "宜蘭大同 原最露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2616",
+          "name": "南投魚池 念念小憩",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2396",
+          "name": "台中石岡 九甲林 (一般營位)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2630",
+          "name": "南投魚池 愛心露營地",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2419",
+          "name": "宜蘭大同 夏諾營露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2522",
+          "name": "高雄那瑪夏 貴梅露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2633",
+          "name": "新竹五峰 天湖秘境露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2207",
+          "name": "苗栗南庄 春友彩虹民宿 餐廳 露營",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2431",
+          "name": "台中新社 星空yay語露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2541",
+          "name": "桃園復興 塔木休閒露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2637",
+          "name": "新竹北埔 旅人山泉農場",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2225",
+          "name": "新竹橫山 遊橘露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2439",
+          "name": "桃園復興 福田美地",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2547",
+          "name": "台東延平 一零八零1080",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2644",
+          "name": "南投竹山 深山林內生態農場",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2288",
+          "name": "新竹尖石 歐莎露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2451",
+          "name": "宜蘭大同 幸福瑪崙露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2560",
+          "name": "新竹橫山 福興小農庄",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2647",
+          "name": "嘉義番路 星晴朗露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2653",
+          "name": "南投魚池 溪泮小屋",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2305",
+          "name": "南投埔里 農家樂露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2471",
+          "name": "宜蘭大同 雲端紅土咖啡露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2570",
+          "name": "宜蘭大同 圓頂360(一般營位)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2659",
+          "name": "苗栗南庄 楓美露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2315",
+          "name": "南投埔里 ToMe 桃米生態露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2476",
+          "name": "台中新社 天冷吹雲",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2592",
+          "name": "桃園復興 溫度露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2662",
+          "name": "苗栗泰安 沐嵐語Camping",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2015",
+          "name": "新竹尖石 綠宥子甜柿果園露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2321",
+          "name": "苗栗南庄 南庄慢生活露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2483",
+          "name": "桃園復興 石秀灣五葉松露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2499",
+          "name": "新竹尖石 怡然自德",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2606",
+          "name": "嘉義阿里山 禾田農莊",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2060",
+          "name": "苗栗泰安 瑪都安露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2339",
+          "name": "雲林林內 逸境生態露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2346",
+          "name": "桃園復興 泰雅秘境露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2506",
+          "name": "新竹尖石 月伴灣露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2612",
+          "name": "南投中寮 依星生態農場",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2105",
+          "name": "宜蘭南澳 老柯野外探險營地(原老柯農莊)",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2380",
+          "name": "嘉義梅山 琢英露營場",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2510",
+          "name": "桃園復興 沒搞頭露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2618",
+          "name": "桃園復興 布納星空露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2403",
+          "name": "新竹尖石 玉峰 星光閃閃露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2517",
+          "name": "新竹尖石 溪遊記露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2631",
+          "name": "南投埔里 龍泉營地",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2204",
+          "name": "苗栗南庄 有鬼露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2420",
+          "name": "桃園復興 好馨勤齊露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2524",
+          "name": "嘉義番路 星知心露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2635",
+          "name": "南投中寮 長壽天然農場",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2213",
+          "name": "高雄六龜 荖濃有機農場露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2432",
+          "name": "苗栗三義 五福山莊",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2544",
+          "name": "新竹新埔 挪亞星舟露營農莊",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2226",
+          "name": "新竹尖石 印象尖石露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2441",
+          "name": "新竹五峰 喜來登露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2550",
+          "name": "桃園復興 拉拉山 微風山崚",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2645",
+          "name": "新竹尖石 梅花梯田免裝備露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2649",
+          "name": "南投仁愛 樸溯生活露營原區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2293",
+          "name": "嘉義番路 好柿抵嘉農場",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2458",
+          "name": "南投埔里 湯尼瑪麗露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2562",
+          "name": "南投中寮 賞星月慕 露營樂6號店(狩獵帳)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2657",
+          "name": "新竹五峰 憶起享露露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2306",
+          "name": "嘉義阿里山  高美休閒營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2472",
+          "name": "桃園復興 達彥休閒露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2573",
+          "name": "苗栗泰安 寬闊露營區(狩獵帳)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2589",
+          "name": "桃園復興 拉拉山 天恩農場(狩獵帳)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2318",
+          "name": "嘉義竹崎 塘湖古道露營農場",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2478",
+          "name": "南投埔里 LOLO農場-休閒露營園區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2595",
+          "name": "苗栗南庄 啊露吧Camping聖地",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2664",
+          "name": "新竹關西 樸真園六曲窩生態園區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2336",
+          "name": "桃園復興 八度野溪(一般營位)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2488",
+          "name": "南投仁愛 畫眉園露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2501",
+          "name": "台南左鎮 露營樂1號店(狩獵帳)左鎮旗艦店",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2608",
+          "name": "新竹尖石 樓蜜香菇農場",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2342",
+          "name": "新竹五峰 蘇珊藏美露營農場",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2371",
+          "name": "南投埔里 桃米山生態露營地",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2507",
+          "name": "新竹尖石 烏米的家露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2613",
+          "name": "桃園復興 馬灣露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2112",
+          "name": "嘉義阿里山 倉伯露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2395",
+          "name": "南投中寮 言葉之庭(包場制)",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2515",
+          "name": "嘉義番路 花田小露",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2628",
+          "name": "苗栗南庄 裕見生活",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2164",
+          "name": "桃園復興 融奎霖露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2415",
+          "name": "新竹尖石 參陳山內灣旅店營地",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2518",
+          "name": "嘉義番路 草地狀元露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2632",
+          "name": "嘉義阿里山 荒郊野外露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "723",
+          "name": "新竹五峰 尤瑪山莊",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2205",
+          "name": "南投信義 雙龍景觀露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2428",
+          "name": "桃園復興 八度野溪(狩獵帳/露營車)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2528",
+          "name": "桃園復興 馬莎度露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2214",
+          "name": "嘉義番路 岩仔腳(一般營位)",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2546",
+          "name": "桃園復興 逍遙遊秘境露營區",
+          "elevation": "301-500m"
+        }
+      ]
+    },
+    {
+      "feature": "有雲海",
+      "key": "sea_of_clouds",
+      "easycamp_feature_id": "353",
+      "total_camps": 96,
+      "matched_spots": 22,
+      "camps": [
+        {
+          "store_id": "2082",
+          "name": "宜蘭大同 松蘿園林露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "1743",
+          "name": "苗栗泰安 藍天嶺露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2504",
+          "name": "新竹尖石 臻美營地(狩獵帳)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "1278",
+          "name": "嘉義阿里山 受不寮露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2509",
+          "name": "新竹尖石 夢田露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2516",
+          "name": "新竹尖石 晴空森林露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2584",
+          "name": "桃園復興 拉拉山 塔曼之光露營區",
+          "elevation": "1501m以上"
+        },
+        {
+          "store_id": "837",
+          "name": "新竹尖石 高台山露營區(一般營位/輕露營)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "700",
+          "name": "桃園復興 拉拉山 雲河露營農場",
+          "elevation": "1501m以上"
+        },
+        {
+          "store_id": "1981",
+          "name": "苗栗大湖 四季非露不可 (豪華野營/一般營位)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2155",
+          "name": "苗栗大湖 四季非露不可 (露營屋)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "695",
+          "name": "桃園復興 拉拉山 長榮露營區",
+          "elevation": "1501m以上"
+        },
+        {
+          "store_id": "931",
+          "name": "苗栗泰安 一片天(一般營位/露營車/露營屋)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "958",
+          "name": "苗栗泰安 綠野雲仙露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "787",
+          "name": "新竹尖石 梅花天湖農園",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "661",
+          "name": "桃園復興 拉拉山 夢想家園露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2171",
+          "name": "新竹尖石 馬美欣欣營地",
+          "elevation": "1501m以上"
+        },
+        {
+          "store_id": "1942",
+          "name": "南投仁愛 清境陽光露營",
+          "elevation": "1501m以上"
+        },
+        {
+          "store_id": "693",
+          "name": "桃園復興 拉拉山 遠見之星露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "674",
+          "name": "桃園復興 拉拉山 木村的家露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "698",
+          "name": "桃園復興 拉拉山 雅比斯露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2151",
+          "name": "新竹尖石 馬月台露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "795",
+          "name": "新竹尖石 臻美營地 (空中帳篷)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2158",
+          "name": "桃園復興 卡普休閒農莊",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "835",
+          "name": "新竹尖石  馬胎仙境(自搭帳/輕露營)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2446",
+          "name": "苗栗南庄 南山傳奇(狩獵帳)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2589",
+          "name": "桃園復興 拉拉山 天恩農場(狩獵帳)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2486",
+          "name": "新竹五峰 愛上天湖(狩獵帳)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2603",
+          "name": "嘉義阿里山 達明休憩農場",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2112",
+          "name": "嘉義阿里山 倉伯露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2496",
+          "name": "新竹五峰 輪園秘境",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2612",
+          "name": "南投中寮 依星生態農場",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2633",
+          "name": "新竹五峰 天湖秘境露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2645",
+          "name": "新竹尖石 梅花梯田免裝備露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2192",
+          "name": "嘉義竹崎 景山露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2510",
+          "name": "桃園復興 沒搞頭露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2659",
+          "name": "苗栗南庄 楓美露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2208",
+          "name": "苗栗南庄 南山傳奇(自搭帳/露營車)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2524",
+          "name": "嘉義番路 星知心露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2533",
+          "name": "新竹五峰 馬瀨營地",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2272",
+          "name": "新竹尖石 自然野趣(狩獵帳)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2302",
+          "name": "新竹五峰 梅后蔓露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2542",
+          "name": "桃園復興 谷力農場(狩獵帳)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2342",
+          "name": "新竹五峰 蘇珊藏美露營農場",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2550",
+          "name": "桃園復興 拉拉山 微風山崚",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "723",
+          "name": "新竹五峰 尤瑪山莊",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2403",
+          "name": "新竹尖石 玉峰 星光閃閃露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2563",
+          "name": "新竹尖石 馬胎仙境(狩獵帳)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2443",
+          "name": "桃園復興 美腿山親子露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2585",
+          "name": "桃園復興 達拉蓋(狩獵帳)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "1757",
+          "name": "新竹五峰 愛上天湖(一般營位/露營屋)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2452",
+          "name": "新竹五峰 觀雲露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2590",
+          "name": "南投魚池 空若水營地",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2489",
+          "name": "新竹尖石 高台山(狩獵帳)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2605",
+          "name": "嘉義番路 阿里山 龍頂山(狩獵帳)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2498",
+          "name": "桃園復興 亞霧香草營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2618",
+          "name": "桃園復興 布納星空露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2507",
+          "name": "新竹尖石 烏米的家露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2635",
+          "name": "南投中寮 長壽天然農場",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2648",
+          "name": "嘉義阿里山 鹿過好美露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2204",
+          "name": "苗栗南庄 有鬼露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2512",
+          "name": "新竹五峰 漫步天湖(狩獵帳)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2528",
+          "name": "桃園復興 馬莎度露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2662",
+          "name": "苗栗泰安 沐嵐語Camping",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2213",
+          "name": "高雄六龜 荖濃有機農場露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2537",
+          "name": "嘉義阿里山 來灣哈露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2282",
+          "name": "苗栗三義 溫馨休閒農場",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2306",
+          "name": "嘉義阿里山  高美休閒營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2548",
+          "name": "嘉義梅山 太和小木屋露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2363",
+          "name": "新竹五峰 空軍一號",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2556",
+          "name": "新竹尖石 觀星賞月營地",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2413",
+          "name": "嘉義番路  阿里山 龍頂山(一般營位)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2565",
+          "name": "嘉義番路 露營樂9號店(狩獵帳)阿里山草堂",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2444",
+          "name": "新竹五峰 戀戀天湖",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2588",
+          "name": "苗栗南庄 達喇改露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "1810",
+          "name": "新竹尖石 自然野趣(一般營位)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2476",
+          "name": "台中新社 天冷吹雲",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2591",
+          "name": "嘉義梅山 鷺野之家",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2490",
+          "name": "嘉義阿里山  晨光(狩獵帳)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2609",
+          "name": "新竹尖石 景色天地露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2499",
+          "name": "新竹尖石 怡然自德",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2624",
+          "name": "苗栗大湖 石門客棧露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2183",
+          "name": "苗栗銅鑼 自由露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2644",
+          "name": "南投竹山 深山林內生態農場",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2650",
+          "name": "嘉義阿里山 牧匠露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2205",
+          "name": "南投信義 雙龍景觀露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2529",
+          "name": "桃園復興 拉拉山 微笑草地",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2671",
+          "name": "嘉義梅山 1696露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2267",
+          "name": "嘉義阿里山 拉拉克斯莊園",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2541",
+          "name": "桃園復興 塔木休閒露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2283",
+          "name": "苗栗大湖 福人居露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2315",
+          "name": "南投埔里 ToMe 桃米生態露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2549",
+          "name": "新竹尖石 玉峰 光漫營地",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2374",
+          "name": "台中和平 摩天嶺楊園露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2557",
+          "name": "嘉義番路 淺山尋露(青峯製茶所)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2442",
+          "name": "新竹五峰 漫步天湖(一般營位)",
+          "elevation": "1001-1500m"
+        }
+      ]
+    },
+    {
+      "feature": "裝備出租",
+      "key": "equipment_rental",
+      "easycamp_feature_id": "348",
+      "total_camps": 27,
+      "matched_spots": 34,
+      "camps": [
+        {
+          "store_id": "2175",
+          "name": "桃園中壢 水樂活親子農場",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2639",
+          "name": "苗栗南庄 向天湖露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2435",
+          "name": "桃園復興 可飛鹿營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "974",
+          "name": "苗栗泰安 馬嘟溪露營基地",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "1981",
+          "name": "苗栗大湖 四季非露不可 (豪華野營/一般營位)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2155",
+          "name": "苗栗大湖 四季非露不可 (露營屋)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "1702",
+          "name": "苗栗卓蘭 逸香園農場",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2040",
+          "name": "南投埔里 樂活森林(一般營位)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "674",
+          "name": "桃園復興 拉拉山 木村的家露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2158",
+          "name": "桃園復興 卡普休閒農莊",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2363",
+          "name": "新竹五峰 空軍一號",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2439",
+          "name": "桃園復興 福田美地",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2507",
+          "name": "新竹尖石 烏米的家露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2598",
+          "name": "苗栗公館 橄欖莊園",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2653",
+          "name": "南投魚池 溪泮小屋",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "1757",
+          "name": "新竹五峰 愛上天湖(一般營位/露營屋)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2105",
+          "name": "宜蘭南澳 老柯野外探險營地(原老柯農莊)",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2318",
+          "name": "嘉義竹崎 塘湖古道露營農場",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2419",
+          "name": "宜蘭大同 夏諾營露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2473",
+          "name": "新竹尖石 馬胎227露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2541",
+          "name": "桃園復興 塔木休閒露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2208",
+          "name": "苗栗南庄 南山傳奇(自搭帳/露營車)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2321",
+          "name": "苗栗南庄 南庄慢生活露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2499",
+          "name": "新竹尖石 怡然自德",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2575",
+          "name": "苗栗南庄 清景農場(肖楠美地)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2652",
+          "name": "南投魚池 溪泮別館",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2315",
+          "name": "南投埔里 ToMe 桃米生態露營區",
+          "elevation": "501-800m"
+        }
+      ]
+    },
+    {
+      "feature": "少帳包場",
+      "key": "small_group_area",
+      "easycamp_feature_id": "357",
+      "total_camps": 61,
+      "matched_spots": 53,
+      "camps": [
+        {
+          "store_id": "1909",
+          "name": "台中和平 吉娃斯景觀咖啡露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2493",
+          "name": "嘉義阿里山 羅老爸的家",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2667",
+          "name": "嘉義阿里山 獵人書坊",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2564",
+          "name": "嘉義竹崎 阿里山螢火蟲(狩獵帳)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2412",
+          "name": "高雄內門 茂升山林",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2636",
+          "name": "南投魚池 魚宙露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2668",
+          "name": "新竹關西 石牛山露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "1813",
+          "name": "苗栗南庄 長青露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2145",
+          "name": "嘉義竹崎 天一露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2509",
+          "name": "新竹尖石 夢田露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2579",
+          "name": "嘉義阿里山 瓜地亞那Gwaliana",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "695",
+          "name": "桃園復興 拉拉山 長榮露營區",
+          "elevation": "1501m以上"
+        },
+        {
+          "store_id": "661",
+          "name": "桃園復興 拉拉山 夢想家園露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2059",
+          "name": "南投國姓 水中月民宿露營",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "1090",
+          "name": "南投國姓 地球村休閒農場",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "1942",
+          "name": "南投仁愛 清境陽光露營",
+          "elevation": "1501m以上"
+        },
+        {
+          "store_id": "674",
+          "name": "桃園復興 拉拉山 木村的家露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "1988",
+          "name": "南投仁愛 月夢田露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2055",
+          "name": "新竹五峰 KT露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2363",
+          "name": "新竹五峰 空軍一號",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2603",
+          "name": "嘉義阿里山 達明休憩農場",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2395",
+          "name": "南投中寮 言葉之庭(包場制)",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2632",
+          "name": "嘉義阿里山 荒郊野外露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2440",
+          "name": "新竹新埔 明園星空營地",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2647",
+          "name": "嘉義番路 星晴朗露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2652",
+          "name": "南投魚池 溪泮別館",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2510",
+          "name": "桃園復興 沒搞頭露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2537",
+          "name": "嘉義阿里山 來灣哈露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2548",
+          "name": "嘉義梅山 太和小木屋露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2557",
+          "name": "嘉義番路 淺山尋露(青峯製茶所)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2588",
+          "name": "苗栗南庄 達喇改露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2207",
+          "name": "苗栗南庄 春友彩虹民宿 餐廳 露營",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2597",
+          "name": "苗栗卓蘭 頤生園露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2371",
+          "name": "南投埔里 桃米山生態露營地",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2624",
+          "name": "苗栗大湖 石門客棧露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2456",
+          "name": "南投仁愛 樹不老露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2648",
+          "name": "嘉義阿里山 鹿過好美露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2498",
+          "name": "桃園復興 亞霧香草營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2662",
+          "name": "苗栗泰安 沐嵐語Camping",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2529",
+          "name": "桃園復興 拉拉山 微笑草地",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2544",
+          "name": "新竹新埔 挪亞星舟露營農莊",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2549",
+          "name": "新竹尖石 玉峰 光漫營地",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2558",
+          "name": "南投仁愛 旅人蕉小棧",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2574",
+          "name": "南投埔里 暮雲春樹",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2592",
+          "name": "桃園復興 溫度露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2282",
+          "name": "苗栗三義 溫馨休閒農場",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2602",
+          "name": "新北烏來 頭目山水",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2380",
+          "name": "嘉義梅山 琢英露營場",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2630",
+          "name": "南投魚池 愛心露營地",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2420",
+          "name": "桃園復興 好馨勤齊露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2637",
+          "name": "新竹北埔 旅人山泉農場",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2460",
+          "name": "桃園復興 比亞山露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2651",
+          "name": "新竹尖石 布度努Btunux",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2664",
+          "name": "新竹關西 樸真園六曲窩生態園區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2533",
+          "name": "新竹五峰 馬瀨營地",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2672",
+          "name": "南投魚池 日月潭 Lulu微居",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2547",
+          "name": "台東延平 一零八零1080",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2550",
+          "name": "桃園復興 拉拉山 微風山崚",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2559",
+          "name": "苗栗銅鑼 悠嵐曉境",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2183",
+          "name": "苗栗銅鑼 自由露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2594",
+          "name": "桃園復興 貳柒珈琲露營區",
+          "elevation": "301-500m"
+        }
+      ]
+    },
+    {
+      "feature": "團露大空間",
+      "key": null,
+      "easycamp_feature_id": "344",
+      "total_camps": 54,
+      "matched_spots": 0,
+      "camps": [
+        {
+          "store_id": "2082",
+          "name": "宜蘭大同 松蘿園林露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "1720",
+          "name": "苗栗泰安 UP露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "1743",
+          "name": "苗栗泰安 藍天嶺露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2639",
+          "name": "苗栗南庄 向天湖露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2426",
+          "name": "宜蘭冬山 山谷樂生態露營園區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2412",
+          "name": "高雄內門 茂升山林",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2435",
+          "name": "桃園復興 可飛鹿營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2175",
+          "name": "桃園中壢 水樂活親子農場",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2636",
+          "name": "南投魚池 魚宙露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2307",
+          "name": "南投埔里 遇見東平莊園",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2642",
+          "name": "嘉義番路 天長地久露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2504",
+          "name": "新竹尖石 臻美營地(狩獵帳)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "794",
+          "name": "新竹尖石 尤命築園露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "1455",
+          "name": "宜蘭大同 幸福城景觀露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "700",
+          "name": "桃園復興 拉拉山 雲河露營農場",
+          "elevation": "1501m以上"
+        },
+        {
+          "store_id": "931",
+          "name": "苗栗泰安 一片天(一般營位/露營車/露營屋)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "1644",
+          "name": "苗栗南庄 紅毛印象露營窩",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "1529",
+          "name": "台東卑南 初鹿椰子林",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "1441",
+          "name": "宜蘭冬山 梅花湖休閒農場",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2208",
+          "name": "苗栗南庄 南山傳奇(自搭帳/露營車)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2618",
+          "name": "桃園復興 布納星空露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2226",
+          "name": "新竹尖石 印象尖石露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2312",
+          "name": "南投中寮 鶴里翁露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2645",
+          "name": "新竹尖石 梅花梯田免裝備露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2374",
+          "name": "台中和平 摩天嶺楊園露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2451",
+          "name": "宜蘭大同 幸福瑪崙露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2464",
+          "name": "苗栗泰安 星樂親子露營",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2480",
+          "name": "南投鹿谷 三生園生態露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2534",
+          "name": "嘉義番路 岩仔腳(狩獵帳)",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "1810",
+          "name": "新竹尖石 自然野趣(一般營位)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2570",
+          "name": "宜蘭大同 圓頂360(一般營位)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2164",
+          "name": "桃園復興 融奎霖露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2591",
+          "name": "嘉義梅山 鷺野之家",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2212",
+          "name": "新竹尖石 熊麻吉親子露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2631",
+          "name": "南投埔里 龍泉營地",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2267",
+          "name": "嘉義阿里山 拉拉克斯莊園",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2641",
+          "name": "苗栗後龍 黃金好望角露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2356",
+          "name": "苗栗南庄 南庄麒麟山露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2458",
+          "name": "南投埔里 湯尼瑪麗露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2476",
+          "name": "台中新社 天冷吹雲",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2501",
+          "name": "台南左鎮 露營樂1號店(狩獵帳)左鎮旗艦店",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2538",
+          "name": "台南楠西 梅嶺露營區(神秘氣場)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2577",
+          "name": "新竹關西 大象露營地",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2601",
+          "name": "南投國姓 新境休憩園",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2213",
+          "name": "高雄六龜 荖濃有機農場露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2369",
+          "name": "南投仁愛 星願村露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2425",
+          "name": "雲林斗六 十三番露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2446",
+          "name": "苗栗南庄 南山傳奇(狩獵帳)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2461",
+          "name": "苗栗三灣 鄉町露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2478",
+          "name": "南投埔里 LOLO農場-休閒露營園區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2551",
+          "name": "新北淡水 甜蜜點休閒莊園Sweet Spot Village",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2105",
+          "name": "宜蘭南澳 老柯野外探險營地(原老柯農莊)",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2586",
+          "name": "高雄六龜 泗高露棧",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2663",
+          "name": "台東台東 碧海星辰休閒農場",
+          "elevation": "300m以下"
+        }
+      ]
+    },
+    {
+      "feature": "有遊戲設施",
+      "key": "playground",
+      "easycamp_feature_id": "351",
+      "total_camps": 119,
+      "matched_spots": 28,
+      "camps": [
+        {
+          "store_id": "2426",
+          "name": "宜蘭冬山 山谷樂生態露營園區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2552",
+          "name": "宜蘭大同 哇吉散悠遊樂園露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2666",
+          "name": "雲林虎尾 富士春休閒景莊",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2504",
+          "name": "新竹尖石 臻美營地(狩獵帳)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2509",
+          "name": "新竹尖石 夢田露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2636",
+          "name": "南投魚池 魚宙露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2670",
+          "name": "宜蘭礁溪 充電莊露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2175",
+          "name": "桃園中壢 水樂活親子農場",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2307",
+          "name": "南投埔里 遇見東平莊園",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "1813",
+          "name": "苗栗南庄 長青露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2642",
+          "name": "嘉義番路 天長地久露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2435",
+          "name": "桃園復興 可飛鹿營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2502",
+          "name": "宜蘭大同 斯揚莫那休閒莊園",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "1035",
+          "name": "南投仁愛 清境小瑞士花園",
+          "elevation": "1501m以上"
+        },
+        {
+          "store_id": "837",
+          "name": "新竹尖石 高台山露營區(一般營位/輕露營)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "1455",
+          "name": "宜蘭大同 幸福城景觀露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "1981",
+          "name": "苗栗大湖 四季非露不可 (豪華野營/一般營位)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2155",
+          "name": "苗栗大湖 四季非露不可 (露營屋)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "1702",
+          "name": "苗栗卓蘭 逸香園農場",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2040",
+          "name": "南投埔里 樂活森林(一般營位)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "1779",
+          "name": "新竹尖石 小尖石露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "958",
+          "name": "苗栗泰安 綠野雲仙露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "661",
+          "name": "桃園復興 拉拉山 夢想家園露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "1644",
+          "name": "苗栗南庄 紅毛印象露營窩",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2059",
+          "name": "南投國姓 水中月民宿露營",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "1092",
+          "name": "南投國姓 小野柳滑草場露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "899",
+          "name": "苗栗南庄 林泉休閒露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2076",
+          "name": "南投魚池 涵香小屋露營驛站",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "795",
+          "name": "新竹尖石 臻美營地 (空中帳篷)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "776",
+          "name": "新竹尖石 玉峰 悠達思露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2542",
+          "name": "桃園復興 谷力農場(狩獵帳)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2645",
+          "name": "新竹尖石 梅花梯田免裝備露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2439",
+          "name": "桃園復興 福田美地",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2653",
+          "name": "南投魚池 溪泮小屋",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2164",
+          "name": "桃園復興 融奎霖露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2451",
+          "name": "宜蘭大同 幸福瑪崙露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2560",
+          "name": "新竹橫山 福興小農庄",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2207",
+          "name": "苗栗南庄 春友彩虹民宿 餐廳 露營",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2460",
+          "name": "桃園復興 比亞山露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2565",
+          "name": "嘉義番路 露營樂9號店(狩獵帳)阿里山草堂",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2573",
+          "name": "苗栗泰安 寬闊露營區(狩獵帳)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2225",
+          "name": "新竹橫山 遊橘露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2476",
+          "name": "台中新社 天冷吹雲",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2577",
+          "name": "新竹關西 大象露營地",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2305",
+          "name": "南投埔里 農家樂露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2484",
+          "name": "台中石岡 九甲林 (狩獵帳)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2489",
+          "name": "新竹尖石 高台山(狩獵帳)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2594",
+          "name": "桃園復興 貳柒珈琲露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2312",
+          "name": "南投中寮 鶴里翁露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2339",
+          "name": "雲林林內 逸境生態露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2601",
+          "name": "南投國姓 新境休憩園",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2346",
+          "name": "桃園復興 泰雅秘境露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2616",
+          "name": "南投魚池 念念小憩",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2378",
+          "name": "宜蘭大同 原最露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2517",
+          "name": "新竹尖石 溪遊記露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2631",
+          "name": "南投埔里 龍泉營地",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2420",
+          "name": "桃園復興 好馨勤齊露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2534",
+          "name": "嘉義番路 岩仔腳(狩獵帳)",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2431",
+          "name": "台中新社 星空yay語露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2543",
+          "name": "新竹峨眉 露營盒子",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2646",
+          "name": "苗栗大湖 夢之谷露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2105",
+          "name": "宜蘭南澳 老柯野外探險營地(原老柯農莊)",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2443",
+          "name": "桃園復興 美腿山親子露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2558",
+          "name": "南投仁愛 旅人蕉小棧",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2658",
+          "name": "南投國姓 金青松露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2456",
+          "name": "南投仁愛 樹不老露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2561",
+          "name": "南投埔里 樂活森林(狩獵帳)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2213",
+          "name": "高雄六龜 荖濃有機農場露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2461",
+          "name": "苗栗三灣 鄉町露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2568",
+          "name": "宜蘭大同 露營樂7號店(狩獵帳)圓頂館",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2574",
+          "name": "南投埔里 暮雲春樹",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2226",
+          "name": "新竹尖石 印象尖石露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2478",
+          "name": "南投埔里 LOLO農場-休閒露營園區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2486",
+          "name": "新竹五峰 愛上天湖(狩獵帳)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2585",
+          "name": "桃園復興 達拉蓋(狩獵帳)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2501",
+          "name": "台南左鎮 露營樂1號店(狩獵帳)左鎮旗艦店",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2597",
+          "name": "苗栗卓蘭 頤生園露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2315",
+          "name": "南投埔里 ToMe 桃米生態露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2342",
+          "name": "新竹五峰 蘇珊藏美露營農場",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2506",
+          "name": "新竹尖石 月伴灣露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2607",
+          "name": "宜蘭大同 五葉松林休閒露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2356",
+          "name": "苗栗南庄 南庄麒麟山露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2510",
+          "name": "桃園復興 沒搞頭露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2624",
+          "name": "苗栗大湖 石門客棧露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2396",
+          "name": "台中石岡 九甲林 (一般營位)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2518",
+          "name": "嘉義番路 草地狀元露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2632",
+          "name": "嘉義阿里山 荒郊野外露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2425",
+          "name": "雲林斗六 十三番露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2541",
+          "name": "桃園復興 塔木休閒露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2550",
+          "name": "桃園復興 拉拉山 微風山崚",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2649",
+          "name": "南投仁愛 樸溯生活露營原區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2444",
+          "name": "新竹五峰 戀戀天湖",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2559",
+          "name": "苗栗銅鑼 悠嵐曉境",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2672",
+          "name": "南投魚池 日月潭 Lulu微居",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2205",
+          "name": "南投信義 雙龍景觀露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2458",
+          "name": "南投埔里 湯尼瑪麗露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2562",
+          "name": "南投中寮 賞星月慕 露營樂6號店(狩獵帳)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2214",
+          "name": "嘉義番路 岩仔腳(一般營位)",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2471",
+          "name": "宜蘭大同 雲端紅土咖啡露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2570",
+          "name": "宜蘭大同 圓頂360(一般營位)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2575",
+          "name": "苗栗南庄 清景農場(肖楠美地)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2293",
+          "name": "嘉義番路 好柿抵嘉農場",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2483",
+          "name": "桃園復興 石秀灣五葉松露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2488",
+          "name": "南投仁愛 畫眉園露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2590",
+          "name": "南投魚池 空若水營地",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2309",
+          "name": "花蓮新城 Ocean Chill 海憩露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2598",
+          "name": "苗栗公館 橄欖莊園",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2319",
+          "name": "嘉義竹崎 仙腳趾景觀露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2345",
+          "name": "苗栗大湖 天藍露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2507",
+          "name": "新竹尖石 烏米的家露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2608",
+          "name": "新竹尖石 樓蜜香菇農場",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2369",
+          "name": "南投仁愛 星願村露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2515",
+          "name": "嘉義番路 花田小露",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2628",
+          "name": "苗栗南庄 裕見生活",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "1757",
+          "name": "新竹五峰 愛上天湖(一般營位/露營屋)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2419",
+          "name": "宜蘭大同 夏諾營露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2528",
+          "name": "桃園復興 馬莎度露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2633",
+          "name": "新竹五峰 天湖秘境露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2663",
+          "name": "台東台東 碧海星辰休閒農場",
+          "elevation": "300m以下"
+        }
+      ]
+    },
+    {
+      "feature": "有雨棚",
+      "key": "covered_area",
+      "easycamp_feature_id": "347",
+      "total_camps": 86,
+      "matched_spots": 28,
+      "camps": [
+        {
+          "store_id": "1451",
+          "name": "宜蘭大同 天際線茶園營地",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2661",
+          "name": "宜蘭大同 飛亞蘭",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2668",
+          "name": "新竹關西 石牛山露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2493",
+          "name": "嘉義阿里山 羅老爸的家",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2552",
+          "name": "宜蘭大同 哇吉散悠遊樂園露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "1813",
+          "name": "苗栗南庄 長青露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2670",
+          "name": "宜蘭礁溪 充電莊露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2502",
+          "name": "宜蘭大同 斯揚莫那休閒莊園",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2666",
+          "name": "雲林虎尾 富士春休閒景莊",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "1035",
+          "name": "南投仁愛 清境小瑞士花園",
+          "elevation": "1501m以上"
+        },
+        {
+          "store_id": "794",
+          "name": "新竹尖石 尤命築園露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "974",
+          "name": "苗栗泰安 馬嘟溪露營基地",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "1455",
+          "name": "宜蘭大同 幸福城景觀露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "931",
+          "name": "苗栗泰安 一片天(一般營位/露營車/露營屋)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2040",
+          "name": "南投埔里 樂活森林(一般營位)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "787",
+          "name": "新竹尖石 梅花天湖農園",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "661",
+          "name": "桃園復興 拉拉山 夢想家園露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "805",
+          "name": "新竹尖石  梅花山莊",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "798",
+          "name": "新竹尖石 恩典露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "1090",
+          "name": "南投國姓 地球村休閒農場",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2171",
+          "name": "新竹尖石 馬美欣欣營地",
+          "elevation": "1501m以上"
+        },
+        {
+          "store_id": "2154",
+          "name": "新竹五峰 楠桂坊露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "693",
+          "name": "桃園復興 拉拉山 遠見之星露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "674",
+          "name": "桃園復興 拉拉山 木村的家露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "1988",
+          "name": "南投仁愛 月夢田露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "698",
+          "name": "桃園復興 拉拉山 雅比斯露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "776",
+          "name": "新竹尖石 玉峰 悠達思露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2444",
+          "name": "新竹五峰 戀戀天湖",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2644",
+          "name": "南投竹山 深山林內生態農場",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2456",
+          "name": "南投仁愛 樹不老露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2164",
+          "name": "桃園復興 融奎霖露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2471",
+          "name": "宜蘭大同 雲端紅土咖啡露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2213",
+          "name": "高雄六龜 荖濃有機農場露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2478",
+          "name": "南投埔里 LOLO農場-休閒露營園區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2226",
+          "name": "新竹尖石 印象尖石露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2302",
+          "name": "新竹五峰 梅后蔓露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2515",
+          "name": "嘉義番路 花田小露",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2541",
+          "name": "桃園復興 塔木休閒露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2318",
+          "name": "嘉義竹崎 塘湖古道露營農場",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2339",
+          "name": "雲林林內 逸境生態露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2356",
+          "name": "苗栗南庄 南庄麒麟山露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2570",
+          "name": "宜蘭大同 圓頂360(一般營位)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2403",
+          "name": "新竹尖石 玉峰 星光閃閃露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2597",
+          "name": "苗栗卓蘭 頤生園露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2439",
+          "name": "桃園復興 福田美地",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2613",
+          "name": "桃園復興 馬灣露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2451",
+          "name": "宜蘭大同 幸福瑪崙露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2646",
+          "name": "苗栗大湖 夢之谷露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2112",
+          "name": "嘉義阿里山 倉伯露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2457",
+          "name": "新竹尖石 雷沙達岜斯",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2664",
+          "name": "新竹關西 樸真園六曲窩生態園區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2472",
+          "name": "桃園復興 達彥休閒露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2214",
+          "name": "嘉義番路 岩仔腳(一般營位)",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2483",
+          "name": "桃園復興 石秀灣五葉松露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2282",
+          "name": "苗栗三義 溫馨休閒農場",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2517",
+          "name": "新竹尖石 溪遊記露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2305",
+          "name": "南投埔里 農家樂露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2544",
+          "name": "新竹新埔 挪亞星舟露營農莊",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2319",
+          "name": "嘉義竹崎 仙腳趾景觀露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2342",
+          "name": "新竹五峰 蘇珊藏美露營農場",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2556",
+          "name": "新竹尖石 觀星賞月營地",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2369",
+          "name": "南投仁愛 星願村露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2590",
+          "name": "南投魚池 空若水營地",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2415",
+          "name": "新竹尖石 參陳山內灣旅店營地",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2607",
+          "name": "宜蘭大同 五葉松林休閒露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2441",
+          "name": "新竹五峰 喜來登露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2630",
+          "name": "南投魚池 愛心露營地",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2452",
+          "name": "新竹五峰 觀雲露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2658",
+          "name": "南投國姓 金青松露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2458",
+          "name": "南投埔里 湯尼瑪麗露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2192",
+          "name": "嘉義竹崎 景山露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2476",
+          "name": "台中新社 天冷吹雲",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2225",
+          "name": "新竹橫山 遊橘露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2488",
+          "name": "南投仁愛 畫眉園露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2293",
+          "name": "嘉義番路 好柿抵嘉農場",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2506",
+          "name": "新竹尖石 月伴灣露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2518",
+          "name": "嘉義番路 草地狀元露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2312",
+          "name": "南投中寮 鶴里翁露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2550",
+          "name": "桃園復興 拉拉山 微風山崚",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2338",
+          "name": "苗栗泰安 朵悠露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2345",
+          "name": "苗栗大湖 天藍露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2560",
+          "name": "新竹橫山 福興小農庄",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2396",
+          "name": "台中石岡 九甲林 (一般營位)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2591",
+          "name": "嘉義梅山 鷺野之家",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2419",
+          "name": "宜蘭大同 夏諾營露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2608",
+          "name": "新竹尖石 樓蜜香菇農場",
+          "elevation": "501-800m"
+        }
+      ]
+    },
+    {
+      "feature": "近溪流",
+      "key": "river_stream",
+      "easycamp_feature_id": "355",
+      "total_camps": 80,
+      "matched_spots": 21,
+      "camps": [
+        {
+          "store_id": "1909",
+          "name": "台中和平 吉娃斯景觀咖啡露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2668",
+          "name": "新竹關西 石牛山露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2426",
+          "name": "宜蘭冬山 山谷樂生態露營園區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2670",
+          "name": "宜蘭礁溪 充電莊露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2564",
+          "name": "嘉義竹崎 阿里山螢火蟲(狩獵帳)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2145",
+          "name": "嘉義竹崎 天一露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2502",
+          "name": "宜蘭大同 斯揚莫那休閒莊園",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2579",
+          "name": "嘉義阿里山 瓜地亞那Gwaliana",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "974",
+          "name": "苗栗泰安 馬嘟溪露營基地",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "1702",
+          "name": "苗栗卓蘭 逸香園農場",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "931",
+          "name": "苗栗泰安 一片天(一般營位/露營車/露營屋)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "958",
+          "name": "苗栗泰安 綠野雲仙露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2059",
+          "name": "南投國姓 水中月民宿露營",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "899",
+          "name": "苗栗南庄 林泉休閒露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "798",
+          "name": "新竹尖石 恩典露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "1529",
+          "name": "台東卑南 初鹿椰子林",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2154",
+          "name": "新竹五峰 楠桂坊露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "674",
+          "name": "桃園復興 拉拉山 木村的家露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "1988",
+          "name": "南投仁愛 月夢田露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2076",
+          "name": "南投魚池 涵香小屋露營驛站",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "776",
+          "name": "新竹尖石 玉峰 悠達思露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2494",
+          "name": "苗栗泰安 一片天(狩獵帳)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2517",
+          "name": "新竹尖石 溪遊記露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2205",
+          "name": "南投信義 雙龍景觀露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2546",
+          "name": "桃園復興 逍遙遊秘境露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2214",
+          "name": "嘉義番路 岩仔腳(一般營位)",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2550",
+          "name": "桃園復興 拉拉山 微風山崚",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2302",
+          "name": "新竹五峰 梅后蔓露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2562",
+          "name": "南投中寮 賞星月慕 露營樂6號店(狩獵帳)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2318",
+          "name": "嘉義竹崎 塘湖古道露營農場",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2588",
+          "name": "苗栗南庄 達喇改露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2595",
+          "name": "苗栗南庄 啊露吧Camping聖地",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2356",
+          "name": "苗栗南庄 南庄麒麟山露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2608",
+          "name": "新竹尖石 樓蜜香菇農場",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2439",
+          "name": "桃園復興 福田美地",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2628",
+          "name": "苗栗南庄 裕見生活",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2464",
+          "name": "苗栗泰安 星樂親子露營",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2646",
+          "name": "苗栗大湖 夢之谷露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2476",
+          "name": "台中新社 天冷吹雲",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2653",
+          "name": "南投魚池 溪泮小屋",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2105",
+          "name": "宜蘭南澳 老柯野外探險營地(原老柯農莊)",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2498",
+          "name": "桃園復興 亞霧香草營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2164",
+          "name": "桃園復興 融奎霖露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2534",
+          "name": "嘉義番路 岩仔腳(狩獵帳)",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2212",
+          "name": "新竹尖石 熊麻吉親子露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2547",
+          "name": "台東延平 一零八零1080",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2225",
+          "name": "新竹橫山 遊橘露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2558",
+          "name": "南投仁愛 旅人蕉小棧",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2312",
+          "name": "南投中寮 鶴里翁露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2592",
+          "name": "桃園復興 溫度露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2336",
+          "name": "桃園復興 八度野溪(一般營位)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2597",
+          "name": "苗栗卓蘭 頤生園露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2369",
+          "name": "南投仁愛 星願村露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2428",
+          "name": "桃園復興 八度野溪(狩獵帳/露營車)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2613",
+          "name": "桃園復興 馬灣露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2456",
+          "name": "南投仁愛 樹不老露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2631",
+          "name": "南投埔里 龍泉營地",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2472",
+          "name": "桃園復興 達彥休閒露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2650",
+          "name": "嘉義阿里山 牧匠露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2060",
+          "name": "苗栗泰安 瑪都安露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2478",
+          "name": "南投埔里 LOLO農場-休閒露營園區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2658",
+          "name": "南投國姓 金青松露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2204",
+          "name": "苗栗南庄 有鬼露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2542",
+          "name": "桃園復興 谷力農場(狩獵帳)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2213",
+          "name": "高雄六龜 荖濃有機農場露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2548",
+          "name": "嘉義梅山 太和小木屋露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2293",
+          "name": "嘉義番路 好柿抵嘉農場",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2561",
+          "name": "南投埔里 樂活森林(狩獵帳)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2315",
+          "name": "南投埔里 ToMe 桃米生態露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2594",
+          "name": "桃園復興 貳柒珈琲露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2345",
+          "name": "苗栗大湖 天藍露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2602",
+          "name": "新北烏來 頭目山水",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2395",
+          "name": "南投中寮 言葉之庭(包場制)",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2432",
+          "name": "苗栗三義 五福山莊",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2616",
+          "name": "南投魚池 念念小憩",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2457",
+          "name": "新竹尖石 雷沙達岜斯",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2637",
+          "name": "新竹北埔 旅人山泉農場",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2015",
+          "name": "新竹尖石 綠宥子甜柿果園露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2473",
+          "name": "新竹尖石 馬胎227露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2652",
+          "name": "南投魚池 溪泮別館",
+          "elevation": "501-800m"
+        }
+      ]
+    },
+    {
+      "feature": "螢火蟲季",
+      "key": "fireflies",
+      "easycamp_feature_id": "454",
+      "total_camps": 131,
+      "matched_spots": 35,
+      "camps": [
+        {
+          "store_id": "1909",
+          "name": "台中和平 吉娃斯景觀咖啡露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "1743",
+          "name": "苗栗泰安 藍天嶺露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2668",
+          "name": "新竹關西 石牛山露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2509",
+          "name": "新竹尖石 夢田露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2516",
+          "name": "新竹尖石 晴空森林露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2639",
+          "name": "苗栗南庄 向天湖露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2670",
+          "name": "宜蘭礁溪 充電莊露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2504",
+          "name": "新竹尖石 臻美營地(狩獵帳)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2435",
+          "name": "桃園復興 可飛鹿營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2660",
+          "name": "南投魚池 日月潭 富城河紅茶體驗館",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2564",
+          "name": "嘉義竹崎 阿里山螢火蟲(狩獵帳)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2579",
+          "name": "嘉義阿里山 瓜地亞那Gwaliana",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2493",
+          "name": "嘉義阿里山 羅老爸的家",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2307",
+          "name": "南投埔里 遇見東平莊園",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "1278",
+          "name": "嘉義阿里山 受不寮露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "794",
+          "name": "新竹尖石 尤命築園露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "974",
+          "name": "苗栗泰安 馬嘟溪露營基地",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "1981",
+          "name": "苗栗大湖 四季非露不可 (豪華野營/一般營位)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2155",
+          "name": "苗栗大湖 四季非露不可 (露營屋)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "931",
+          "name": "苗栗泰安 一片天(一般營位/露營車/露營屋)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2040",
+          "name": "南投埔里 樂活森林(一般營位)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "958",
+          "name": "苗栗泰安 綠野雲仙露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "787",
+          "name": "新竹尖石 梅花天湖農園",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "1644",
+          "name": "苗栗南庄 紅毛印象露營窩",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2059",
+          "name": "南投國姓 水中月民宿露營",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "1092",
+          "name": "南投國姓 小野柳滑草場露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "899",
+          "name": "苗栗南庄 林泉休閒露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "798",
+          "name": "新竹尖石 恩典露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "1988",
+          "name": "南投仁愛 月夢田露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2055",
+          "name": "新竹五峰 KT露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2151",
+          "name": "新竹尖石 馬月台露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "795",
+          "name": "新竹尖石 臻美營地 (空中帳篷)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "1441",
+          "name": "宜蘭冬山 梅花湖休閒農場",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2158",
+          "name": "桃園復興 卡普休閒農莊",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2160",
+          "name": "苗栗三義 景庭露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "835",
+          "name": "新竹尖石  馬胎仙境(自搭帳/輕露營)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2344",
+          "name": "苗栗 杜石地一號",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2512",
+          "name": "新竹五峰 漫步天湖(狩獵帳)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2618",
+          "name": "桃園復興 布納星空露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2356",
+          "name": "苗栗南庄 南庄麒麟山露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2522",
+          "name": "高雄那瑪夏 貴梅露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2631",
+          "name": "南投埔里 龍泉營地",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "1996",
+          "name": "新竹尖石 玉峰 遇見嵨繞",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2428",
+          "name": "桃園復興 八度野溪(狩獵帳/露營車)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2537",
+          "name": "嘉義阿里山 來灣哈露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2637",
+          "name": "新竹北埔 旅人山泉農場",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2645",
+          "name": "新竹尖石 梅花梯田免裝備露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2439",
+          "name": "桃園復興 福田美地",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2542",
+          "name": "桃園復興 谷力農場(狩獵帳)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2556",
+          "name": "新竹尖石 觀星賞月營地",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2649",
+          "name": "南投仁愛 樸溯生活露營原區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2444",
+          "name": "新竹五峰 戀戀天湖",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2561",
+          "name": "南投埔里 樂活森林(狩獵帳)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2662",
+          "name": "苗栗泰安 沐嵐語Camping",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2164",
+          "name": "桃園復興 融奎霖露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2460",
+          "name": "桃園復興 比亞山露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2478",
+          "name": "南投埔里 LOLO農場-休閒露營園區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2565",
+          "name": "嘉義番路 露營樂9號店(狩獵帳)阿里山草堂",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "723",
+          "name": "新竹五峰 尤瑪山莊",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2204",
+          "name": "苗栗南庄 有鬼露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2225",
+          "name": "新竹橫山 遊橘露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2486",
+          "name": "新竹五峰 愛上天湖(狩獵帳)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2585",
+          "name": "桃園復興 達拉蓋(狩獵帳)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2288",
+          "name": "新竹尖石 歐莎露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2494",
+          "name": "苗栗泰安 一片天(狩獵帳)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2595",
+          "name": "苗栗南庄 啊露吧Camping聖地",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2315",
+          "name": "南投埔里 ToMe 桃米生態露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2499",
+          "name": "新竹尖石 怡然自德",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2603",
+          "name": "嘉義阿里山 達明休憩農場",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2336",
+          "name": "桃園復興 八度野溪(一般營位)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2612",
+          "name": "南投中寮 依星生態農場",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "1757",
+          "name": "新竹五峰 愛上天湖(一般營位/露營屋)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2345",
+          "name": "苗栗大湖 天藍露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2624",
+          "name": "苗栗大湖 石門客棧露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2363",
+          "name": "新竹五峰 空軍一號",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2524",
+          "name": "嘉義番路 星知心露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2632",
+          "name": "嘉義阿里山 荒郊野外露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2432",
+          "name": "苗栗三義 五福山莊",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2538",
+          "name": "台南楠西 梅嶺露營區(神秘氣場)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2646",
+          "name": "苗栗大湖 夢之谷露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2112",
+          "name": "嘉義阿里山 倉伯露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2442",
+          "name": "新竹五峰 漫步天湖(一般營位)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2548",
+          "name": "嘉義梅山 太和小木屋露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2557",
+          "name": "嘉義番路 淺山尋露(青峯製茶所)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2659",
+          "name": "苗栗南庄 楓美露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2457",
+          "name": "新竹尖石 雷沙達岜斯",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2472",
+          "name": "桃園復興 達彥休閒露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2563",
+          "name": "新竹尖石 馬胎仙境(狩獵帳)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2183",
+          "name": "苗栗銅鑼 自由露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2480",
+          "name": "南投鹿谷 三生園生態露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2575",
+          "name": "苗栗南庄 清景農場(肖楠美地)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2207",
+          "name": "苗栗南庄 春友彩虹民宿 餐廳 露營",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2267",
+          "name": "嘉義阿里山 拉拉克斯莊園",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2490",
+          "name": "嘉義阿里山  晨光(狩獵帳)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2591",
+          "name": "嘉義梅山 鷺野之家",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2302",
+          "name": "新竹五峰 梅后蔓露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2496",
+          "name": "新竹五峰 輪園秘境",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2597",
+          "name": "苗栗卓蘭 頤生園露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2321",
+          "name": "苗栗南庄 南庄慢生活露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2606",
+          "name": "嘉義阿里山 禾田農莊",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2338",
+          "name": "苗栗泰安 朵悠露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2510",
+          "name": "桃園復興 沒搞頭露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2613",
+          "name": "桃園復興 馬灣露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "1810",
+          "name": "新竹尖石 自然野趣(一般營位)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2346",
+          "name": "桃園復興 泰雅秘境露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2517",
+          "name": "新竹尖石 溪遊記露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2628",
+          "name": "苗栗南庄 裕見生活",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2371",
+          "name": "南投埔里 桃米山生態露營地",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2533",
+          "name": "新竹五峰 馬瀨營地",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2633",
+          "name": "新竹五峰 天湖秘境露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2644",
+          "name": "南投竹山 深山林內生態農場",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2541",
+          "name": "桃園復興 塔木休閒露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2648",
+          "name": "嘉義阿里山 鹿過好美露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2443",
+          "name": "桃園復興 美腿山親子露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2549",
+          "name": "新竹尖石 玉峰 光漫營地",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2560",
+          "name": "新竹橫山 福興小農庄",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2458",
+          "name": "南投埔里 湯尼瑪麗露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2473",
+          "name": "新竹尖石 馬胎227露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2664",
+          "name": "新竹關西 樸真園六曲窩生態園區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2192",
+          "name": "嘉義竹崎 景山露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2483",
+          "name": "桃園復興 石秀灣五葉松露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2671",
+          "name": "嘉義梅山 1696露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2213",
+          "name": "高雄六龜 荖濃有機農場露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2272",
+          "name": "新竹尖石 自然野趣(狩獵帳)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2592",
+          "name": "桃園復興 溫度露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2498",
+          "name": "桃園復興 亞霧香草營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2598",
+          "name": "苗栗公館 橄欖莊園",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2335",
+          "name": "新竹北埔 星院露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2505",
+          "name": "南投魚池 1-2號營地",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2608",
+          "name": "新竹尖石 樓蜜香菇農場",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2663",
+          "name": "台東台東 碧海星辰休閒農場",
+          "elevation": "300m以下"
+        }
+      ]
+    },
+    {
+      "feature": "可車露",
+      "key": "car_beside_tent",
+      "easycamp_feature_id": "350",
+      "total_camps": 152,
+      "matched_spots": 41,
+      "camps": [
+        {
+          "store_id": "1451",
+          "name": "宜蘭大同 天際線茶園營地",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2082",
+          "name": "宜蘭大同 松蘿園林露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "1909",
+          "name": "台中和平 吉娃斯景觀咖啡露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "1743",
+          "name": "苗栗泰安 藍天嶺露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2552",
+          "name": "宜蘭大同 哇吉散悠遊樂園露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2660",
+          "name": "南投魚池 日月潭 富城河紅茶體驗館",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "1813",
+          "name": "苗栗南庄 長青露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2642",
+          "name": "嘉義番路 天長地久露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2661",
+          "name": "宜蘭大同 飛亞蘭",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2579",
+          "name": "嘉義阿里山 瓜地亞那Gwaliana",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2667",
+          "name": "嘉義阿里山 獵人書坊",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2502",
+          "name": "宜蘭大同 斯揚莫那休閒莊園",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2516",
+          "name": "新竹尖石 晴空森林露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2584",
+          "name": "桃園復興 拉拉山 塔曼之光露營區",
+          "elevation": "1501m以上"
+        },
+        {
+          "store_id": "2670",
+          "name": "宜蘭礁溪 充電莊露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2307",
+          "name": "南投埔里 遇見東平莊園",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2412",
+          "name": "高雄內門 茂升山林",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2426",
+          "name": "宜蘭冬山 山谷樂生態露營園區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "1035",
+          "name": "南投仁愛 清境小瑞士花園",
+          "elevation": "1501m以上"
+        },
+        {
+          "store_id": "794",
+          "name": "新竹尖石 尤命築園露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "974",
+          "name": "苗栗泰安 馬嘟溪露營基地",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "837",
+          "name": "新竹尖石 高台山露營區(一般營位/輕露營)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "1455",
+          "name": "宜蘭大同 幸福城景觀露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "700",
+          "name": "桃園復興 拉拉山 雲河露營農場",
+          "elevation": "1501m以上"
+        },
+        {
+          "store_id": "1981",
+          "name": "苗栗大湖 四季非露不可 (豪華野營/一般營位)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "695",
+          "name": "桃園復興 拉拉山 長榮露營區",
+          "elevation": "1501m以上"
+        },
+        {
+          "store_id": "931",
+          "name": "苗栗泰安 一片天(一般營位/露營車/露營屋)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2040",
+          "name": "南投埔里 樂活森林(一般營位)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "958",
+          "name": "苗栗泰安 綠野雲仙露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "787",
+          "name": "新竹尖石 梅花天湖農園",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "1644",
+          "name": "苗栗南庄 紅毛印象露營窩",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "805",
+          "name": "新竹尖石  梅花山莊",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2059",
+          "name": "南投國姓 水中月民宿露營",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "1092",
+          "name": "南投國姓 小野柳滑草場露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "899",
+          "name": "苗栗南庄 林泉休閒露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "798",
+          "name": "新竹尖石 恩典露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "1529",
+          "name": "台東卑南 初鹿椰子林",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "1942",
+          "name": "南投仁愛 清境陽光露營",
+          "elevation": "1501m以上"
+        },
+        {
+          "store_id": "2154",
+          "name": "新竹五峰 楠桂坊露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "693",
+          "name": "桃園復興 拉拉山 遠見之星露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "674",
+          "name": "桃園復興 拉拉山 木村的家露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "1988",
+          "name": "南投仁愛 月夢田露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "1498",
+          "name": "花蓮玉里 森林露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "698",
+          "name": "桃園復興 拉拉山 雅比斯露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2055",
+          "name": "新竹五峰 KT露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2151",
+          "name": "新竹尖石 馬月台露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "776",
+          "name": "新竹尖石 玉峰 悠達思露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2158",
+          "name": "桃園復興 卡普休閒農莊",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "835",
+          "name": "新竹尖石  馬胎仙境(自搭帳/輕露營)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2213",
+          "name": "高雄六龜 荖濃有機農場露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2442",
+          "name": "新竹五峰 漫步天湖(一般營位)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2657",
+          "name": "新竹五峰 憶起享露露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2267",
+          "name": "嘉義阿里山 拉拉克斯莊園",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2451",
+          "name": "宜蘭大同 幸福瑪崙露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2558",
+          "name": "南投仁愛 旅人蕉小棧",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2302",
+          "name": "新竹五峰 梅后蔓露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2458",
+          "name": "南投埔里 湯尼瑪麗露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2575",
+          "name": "苗栗南庄 清景農場(肖楠美地)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2590",
+          "name": "南投魚池 空若水營地",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2672",
+          "name": "南投魚池 日月潭 Lulu微居",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2318",
+          "name": "嘉義竹崎 塘湖古道露營農場",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2464",
+          "name": "苗栗泰安 星樂親子露營",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2480",
+          "name": "南投鹿谷 三生園生態露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2595",
+          "name": "苗栗南庄 啊露吧Camping聖地",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2336",
+          "name": "桃園復興 八度野溪(一般營位)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2499",
+          "name": "新竹尖石 怡然自德",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2602",
+          "name": "新北烏來 頭目山水",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2345",
+          "name": "苗栗大湖 天藍露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2363",
+          "name": "新竹五峰 空軍一號",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2510",
+          "name": "桃園復興 沒搞頭露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2607",
+          "name": "宜蘭大同 五葉松林休閒露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2015",
+          "name": "新竹尖石 綠宥子甜柿果園露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2380",
+          "name": "嘉義梅山 琢英露營場",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2522",
+          "name": "高雄那瑪夏 貴梅露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2618",
+          "name": "桃園復興 布納星空露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2413",
+          "name": "嘉義番路  阿里山 龍頂山(一般營位)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2533",
+          "name": "新竹五峰 馬瀨營地",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2633",
+          "name": "新竹五峰 天湖秘境露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2164",
+          "name": "桃園復興 融奎霖露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2420",
+          "name": "桃園復興 好馨勤齊露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2541",
+          "name": "桃園復興 塔木休閒露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2204",
+          "name": "苗栗南庄 有鬼露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2432",
+          "name": "苗栗三義 五福山莊",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2550",
+          "name": "桃園復興 拉拉山 微風山崚",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2650",
+          "name": "嘉義阿里山 牧匠露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2225",
+          "name": "新竹橫山 遊橘露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2443",
+          "name": "桃園復興 美腿山親子露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2555",
+          "name": "苗栗通霄 南窩綠丘",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2658",
+          "name": "南投國姓 金青松露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2282",
+          "name": "苗栗三義 溫馨休閒農場",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2456",
+          "name": "南投仁愛 樹不老露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2560",
+          "name": "新竹橫山 福興小農庄",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2305",
+          "name": "南投埔里 農家樂露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2460",
+          "name": "桃園復興 比亞山露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2592",
+          "name": "桃園復興 溫度露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2319",
+          "name": "嘉義竹崎 仙腳趾景觀露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2473",
+          "name": "新竹尖石 馬胎227露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2483",
+          "name": "桃園復興 石秀灣五葉松露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2598",
+          "name": "苗栗公館 橄欖莊園",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2338",
+          "name": "苗栗泰安 朵悠露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2346",
+          "name": "桃園復興 泰雅秘境露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2603",
+          "name": "嘉義阿里山 達明休憩農場",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2369",
+          "name": "南投仁愛 星願村露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2609",
+          "name": "新竹尖石 景色天地露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2403",
+          "name": "新竹尖石 玉峰 星光閃閃露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2524",
+          "name": "嘉義番路 星知心露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2631",
+          "name": "南投埔里 龍泉營地",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2415",
+          "name": "新竹尖石 參陳山內灣旅店營地",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2537",
+          "name": "嘉義阿里山 來灣哈露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2635",
+          "name": "南投中寮 長壽天然農場",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2183",
+          "name": "苗栗銅鑼 自由露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2425",
+          "name": "雲林斗六 十三番露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2543",
+          "name": "新竹峨眉 露營盒子",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2644",
+          "name": "南投竹山 深山林內生態農場",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2653",
+          "name": "南投魚池 溪泮小屋",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2212",
+          "name": "新竹尖石 熊麻吉親子露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2441",
+          "name": "新竹五峰 喜來登露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2551",
+          "name": "新北淡水 甜蜜點休閒莊園Sweet Spot Village",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2556",
+          "name": "新竹尖石 觀星賞月營地",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2659",
+          "name": "苗栗南庄 楓美露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2444",
+          "name": "新竹五峰 戀戀天湖",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2556",
+          "name": "新竹尖石 觀星賞月營地",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2662",
+          "name": "苗栗泰安 沐嵐語Camping",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2288",
+          "name": "新竹尖石 歐莎露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2457",
+          "name": "新竹尖石 雷沙達岜斯",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2570",
+          "name": "宜蘭大同 圓頂360(一般營位)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2461",
+          "name": "苗栗三灣 鄉町露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2594",
+          "name": "桃園復興 貳柒珈琲露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "1757",
+          "name": "新竹五峰 愛上天湖(一般營位/露營屋)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2335",
+          "name": "新竹北埔 星院露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2476",
+          "name": "台中新社 天冷吹雲",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2498",
+          "name": "桃園復興 亞霧香草營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2601",
+          "name": "南投國姓 新境休憩園",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2342",
+          "name": "新竹五峰 蘇珊藏美露營農場",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2356",
+          "name": "苗栗南庄 南庄麒麟山露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2507",
+          "name": "新竹尖石 烏米的家露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2606",
+          "name": "嘉義阿里山 禾田農莊",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "1996",
+          "name": "新竹尖石 玉峰 遇見嵨繞",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2378",
+          "name": "宜蘭大同 原最露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2517",
+          "name": "新竹尖石 溪遊記露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2612",
+          "name": "南投中寮 依星生態農場",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2105",
+          "name": "宜蘭南澳 老柯野外探險營地(原老柯農莊)",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2528",
+          "name": "桃園復興 馬莎度露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2632",
+          "name": "嘉義阿里山 荒郊野外露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "723",
+          "name": "新竹五峰 尤瑪山莊",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2419",
+          "name": "宜蘭大同 夏諾營露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2538",
+          "name": "台南楠西 梅嶺露營區(神秘氣場)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2637",
+          "name": "新竹北埔 旅人山泉農場",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2192",
+          "name": "嘉義竹崎 景山露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2548",
+          "name": "嘉義梅山 太和小木屋露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2647",
+          "name": "嘉義番路 星晴朗露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2663",
+          "name": "台東台東 碧海星辰休閒農場",
+          "elevation": "300m以下"
+        }
+      ]
+    },
+    {
+      "feature": "免裝備系列",
+      "key": "equipment_rental",
+      "easycamp_feature_id": "346",
+      "total_camps": 125,
+      "matched_spots": 34,
+      "camps": [
+        {
+          "store_id": "1909",
+          "name": "台中和平 吉娃斯景觀咖啡露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "1720",
+          "name": "苗栗泰安 UP露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2435",
+          "name": "桃園復興 可飛鹿營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2504",
+          "name": "新竹尖石 臻美營地(狩獵帳)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2509",
+          "name": "新竹尖石 夢田露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2661",
+          "name": "宜蘭大同 飛亞蘭",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2564",
+          "name": "嘉義竹崎 阿里山螢火蟲(狩獵帳)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2670",
+          "name": "宜蘭礁溪 充電莊露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2175",
+          "name": "桃園中壢 水樂活親子農場",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2426",
+          "name": "宜蘭冬山 山谷樂生態露營園區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2642",
+          "name": "嘉義番路 天長地久露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2656",
+          "name": "桃園蘆竹 桃野星晴",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2145",
+          "name": "嘉義竹崎 天一露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2307",
+          "name": "南投埔里 遇見東平莊園",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2502",
+          "name": "宜蘭大同 斯揚莫那休閒莊園",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2639",
+          "name": "苗栗南庄 向天湖露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "974",
+          "name": "苗栗泰安 馬嘟溪露營基地",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "837",
+          "name": "新竹尖石 高台山露營區(一般營位/輕露營)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "1455",
+          "name": "宜蘭大同 幸福城景觀露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "1981",
+          "name": "苗栗大湖 四季非露不可 (豪華野營/一般營位)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2155",
+          "name": "苗栗大湖 四季非露不可 (露營屋)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "1702",
+          "name": "苗栗卓蘭 逸香園農場",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "931",
+          "name": "苗栗泰安 一片天(一般營位/露營車/露營屋)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "958",
+          "name": "苗栗泰安 綠野雲仙露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "787",
+          "name": "新竹尖石 梅花天湖農園",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "805",
+          "name": "新竹尖石  梅花山莊",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2171",
+          "name": "新竹尖石 馬美欣欣營地",
+          "elevation": "1501m以上"
+        },
+        {
+          "store_id": "1988",
+          "name": "南投仁愛 月夢田露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2151",
+          "name": "新竹尖石 馬月台露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2076",
+          "name": "南投魚池 涵香小屋露營驛站",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "795",
+          "name": "新竹尖石 臻美營地 (空中帳篷)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2160",
+          "name": "苗栗三義 景庭露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "835",
+          "name": "新竹尖石  馬胎仙境(自搭帳/輕露營)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2428",
+          "name": "桃園復興 八度野溪(狩獵帳/露營車)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2541",
+          "name": "桃園復興 塔木休閒露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2644",
+          "name": "南投竹山 深山林內生態農場",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "1996",
+          "name": "新竹尖石 玉峰 遇見嵨繞",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2544",
+          "name": "新竹新埔 挪亞星舟露營農莊",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2648",
+          "name": "嘉義阿里山 鹿過好美露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2442",
+          "name": "新竹五峰 漫步天湖(一般營位)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2442",
+          "name": "新竹五峰 漫步天湖(一般營位)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2556",
+          "name": "新竹尖石 觀星賞月營地",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2563",
+          "name": "新竹尖石 馬胎仙境(狩獵帳)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2658",
+          "name": "南投國姓 金青松露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2446",
+          "name": "苗栗南庄 南山傳奇(狩獵帳)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2568",
+          "name": "宜蘭大同 露營樂7號店(狩獵帳)圓頂館",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2664",
+          "name": "新竹關西 樸真園六曲窩生態園區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2472",
+          "name": "桃園復興 達彥休閒露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2484",
+          "name": "台中石岡 九甲林 (狩獵帳)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2585",
+          "name": "桃園復興 達拉蓋(狩獵帳)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2212",
+          "name": "新竹尖石 熊麻吉親子露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2272",
+          "name": "新竹尖石 自然野趣(狩獵帳)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2489",
+          "name": "新竹尖石 高台山(狩獵帳)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2597",
+          "name": "苗栗卓蘭 頤生園露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "723",
+          "name": "新竹五峰 尤瑪山莊",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2319",
+          "name": "嘉義竹崎 仙腳趾景觀露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2496",
+          "name": "新竹五峰 輪園秘境",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2607",
+          "name": "宜蘭大同 五葉松林休閒露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2344",
+          "name": "苗栗 杜石地一號",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2616",
+          "name": "南投魚池 念念小憩",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2363",
+          "name": "新竹五峰 空軍一號",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2633",
+          "name": "新竹五峰 天湖秘境露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "1757",
+          "name": "新竹五峰 愛上天湖(一般營位/露營屋)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2403",
+          "name": "新竹尖石 玉峰 星光閃閃露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2522",
+          "name": "高雄那瑪夏 貴梅露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2641",
+          "name": "苗栗後龍 黃金好望角露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2431",
+          "name": "台中新社 星空yay語露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2542",
+          "name": "桃園復興 谷力農場(狩獵帳)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2645",
+          "name": "新竹尖石 梅花梯田免裝備露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2015",
+          "name": "新竹尖石 綠宥子甜柿果園露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2440",
+          "name": "新竹新埔 明園星空營地",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2548",
+          "name": "嘉義梅山 太和小木屋露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2649",
+          "name": "南投仁愛 樸溯生活露營原區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2653",
+          "name": "南投魚池 溪泮小屋",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2112",
+          "name": "嘉義阿里山 倉伯露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2443",
+          "name": "桃園復興 美腿山親子露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2561",
+          "name": "南投埔里 樂活森林(狩獵帳)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2452",
+          "name": "新竹五峰 觀雲露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2573",
+          "name": "苗栗泰安 寬闊露營區(狩獵帳)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2476",
+          "name": "台中新社 天冷吹雲",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2486",
+          "name": "新竹五峰 愛上天湖(狩獵帳)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2589",
+          "name": "桃園復興 拉拉山 天恩農場(狩獵帳)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2225",
+          "name": "新竹橫山 遊橘露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2490",
+          "name": "嘉義阿里山  晨光(狩獵帳)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2601",
+          "name": "南投國姓 新境休憩園",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2283",
+          "name": "苗栗大湖 福人居露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2321",
+          "name": "苗栗南庄 南庄慢生活露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2501",
+          "name": "台南左鎮 露營樂1號店(狩獵帳)左鎮旗艦店",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2609",
+          "name": "新竹尖石 景色天地露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2346",
+          "name": "桃園復興 泰雅秘境露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2505",
+          "name": "南投魚池 1-2號營地",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2624",
+          "name": "苗栗大湖 石門客棧露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2369",
+          "name": "南投仁愛 星願村露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2512",
+          "name": "新竹五峰 漫步天湖(狩獵帳)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2637",
+          "name": "新竹北埔 旅人山泉農場",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "1810",
+          "name": "新竹尖石 自然野趣(一般營位)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2534",
+          "name": "嘉義番路 岩仔腳(狩獵帳)",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2432",
+          "name": "苗栗三義 五福山莊",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2543",
+          "name": "新竹峨眉 露營盒子",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2646",
+          "name": "苗栗大湖 夢之谷露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2060",
+          "name": "苗栗泰安 瑪都安露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2441",
+          "name": "新竹五峰 喜來登露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2551",
+          "name": "新北淡水 甜蜜點休閒莊園Sweet Spot Village",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2651",
+          "name": "新竹尖石 布度努Btunux",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2444",
+          "name": "新竹五峰 戀戀天湖",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2562",
+          "name": "南投中寮 賞星月慕 露營樂6號店(狩獵帳)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2457",
+          "name": "新竹尖石 雷沙達岜斯",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2565",
+          "name": "嘉義番路 露營樂9號店(狩獵帳)阿里山草堂",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2574",
+          "name": "南投埔里 暮雲春樹",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2672",
+          "name": "南投魚池 日月潭 Lulu微居",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2208",
+          "name": "苗栗南庄 南山傳奇(自搭帳/露營車)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2483",
+          "name": "桃園復興 石秀灣五葉松露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2488",
+          "name": "南投仁愛 畫眉園露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2590",
+          "name": "南投魚池 空若水營地",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2226",
+          "name": "新竹尖石 印象尖石露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2494",
+          "name": "苗栗泰安 一片天(狩獵帳)",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2605",
+          "name": "嘉義番路 阿里山 龍頂山(狩獵帳)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2339",
+          "name": "雲林林內 逸境生態露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2612",
+          "name": "南投中寮 依星生態農場",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2356",
+          "name": "苗栗南庄 南庄麒麟山露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2506",
+          "name": "新竹尖石 月伴灣露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2628",
+          "name": "苗栗南庄 裕見生活",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2395",
+          "name": "南投中寮 言葉之庭(包場制)",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2518",
+          "name": "嘉義番路 草地狀元露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2663",
+          "name": "台東台東 碧海星辰休閒農場",
+          "elevation": "300m以下"
+        }
+      ]
+    },
+    {
+      "feature": "有夜景",
+      "key": "night_view",
+      "easycamp_feature_id": "354",
+      "total_camps": 44,
+      "matched_spots": 14,
+      "camps": [
+        {
+          "store_id": "1451",
+          "name": "宜蘭大同 天際線茶園營地",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2082",
+          "name": "宜蘭大同 松蘿園林露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "1909",
+          "name": "台中和平 吉娃斯景觀咖啡露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2636",
+          "name": "南投魚池 魚宙露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2656",
+          "name": "桃園蘆竹 桃野星晴",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "837",
+          "name": "新竹尖石 高台山露營區(一般營位/輕露營)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "1455",
+          "name": "宜蘭大同 幸福城景觀露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "695",
+          "name": "桃園復興 拉拉山 長榮露營區",
+          "elevation": "1501m以上"
+        },
+        {
+          "store_id": "787",
+          "name": "新竹尖石 梅花天湖農園",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "661",
+          "name": "桃園復興 拉拉山 夢想家園露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "674",
+          "name": "桃園復興 拉拉山 木村的家露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2151",
+          "name": "新竹尖石 馬月台露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "795",
+          "name": "新竹尖石 臻美營地 (空中帳篷)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2208",
+          "name": "苗栗南庄 南山傳奇(自搭帳/露營車)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2374",
+          "name": "台中和平 摩天嶺楊園露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2440",
+          "name": "新竹新埔 明園星空營地",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2446",
+          "name": "苗栗南庄 南山傳奇(狩獵帳)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2489",
+          "name": "新竹尖石 高台山(狩獵帳)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2524",
+          "name": "嘉義番路 星知心露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2548",
+          "name": "嘉義梅山 太和小木屋露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2570",
+          "name": "宜蘭大同 圓頂360(一般營位)",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "723",
+          "name": "新竹五峰 尤瑪山莊",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2607",
+          "name": "宜蘭大同 五葉松林休閒露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "1810",
+          "name": "新竹尖石 自然野趣(一般營位)",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2633",
+          "name": "新竹五峰 天湖秘境露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2318",
+          "name": "嘉義竹崎 塘湖古道露營農場",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2378",
+          "name": "宜蘭大同 原最露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2442",
+          "name": "新竹五峰 漫步天湖(一般營位)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2471",
+          "name": "宜蘭大同 雲端紅土咖啡露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2507",
+          "name": "新竹尖石 烏米的家露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2541",
+          "name": "桃園復興 塔木休閒露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2556",
+          "name": "新竹尖石 觀星賞月營地",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2598",
+          "name": "苗栗公館 橄欖莊園",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2609",
+          "name": "新竹尖石 景色天地露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2183",
+          "name": "苗栗銅鑼 自由露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2319",
+          "name": "嘉義竹崎 仙腳趾景觀露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2419",
+          "name": "宜蘭大同 夏諾營露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2443",
+          "name": "桃園復興 美腿山親子露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2476",
+          "name": "台中新社 天冷吹雲",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2512",
+          "name": "新竹五峰 漫步天湖(狩獵帳)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2547",
+          "name": "台東延平 一零八零1080",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2568",
+          "name": "宜蘭大同 露營樂7號店(狩獵帳)圓頂館",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2605",
+          "name": "嘉義番路 阿里山 龍頂山(狩獵帳)",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2612",
+          "name": "南投中寮 依星生態農場",
+          "elevation": "1001-1500m"
+        }
+      ]
+    },
+    {
+      "feature": "寵物友善免裝備露營",
+      "key": "pet_friendly",
+      "easycamp_feature_id": "462",
+      "total_camps": 12,
+      "matched_spots": 1,
+      "camps": [
+        {
+          "store_id": "2661",
+          "name": "宜蘭大同 飛亞蘭",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2307",
+          "name": "南投埔里 遇見東平莊園",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2670",
+          "name": "宜蘭礁溪 充電莊露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2151",
+          "name": "新竹尖石 馬月台露營區",
+          "elevation": "801-1000m"
+        },
+        {
+          "store_id": "2060",
+          "name": "苗栗泰安 瑪都安露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2369",
+          "name": "南投仁愛 星願村露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2641",
+          "name": "苗栗後龍 黃金好望角露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2653",
+          "name": "南投魚池 溪泮小屋",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2559",
+          "name": "苗栗銅鑼 悠嵐曉境",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2644",
+          "name": "南投竹山 深山林內生態農場",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2616",
+          "name": "南投魚池 念念小憩",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2652",
+          "name": "南投魚池 溪泮別館",
+          "elevation": "501-800m"
+        }
+      ]
+    },
+    {
+      "feature": "釣魚",
+      "key": "fishing",
+      "easycamp_feature_id": "349",
+      "total_camps": 29,
+      "matched_spots": 1,
+      "camps": [
+        {
+          "store_id": "2175",
+          "name": "桃園中壢 水樂活親子農場",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2660",
+          "name": "南投魚池 日月潭 富城河紅茶體驗館",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2668",
+          "name": "新竹關西 石牛山露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2076",
+          "name": "南投魚池 涵香小屋露營驛站",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2471",
+          "name": "宜蘭大同 雲端紅土咖啡露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2488",
+          "name": "南投仁愛 畫眉園露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2546",
+          "name": "桃園復興 逍遙遊秘境露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2641",
+          "name": "苗栗後龍 黃金好望角露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2653",
+          "name": "南投魚池 溪泮小屋",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2225",
+          "name": "新竹橫山 遊橘露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2339",
+          "name": "雲林林內 逸境生態露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2439",
+          "name": "桃園復興 福田美地",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2472",
+          "name": "桃園復興 達彥休閒露營區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2501",
+          "name": "台南左鎮 露營樂1號店(狩獵帳)左鎮旗艦店",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2592",
+          "name": "桃園復興 溫度露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2650",
+          "name": "嘉義阿里山 牧匠露營區",
+          "elevation": "1001-1500m"
+        },
+        {
+          "store_id": "2105",
+          "name": "宜蘭南澳 老柯野外探險營地(原老柯農莊)",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2207",
+          "name": "苗栗南庄 春友彩虹民宿 餐廳 露營",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2312",
+          "name": "南投中寮 鶴里翁露營區",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2369",
+          "name": "南投仁愛 星願村露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2460",
+          "name": "桃園復興 比亞山露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2478",
+          "name": "南投埔里 LOLO農場-休閒露營園區",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2543",
+          "name": "新竹峨眉 露營盒子",
+          "elevation": "300m以下"
+        },
+        {
+          "store_id": "2613",
+          "name": "桃園復興 馬灣露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2652",
+          "name": "南投魚池 溪泮別館",
+          "elevation": "501-800m"
+        },
+        {
+          "store_id": "2164",
+          "name": "桃園復興 融奎霖露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2213",
+          "name": "高雄六龜 荖濃有機農場露營區",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2318",
+          "name": "嘉義竹崎 塘湖古道露營農場",
+          "elevation": "301-500m"
+        },
+        {
+          "store_id": "2425",
+          "name": "雲林斗六 十三番露營區",
+          "elevation": "300m以下"
+        }
+      ]
+    }
+  ]
+}
