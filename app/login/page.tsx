@@ -1,0 +1,282 @@
+'use client'
+
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useAuth } from '@/lib/auth-context'
+import Link from 'next/link'
+
+type Tab = 'login' | 'register'
+
+export default function LoginPage() {
+  const router = useRouter()
+  const { signInWithEmail, signUpWithEmail, signInWithGoogle, signInWithPhone } = useAuth()
+
+  const [tab, setTab] = useState<Tab>('login')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [displayName, setDisplayName] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [toast, setToast] = useState('')
+
+  const showToast = (msg: string) => {
+    setToast(msg)
+    setTimeout(() => setToast(''), 3000)
+  }
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError('')
+    setLoading(true)
+
+    const result = await signInWithEmail(email, password)
+    if (result.error) {
+      setError(result.error)
+    } else {
+      router.push('/')
+    }
+    setLoading(false)
+  }
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError('')
+
+    if (password !== confirmPassword) {
+      setError('密碼不一致')
+      return
+    }
+    if (password.length < 6) {
+      setError('密碼至少需要 6 個字元')
+      return
+    }
+    if (!displayName.trim()) {
+      setError('請輸入顯示名稱')
+      return
+    }
+
+    setLoading(true)
+    const result = await signUpWithEmail(email, password, displayName.trim())
+    if (result.error) {
+      setError(result.error)
+    } else {
+      router.push('/')
+    }
+    setLoading(false)
+  }
+
+  const handlePhoneLogin = async () => {
+    const result = await signInWithPhone('')
+    if (result.error) {
+      showToast(result.error)
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white flex items-center justify-center px-4">
+      {/* Toast */}
+      {toast && (
+        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-gray-800 text-white px-6 py-3 rounded-xl shadow-lg text-sm animate-fade-in">
+          {toast}
+        </div>
+      )}
+
+      <div className="w-full max-w-md">
+        {/* Logo */}
+        <div className="text-center mb-8">
+          <Link href="/" className="inline-block">
+            <h1 className="text-3xl font-bold text-green-700">🗺️ Wildmap</h1>
+          </Link>
+          <p className="text-gray-500 mt-2">探索台灣最棒的戶外秘境</p>
+        </div>
+
+        {/* Card */}
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+          {/* Tabs */}
+          <div className="flex border-b border-gray-100">
+            <button
+              onClick={() => { setTab('login'); setError('') }}
+              className={`flex-1 py-3.5 text-sm font-medium transition-colors cursor-pointer ${
+                tab === 'login'
+                  ? 'text-green-700 border-b-2 border-green-600 bg-green-50/50'
+                  : 'text-gray-400 hover:text-gray-600'
+              }`}
+            >
+              登入
+            </button>
+            <button
+              onClick={() => { setTab('register'); setError('') }}
+              className={`flex-1 py-3.5 text-sm font-medium transition-colors cursor-pointer ${
+                tab === 'register'
+                  ? 'text-green-700 border-b-2 border-green-600 bg-green-50/50'
+                  : 'text-gray-400 hover:text-gray-600'
+              }`}
+            >
+              註冊
+            </button>
+          </div>
+
+          {/* Form */}
+          <div className="p-6">
+            {error && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+                {error}
+              </div>
+            )}
+
+            {tab === 'login' ? (
+              <form onSubmit={handleLogin} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    required
+                    placeholder="your@email.com"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-sm transition-shadow"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">密碼</label>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    required
+                    placeholder="••••••••"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-sm transition-shadow"
+                  />
+                </div>
+                <div className="flex justify-end">
+                  <Link href="/forgot-password" className="text-sm text-green-600 hover:text-green-700">
+                    忘記密碼？
+                  </Link>
+                </div>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                >
+                  {loading ? '登入中...' : '登入'}
+                </button>
+              </form>
+            ) : (
+              <form onSubmit={handleRegister} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">顯示名稱</label>
+                  <input
+                    type="text"
+                    value={displayName}
+                    onChange={e => setDisplayName(e.target.value)}
+                    required
+                    placeholder="你的暱稱"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-sm transition-shadow"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    required
+                    placeholder="your@email.com"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-sm transition-shadow"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">密碼</label>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    required
+                    placeholder="至少 6 個字元"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-sm transition-shadow"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">確認密碼</label>
+                  <input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={e => setConfirmPassword(e.target.value)}
+                    required
+                    placeholder="再輸入一次密碼"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-sm transition-shadow"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                >
+                  {loading ? '註冊中...' : '建立帳號'}
+                </button>
+              </form>
+            )}
+
+            {/* Divider */}
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-3 bg-white text-gray-400">或使用其他方式</span>
+              </div>
+            </div>
+
+            {/* Social login buttons */}
+            <div className="space-y-3">
+              {/* Google */}
+              <button
+                onClick={signInWithGoogle}
+                className="w-full flex items-center justify-center gap-2.5 bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 shadow-sm transition-colors cursor-pointer"
+              >
+                <svg className="w-5 h-5" viewBox="0 0 24 24">
+                  <path
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
+                    fill="#4285F4"
+                  />
+                  <path
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                    fill="#34A853"
+                  />
+                  <path
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                    fill="#FBBC05"
+                  />
+                  <path
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                    fill="#EA4335"
+                  />
+                </svg>
+                使用 Google 帳號繼續
+              </button>
+
+              {/* Phone */}
+              <button
+                onClick={handlePhoneLogin}
+                className="w-full flex items-center justify-center gap-2.5 bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 shadow-sm transition-colors cursor-pointer"
+              >
+                <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+                使用手機號碼登入
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Back to map */}
+        <div className="text-center mt-6">
+          <Link href="/" className="text-sm text-gray-400 hover:text-gray-600 transition-colors">
+            ← 返回地圖
+          </Link>
+        </div>
+      </div>
+    </div>
+  )
+}
