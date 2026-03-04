@@ -52,6 +52,7 @@ export default function Map() {
     const { data, error } = await supabase
       .from('spots')
       .select('id, name, name_en, description, description_en, category, latitude, longitude, address, status, quality, is_free, is_private, created_by, managed_by, phone, website, facebook, instagram, line_id, email, google_maps_url, gov_certified, view_count, created_at, updated_at')
+      .range(0, 9999)
     if (!error && data) setSpots(data as Spot[])
     setLoading(false)
   }, [])
