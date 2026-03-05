@@ -33,6 +33,18 @@ const QUALITY_BADGE: Record<string, { label: string; color: string }> = {
   unrated: { label: '', color: '' },
 }
 
+// 精簡的地圖 marker 用 type
+type SpotSummary = {
+  id: string
+  name: string
+  category: SpotCategory
+  latitude: number
+  longitude: number
+  is_free: boolean | null
+  gov_certified: boolean | null
+  quality: string
+}
+
 // 根據 cluster 數量決定圓圈大小
 function getClusterSize(count: number): number {
   if (count < 10) return 36
@@ -54,17 +66,18 @@ type ViewMode = 'map' | 'list'
 
 export default function Map() {
   const mapRef = useRef<MapRef>(null)
-  const [spots, setSpots] = useState<Spot[]>([])
-  const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null)
+  const [spots, setSpots] = useState<SpotSummary[]>([])
+  const [selectedSpot, setSelectedSpot] = useState<SpotSummary | null>(null)
   const [loading, setLoading] = useState(true)
   const [activeFilter, setActiveFilter] = useState<SpotCategory | 'all'>('all')
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([])
   const [featureSpotIds, setFeatureSpotIds] = useState<Set<string> | null>(null)
   const [addModal, setAddModal] = useState<{ lat: number; lng: number } | null>(null)
-  const [detailSpot, setDetailSpot] = useState<Spot | null>(null)
+  const [detailSpotId, setDetailSpotId] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [searchExpanded, setSearchExpanded] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>('map')
+  const [totalCount, setTotalCount] = useState(0)
   const [viewState, setViewState] = useState({
     longitude: 121.0,
     latitude: 23.8,
@@ -76,34 +89,108 @@ export default function Map() {
     [119.0, 21.5, 123.0, 25.5]
   )
 
-  const fetchSpots = useCallback(async () => {
-    // 地圖只需要最少欄位，詳情在 SpotDetail 裡再查
-    // Supabase 預設上限 1000 筆，必須分頁
-    const PAGE_SIZE = 1000
-    const allSpots: Spot[] = []
-    let from = 0
-    let hasMore = true
+  // Debounce timer ref
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-    while (hasMore) {
-      const { data, error } = await supabase
-        .from('spots')
-        .select('id, name, name_en, category, latitude, longitude, address, quality, is_free, gov_certified, description')
-        .range(from, from + PAGE_SIZE - 1)
-        .order('id')
+  // ====== Viewport-based fetch ======
+  const fetchViewportSpots = useCallback(async (
+    bounds: [number, number, number, number],
+    category: SpotCategory | 'all',
+    search: string,
+    featureIds: Set<string> | null,
+  ) => {
+    const [west, south, east, north] = bounds
 
-      if (error || !data) break
-      allSpots.push(...(data as Spot[]))
-      hasMore = data.length === PAGE_SIZE
-      from += PAGE_SIZE
+    let query = supabase
+      .from('spots')
+      .select('id, name, category, latitude, longitude, is_free, gov_certified, quality')
+      .gte('latitude', south)
+      .lte('latitude', north)
+      .gte('longitude', west)
+      .lte('longitude', east)
+
+    if (category !== 'all') {
+      query = query.eq('category', category)
     }
 
-    setSpots(allSpots)
+    if (search.trim()) {
+      query = query.ilike('name', `%${search.trim()}%`)
+    }
+
+    if (featureIds !== null) {
+      // 篩選 feature_votes 過濾出來的 spot_ids
+      query = query.in('id', Array.from(featureIds))
+    }
+
+    query = query.limit(500)
+
+    const { data, error } = await query
+
+    if (error) {
+      console.error('fetchViewportSpots error:', error)
+      return
+    }
+
+    setSpots((data || []) as SpotSummary[])
     setLoading(false)
   }, [])
 
+  // ====== Count query（帶 filter） ======
+  const fetchTotalCount = useCallback(async (
+    category: SpotCategory | 'all',
+    search: string,
+    featureIds: Set<string> | null,
+  ) => {
+    let query = supabase
+      .from('spots')
+      .select('id', { count: 'exact', head: true })
+
+    if (category !== 'all') {
+      query = query.eq('category', category)
+    }
+
+    if (search.trim()) {
+      query = query.ilike('name', `%${search.trim()}%`)
+    }
+
+    if (featureIds !== null) {
+      query = query.in('id', Array.from(featureIds))
+    }
+
+    const { count, error } = await query
+
+    if (!error && count !== null) {
+      setTotalCount(count)
+    }
+  }, [])
+
+  // ====== Trigger viewport fetch with debounce ======
+  const triggerFetch = useCallback((
+    bounds: [number, number, number, number],
+    category: SpotCategory | 'all',
+    search: string,
+    featureIds: Set<string> | null,
+  ) => {
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current)
+    }
+    debounceRef.current = setTimeout(() => {
+      fetchViewportSpots(bounds, category, search, featureIds)
+      fetchTotalCount(category, search, featureIds)
+    }, 300)
+  }, [fetchViewportSpots, fetchTotalCount])
+
+  // ====== 初次載入 + filter/search 改變時重新 fetch ======
   useEffect(() => {
-    fetchSpots()
-  }, [fetchSpots])
+    triggerFetch(mapBounds, activeFilter, searchQuery, featureSpotIds)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeFilter, searchQuery, featureSpotIds])
+
+  // 初次載入也要算 count
+  useEffect(() => {
+    fetchTotalCount(activeFilter, searchQuery, featureSpotIds)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // 當選擇特性篩選時，查詢符合條件的 spot ids
   useEffect(() => {
@@ -167,24 +254,14 @@ export default function Map() {
     setAddModal({ lat: e.lngLat.lat, lng: e.lngLat.lng })
   }, [])
 
-  const filteredSpots = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase()
-    return spots.filter(s => {
-      if (activeFilter !== 'all' && s.category !== activeFilter) return false
-      if (featureSpotIds !== null && !featureSpotIds.has(s.id)) return false
-      if (q && !s.name.toLowerCase().includes(q) && !(s.name_en?.toLowerCase().includes(q))) return false
-      return true
-    })
-  }, [spots, activeFilter, featureSpotIds, searchQuery])
-
-  // ====== Supercluster 建立 ======
+  // ====== Supercluster 建立（直接用 viewport spots） ======
   const supercluster = useMemo(() => {
     const sc = new Supercluster({
       radius: 60,
       maxZoom: 14,
     })
 
-    const points: Supercluster.PointFeature<{ spotId: string }>[] = filteredSpots.map(spot => ({
+    const points: Supercluster.PointFeature<{ spotId: string }>[] = spots.map(spot => ({
       type: 'Feature',
       properties: { spotId: spot.id },
       geometry: {
@@ -195,34 +272,36 @@ export default function Map() {
 
     sc.load(points)
     return sc
-  }, [filteredSpots])
+  }, [spots])
 
   // 根據目前 viewport 計算 clusters
   const clusters = useMemo(() => {
     return supercluster.getClusters(mapBounds, Math.floor(viewState.zoom))
   }, [supercluster, mapBounds, viewState.zoom])
 
-  // spot id → Spot 快速查詢
+  // spot id → SpotSummary 快速查詢
   const spotMap = useMemo(() => {
-    const m = new globalThis.Map<string, Spot>()
+    const m = new globalThis.Map<string, SpotSummary>()
     for (const s of spots) m.set(s.id, s)
     return m
   }, [spots])
 
-  // 地圖移動時更新 bounds
+  // 地圖移動時更新 bounds + 觸發 debounced fetch
   const handleMapMove = useCallback((evt: { viewState: typeof viewState }) => {
     setViewState(evt.viewState)
     const map = mapRef.current?.getMap()
     if (map) {
       const b = map.getBounds()
-      setMapBounds([
+      const newBounds: [number, number, number, number] = [
         b.getWest(),
         b.getSouth(),
         b.getEast(),
         b.getNorth(),
-      ])
+      ]
+      setMapBounds(newBounds)
+      triggerFetch(newBounds, activeFilter, searchQuery, featureSpotIds)
     }
-  }, [])
+  }, [triggerFetch, activeFilter, searchQuery, featureSpotIds])
 
   // 點擊 cluster → zoom in
   const handleClusterClick = useCallback((clusterId: number, longitude: number, latitude: number) => {
@@ -237,15 +316,29 @@ export default function Map() {
     })
   }, [supercluster])
 
-  // 列表模式：按名稱排序
-  const sortedFilteredSpots = useMemo(() => {
-    return [...filteredSpots].sort((a, b) => a.name.localeCompare(b.name, 'zh-Hant'))
-  }, [filteredSpots])
+  // 列表模式：按名稱排序（用 viewport 內的 spots）
+  const sortedSpots = useMemo(() => {
+    return [...spots].sort((a, b) => a.name.localeCompare(b.name, 'zh-Hant'))
+  }, [spots])
+
+  // 新增地點後重新 fetch viewport
+  const handleSpotAdded = useCallback(() => {
+    setAddModal(null)
+    fetchViewportSpots(mapBounds, activeFilter, searchQuery, featureSpotIds)
+    fetchTotalCount(activeFilter, searchQuery, featureSpotIds)
+  }, [mapBounds, activeFilter, searchQuery, featureSpotIds, fetchViewportSpots, fetchTotalCount])
+
+  // SpotDetail 更新後重新 fetch viewport
+  const handleSpotUpdated = useCallback(() => {
+    setDetailSpotId(null)
+    fetchViewportSpots(mapBounds, activeFilter, searchQuery, featureSpotIds)
+    fetchTotalCount(activeFilter, searchQuery, featureSpotIds)
+  }, [mapBounds, activeFilter, searchQuery, featureSpotIds, fetchViewportSpots, fetchTotalCount])
 
   return (
     <div className="relative w-full h-full flex flex-col">
       <Header
-        spotCount={filteredSpots.length}
+        spotCount={totalCount}
         loading={loading}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
@@ -318,8 +411,8 @@ export default function Map() {
       {/* =================== 地圖模式 =================== */}
       {viewMode === 'map' && (
         <>
-          {/* Loading overlay */}
-          {loading && (
+          {/* Loading overlay — 只在第一次載入時顯示 */}
+          {loading && spots.length === 0 && (
             <div className="absolute inset-0 z-20 flex items-center justify-center bg-bg/80 backdrop-blur-sm">
               <div className="flex flex-col items-center gap-3">
                 <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center animate-pulse">
@@ -445,18 +538,9 @@ export default function Map() {
                       </div>
                     </div>
                   </div>
-                  {selectedSpot.description && (
-                    <p className="text-sm text-text-secondary mb-2 line-clamp-2 leading-relaxed">{selectedSpot.description}</p>
-                  )}
-                  {selectedSpot.address && (
-                    <p className="text-xs text-text-secondary mb-2 flex items-start gap-1.5">
-                      <FontAwesomeIcon icon={NAV_ICONS.location} className="text-primary mt-0.5 flex-shrink-0" />
-                      <span className="line-clamp-1">{selectedSpot.address}</span>
-                    </p>
-                  )}
                   <button
                     onClick={() => {
-                      setDetailSpot(selectedSpot)
+                      setDetailSpotId(selectedSpot.id)
                       setSelectedSpot(null)
                     }}
                     className="mt-1 w-full text-center text-sm font-semibold text-white bg-primary hover:bg-primary-dark py-2.5 rounded-xl transition-colors cursor-pointer flex items-center justify-center gap-1.5 active:scale-[0.98] min-h-[44px]"
@@ -477,12 +561,12 @@ export default function Map() {
           className="absolute left-0 right-0 bottom-0 overflow-y-auto bg-surface transition-all duration-200"
           style={{ top: searchExpanded ? '12rem' : '8.5rem' }}
         >
-          {loading ? (
+          {loading && spots.length === 0 ? (
             <div className="flex items-center justify-center h-40 text-text-secondary">
               <FontAwesomeIcon icon={NAV_ICONS.spinner} className="animate-spin mr-2" />
               載入中…
             </div>
-          ) : sortedFilteredSpots.length === 0 ? (
+          ) : sortedSpots.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-60 text-text-secondary gap-3 px-4">
               <div className="w-20 h-20 rounded-full bg-surface-alt flex items-center justify-center mb-1">
                 <span className="text-4xl">🔍</span>
@@ -501,11 +585,11 @@ export default function Map() {
             </div>
           ) : (
             <div className="p-3 grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {sortedFilteredSpots.map(spot => (
+              {sortedSpots.map(spot => (
                 <SpotCard
                   key={spot.id}
                   spot={spot}
-                  onDetail={() => setDetailSpot(spot)}
+                  onDetail={() => setDetailSpotId(spot.id)}
                 />
               ))}
             </div>
@@ -518,21 +602,15 @@ export default function Map() {
           lat={addModal.lat}
           lng={addModal.lng}
           onClose={() => setAddModal(null)}
-          onAdded={() => {
-            setAddModal(null)
-            fetchSpots()
-          }}
+          onAdded={handleSpotAdded}
         />
       )}
 
-      {detailSpot && (
+      {detailSpotId && (
         <SpotDetail
-          spot={detailSpot}
-          onClose={() => setDetailSpot(null)}
-          onSpotUpdated={() => {
-            setDetailSpot(null)
-            fetchSpots()
-          }}
+          spotId={detailSpotId}
+          onClose={() => setDetailSpotId(null)}
+          onSpotUpdated={handleSpotUpdated}
         />
       )}
     </div>
@@ -540,7 +618,7 @@ export default function Map() {
 }
 
 // ====== 列表卡片元件 ======
-function SpotCard({ spot, onDetail }: { spot: Spot; onDetail: () => void }) {
+function SpotCard({ spot, onDetail }: { spot: SpotSummary; onDetail: () => void }) {
   return (
     <div
       onClick={onDetail}
@@ -593,16 +671,6 @@ function SpotCard({ spot, onDetail }: { spot: Spot; onDetail: () => void }) {
 
         {/* Separator */}
         <div className="border-t border-border/50 mb-2.5" />
-
-        {/* 地址 */}
-        {spot.address ? (
-          <p className="text-xs text-text-secondary flex items-start gap-1.5 line-clamp-1 mb-2">
-            <FontAwesomeIcon icon={NAV_ICONS.location} className="text-primary mt-0.5 flex-shrink-0 text-[10px]" />
-            {spot.address}
-          </p>
-        ) : (
-          <p className="text-xs text-text-secondary/50 mb-2">未提供地址</p>
-        )}
 
         {/* 查看詳情 */}
         <div className="flex justify-end">

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { type Spot, CATEGORY_EMOJI, CATEGORY_LABEL } from '@/lib/supabase'
+import { supabase, type Spot, CATEGORY_EMOJI, CATEGORY_LABEL } from '@/lib/supabase'
 import { fetchSpotFeatures, type GroupedFeatures } from '@/lib/features'
 import { useAuth } from '@/lib/auth-context'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -17,7 +17,7 @@ import FavoriteButton from './FavoriteButton'
 import EditSpotModal from './EditSpotModal'
 
 interface Props {
-  spot: Spot
+  spotId: string
   onClose: () => void
   onSpotUpdated?: () => void
 }
@@ -30,28 +30,66 @@ const QUALITY_BADGE: Record<string, { label: string; color: string; bgColor: str
   featured: { label: '精選', color: '#D4A843', bgColor: '#D4A84320' },
 }
 
-export default function SpotDetail({ spot, onClose, onSpotUpdated }: Props) {
+export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
   const { user } = useAuth()
+  const [spot, setSpot] = useState<Spot | null>(null)
+  const [spotLoading, setSpotLoading] = useState(true)
   const [groups, setGroups] = useState<GroupedFeatures[]>([])
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<Tab>('overview')
   const [isClosing, setIsClosing] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
 
+  // 用 spotId 撈完整資料
+  useEffect(() => {
+    async function fetchFullSpot() {
+      setSpotLoading(true)
+      const { data, error } = await supabase
+        .from('spots')
+        .select('*')
+        .eq('id', spotId)
+        .single()
+
+      if (!error && data) {
+        setSpot(data as Spot)
+      }
+      setSpotLoading(false)
+    }
+    fetchFullSpot()
+  }, [spotId])
+
   const loadFeatures = useCallback(async () => {
+    if (!spot) return
     setLoading(true)
     const result = await fetchSpotFeatures(spot.id, spot.category, user?.id)
     setGroups(result)
     setLoading(false)
-  }, [spot.id, spot.category, user?.id])
+  }, [spot, user?.id])
 
   useEffect(() => {
-    loadFeatures()
-  }, [loadFeatures])
+    if (spot) {
+      loadFeatures()
+    }
+  }, [spot, loadFeatures])
 
   const handleClose = () => {
     setIsClosing(true)
     setTimeout(onClose, 200)
+  }
+
+  // 載入中的 placeholder
+  if (spotLoading || !spot) {
+    return (
+      <div
+        className="absolute inset-0 z-30 flex items-end justify-center bg-black/20 backdrop-blur-[2px]"
+        onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
+      >
+        <div className="bg-surface rounded-t-2xl w-full max-w-lg shadow-2xl flex flex-col items-center justify-center py-16">
+          <FontAwesomeIcon icon={NAV_ICONS.spinner} className="text-primary animate-spin text-2xl mb-3" />
+          <p className="text-sm text-text-secondary">載入地點資料中...</p>
+        </div>
+      </div>
+    )
   }
 
   const qualityConfig = QUALITY_BADGE[spot.quality] || QUALITY_BADGE.new
