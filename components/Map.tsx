@@ -62,6 +62,7 @@ export default function Map() {
   const [featureSpotIds, setFeatureSpotIds] = useState<Set<string> | null>(null)
   const [addModal, setAddModal] = useState<{ lat: number; lng: number } | null>(null)
   const [detailSpot, setDetailSpot] = useState<Spot | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
   const [viewMode, setViewMode] = useState<ViewMode>('map')
   const [viewState, setViewState] = useState({
     longitude: 121.0,
@@ -149,11 +150,15 @@ export default function Map() {
     setAddModal({ lat: e.lngLat.lat, lng: e.lngLat.lng })
   }, [])
 
-  const filteredSpots = useMemo(() => spots.filter(s => {
-    if (activeFilter !== 'all' && s.category !== activeFilter) return false
-    if (featureSpotIds !== null && !featureSpotIds.has(s.id)) return false
-    return true
-  }), [spots, activeFilter, featureSpotIds])
+  const filteredSpots = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase()
+    return spots.filter(s => {
+      if (activeFilter !== 'all' && s.category !== activeFilter) return false
+      if (featureSpotIds !== null && !featureSpotIds.has(s.id)) return false
+      if (q && !s.name.toLowerCase().includes(q) && !(s.name_en?.toLowerCase().includes(q))) return false
+      return true
+    })
+  }, [spots, activeFilter, featureSpotIds, searchQuery])
 
   // ====== Supercluster 建立 ======
   const supercluster = useMemo(() => {
@@ -222,7 +227,12 @@ export default function Map() {
 
   return (
     <div className="relative w-full h-full flex flex-col">
-      <Header spotCount={filteredSpots.length} loading={loading} />
+      <Header
+        spotCount={filteredSpots.length}
+        loading={loading}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+      />
 
       {/* Category Filter Bar + 地圖/列表切換 */}
       <div className="absolute top-14 left-0 right-0 z-10 px-3 py-2 flex gap-2 items-center overflow-x-auto bg-surface/80 backdrop-blur-sm">

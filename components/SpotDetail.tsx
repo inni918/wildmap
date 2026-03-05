@@ -10,13 +10,17 @@ import { faCircleQuestion, faCircleCheck, faPhone, faGlobe, faComment, faEnvelop
 import { faFacebookF, faInstagram } from '@fortawesome/free-brands-svg-icons'
 import FeatureIcons from './FeatureIcons'
 import FeatureVoting from './FeatureVoting'
+import StarRating from './StarRating'
+import PhotoGrid from './PhotoGrid'
+import CommentsTab from './CommentsTab'
+import FavoriteButton from './FavoriteButton'
 
 interface Props {
   spot: Spot
   onClose: () => void
 }
 
-type Tab = 'info' | 'vote'
+type Tab = 'overview' | 'comments' | 'vote'
 
 const QUALITY_BADGE: Record<string, { label: string; color: string; bgColor: string }> = {
   new: { label: '新建', color: '#EAB308', bgColor: '#EAB30820' },
@@ -28,7 +32,7 @@ export default function SpotDetail({ spot, onClose }: Props) {
   const { user } = useAuth()
   const [groups, setGroups] = useState<GroupedFeatures[]>([])
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState<Tab>('info')
+  const [activeTab, setActiveTab] = useState<Tab>('overview')
   const [isClosing, setIsClosing] = useState(false)
 
   const loadFeatures = useCallback(async () => {
@@ -99,12 +103,15 @@ export default function SpotDetail({ spot, onClose }: Props) {
                 </div>
               </div>
             </div>
-            <button
-              onClick={handleClose}
-              className="text-text-secondary hover:text-text-main p-1 cursor-pointer"
-            >
-              <FontAwesomeIcon icon={NAV_ICONS.close} />
-            </button>
+            <div className="flex items-center gap-1">
+              <FavoriteButton spotId={spot.id} />
+              <button
+                onClick={handleClose}
+                className="text-text-secondary hover:text-text-main p-1 cursor-pointer"
+              >
+                <FontAwesomeIcon icon={NAV_ICONS.close} />
+              </button>
+            </div>
           </div>
 
           {/* Description */}
@@ -129,17 +136,27 @@ export default function SpotDetail({ spot, onClose }: Props) {
           )}
         </div>
 
-        {/* Tab bar */}
+        {/* Tab bar - 3 tabs */}
         <div className="flex border-b border-border px-5">
           <button
-            onClick={() => setActiveTab('info')}
+            onClick={() => setActiveTab('overview')}
             className={`flex-1 py-2.5 text-sm font-medium text-center border-b-2 transition-colors cursor-pointer ${
-              activeTab === 'info'
+              activeTab === 'overview'
                 ? 'border-primary text-primary-dark'
                 : 'border-transparent text-text-secondary hover:text-text-main'
             }`}
           >
-            特性一覽
+            總覽
+          </button>
+          <button
+            onClick={() => setActiveTab('comments')}
+            className={`flex-1 py-2.5 text-sm font-medium text-center border-b-2 transition-colors cursor-pointer ${
+              activeTab === 'comments'
+                ? 'border-primary text-primary-dark'
+                : 'border-transparent text-text-secondary hover:text-text-main'
+            }`}
+          >
+            評論
           </button>
           <button
             onClick={() => setActiveTab('vote')}
@@ -149,20 +166,23 @@ export default function SpotDetail({ spot, onClose }: Props) {
                 : 'border-transparent text-text-secondary hover:text-text-main'
             }`}
           >
-            投票特性 {user ? '' : ''}
-            {!user && <FontAwesomeIcon icon={NAV_ICONS.lock} className="ml-1 text-xs" />}
+            投票特性 {!user && <FontAwesomeIcon icon={NAV_ICONS.lock} className="ml-1 text-xs" />}
           </button>
         </div>
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto px-5 py-4">
-          {loading ? (
-            <div className="flex items-center justify-center py-8">
-              <FontAwesomeIcon icon={NAV_ICONS.spinner} className="text-primary animate-spin mr-2" />
-              <span className="text-sm text-text-secondary">載入特性資料...</span>
-            </div>
-          ) : activeTab === 'info' ? (
-            <InfoTab groups={groups} />
+          {activeTab === 'overview' ? (
+            loading ? (
+              <div className="flex items-center justify-center py-8">
+                <FontAwesomeIcon icon={NAV_ICONS.spinner} className="text-primary animate-spin mr-2" />
+                <span className="text-sm text-text-secondary">載入中...</span>
+              </div>
+            ) : (
+              <OverviewTab spotId={spot.id} groups={groups} />
+            )
+          ) : activeTab === 'comments' ? (
+            <CommentsTab spotId={spot.id} />
           ) : (
             <VoteTab
               spotId={spot.id}
@@ -254,86 +274,110 @@ function ContactIcons({ spot }: { spot: Spot }) {
   )
 }
 
-// === Info Tab: Read-only feature display ===
+// === Overview Tab: Features + Rating + Photos ===
 
-function InfoTab({ groups }: { groups: GroupedFeatures[] }) {
+function OverviewTab({ spotId, groups }: { spotId: string; groups: GroupedFeatures[] }) {
   const hasAnyFeature = groups.some(g => g.features.some(f => f.status !== 'absent'))
 
-  if (!hasAnyFeature) {
-    return (
-      <div className="text-center py-8">
-        <p className="text-4xl mb-2">🤷</p>
-        <p className="text-sm text-text-secondary">尚無特性資料</p>
-        <p className="text-xs text-text-secondary/60 mt-1">切換到「投票特性」幫忙回報吧！</p>
-      </div>
-    )
-  }
-
   return (
-    <div className="space-y-4">
-      {groups.map((group) => {
-        const visibleFeatures = group.features.filter(f => f.status !== 'absent')
-        if (visibleFeatures.length === 0) return null
+    <div className="space-y-6">
+      {/* Rating Section */}
+      <div>
+        <h3 className="text-sm font-semibold text-text-main mb-2 flex items-center gap-1.5">
+          <FontAwesomeIcon icon={NAV_ICONS.starSolid} className="text-accent text-xs" />
+          評分
+        </h3>
+        <StarRating spotId={spotId} />
+      </div>
 
-        return (
-          <div key={group.group_key}>
-            <div className="flex items-center gap-2 mb-2">
-              <span
-                className="w-2.5 h-2.5 rounded-full"
-                style={{ backgroundColor: group.color }}
-              />
-              <span className="text-sm font-semibold" style={{ color: group.color }}>
-                {group.group_name}
-              </span>
-            </div>
-            <div className="flex flex-wrap gap-1.5">
-              {visibleFeatures.map((f) => {
-                const isConfirmed = f.status === 'confirmed'
-                const faIcon = getFeatureIcon(f.key)
-                return (
-                  <span
-                    key={f.id}
-                    className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-                      isConfirmed ? '' : 'opacity-50'
-                    }`}
-                    style={
-                      isConfirmed
-                        ? {
-                            backgroundColor: group.color + '15',
-                            color: group.color,
-                            border: `1px solid ${group.color}40`,
+      {/* Feature Info */}
+      {hasAnyFeature ? (
+        <div>
+          <h3 className="text-sm font-semibold text-text-main mb-3 flex items-center gap-1.5">
+            <FontAwesomeIcon icon={NAV_ICONS.info} className="text-primary text-xs" />
+            特性一覽
+          </h3>
+          <div className="space-y-4">
+            {groups.map((group) => {
+              const visibleFeatures = group.features.filter(f => f.status !== 'absent')
+              if (visibleFeatures.length === 0) return null
+
+              return (
+                <div key={group.group_key}>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span
+                      className="w-2.5 h-2.5 rounded-full"
+                      style={{ backgroundColor: group.color }}
+                    />
+                    <span className="text-sm font-semibold" style={{ color: group.color }}>
+                      {group.group_name}
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {visibleFeatures.map((f) => {
+                      const isConfirmed = f.status === 'confirmed'
+                      const faIcon = getFeatureIcon(f.key)
+                      return (
+                        <span
+                          key={f.id}
+                          className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
+                            isConfirmed ? '' : 'opacity-50'
+                          }`}
+                          style={
+                            isConfirmed
+                              ? {
+                                  backgroundColor: group.color + '15',
+                                  color: group.color,
+                                  border: `1px solid ${group.color}40`,
+                                }
+                              : {
+                                  backgroundColor: '#f3f4f6',
+                                  color: '#9ca3af',
+                                  border: '1px solid #e5e7eb',
+                                }
                           }
-                        : {
-                            backgroundColor: '#f3f4f6',
-                            color: '#9ca3af',
-                            border: '1px solid #e5e7eb',
+                          title={
+                            isConfirmed
+                              ? `${f.yes_count}人確認`
+                              : `待確認（${f.total}票）`
                           }
-                    }
-                    title={
-                      isConfirmed
-                        ? `${f.yes_count}人確認`
-                        : `待確認（${f.total}票）`
-                    }
-                  >
-                    {faIcon ? (
-                      <FontAwesomeIcon icon={faIcon} className="text-[10px]" />
-                    ) : (
-                      <span>{f.icon}</span>
-                    )}
-                    {f.name_zh}
-                    {isConfirmed && (
-                      <FontAwesomeIcon icon={faCircleCheck} className="text-[10px] opacity-70" />
-                    )}
-                    {f.status === 'pending' && (
-                      <FontAwesomeIcon icon={faCircleQuestion} className="text-[10px]" />
-                    )}
-                  </span>
-                )
-              })}
-            </div>
+                        >
+                          {faIcon ? (
+                            <FontAwesomeIcon icon={faIcon} className="text-[10px]" />
+                          ) : (
+                            <span>{f.icon}</span>
+                          )}
+                          {f.name_zh}
+                          {isConfirmed && (
+                            <FontAwesomeIcon icon={faCircleCheck} className="text-[10px] opacity-70" />
+                          )}
+                          {f.status === 'pending' && (
+                            <FontAwesomeIcon icon={faCircleQuestion} className="text-[10px]" />
+                          )}
+                        </span>
+                      )
+                    })}
+                  </div>
+                </div>
+              )
+            })}
           </div>
-        )
-      })}
+        </div>
+      ) : (
+        <div className="text-center py-4">
+          <p className="text-sm text-text-secondary">尚無特性資料</p>
+          <p className="text-xs text-text-secondary/60 mt-1">切換到「投票特性」幫忙回報吧！</p>
+        </div>
+      )}
+
+      {/* Photo Grid */}
+      <div>
+        <h3 className="text-sm font-semibold text-text-main mb-2 flex items-center gap-1.5">
+          <FontAwesomeIcon icon={NAV_ICONS.camera} className="text-primary text-xs" />
+          照片
+        </h3>
+        <PhotoGrid spotId={spotId} />
+      </div>
     </div>
   )
 }

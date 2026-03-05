@@ -124,7 +124,19 @@ import {
   faEye,
   faList,
   faMapLocationDot,
+  faHeart as faHeartSolid,
+  faStar as faStarSolid,
+  faCamera,
+  faImage,
+  faTrash,
+  faCommentDots,
+  faPaperPlane,
 } from '@fortawesome/free-solid-svg-icons'
+
+import {
+  faHeart as faHeartRegular,
+  faStar as faStarRegular,
+} from '@fortawesome/free-regular-svg-icons'
 
 // === Feature key → Font Awesome icon ===
 export const FEATURE_ICON_MAP: Record<string, IconDefinition> = {
@@ -272,6 +284,15 @@ export const NAV_ICONS = {
   eye:         faEye,
   list:        faList,
   mapView:     faMapLocationDot,
+  heartSolid:  faHeartSolid,
+  heartRegular: faHeartRegular,
+  starSolid:   faStarSolid,
+  starRegular: faStarRegular,
+  camera:      faCamera,
+  image:       faImage,
+  trash:       faTrash,
+  commentDots: faCommentDots,
+  send:        faPaperPlane,
 } as const
 
 // Helper to get an icon for a feature key, with fallback
