@@ -6,6 +6,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS } from '@/lib/icons'
 import { faCampground, faVanShuttle, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 
+// 預載地圖頁的 JS chunk — 用戶看 Landing Page 時就背景下載
+if (typeof window !== 'undefined') {
+  setTimeout(() => {
+    const link = document.createElement('link')
+    link.rel = 'prefetch'
+    link.href = '/map'
+    link.as = 'document'
+    document.head.appendChild(link)
+  }, 2000) // 2 秒後才 prefetch，不影響首頁載入
+}
+
 // 動態數字計數動畫
 function AnimatedCounter({ target, duration = 2000, suffix = '' }: { target: number; duration?: number; suffix?: string }) {
   const [count, setCount] = useState(0)
