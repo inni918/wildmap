@@ -78,7 +78,8 @@ export default function Map() {
 
   const fetchSpots = useCallback(async () => {
     // 地圖只需要最少欄位，詳情在 SpotDetail 裡再查
-    const PAGE_SIZE = 2000
+    // Supabase 預設上限 1000 筆，必須分頁
+    const PAGE_SIZE = 1000
     const allSpots: Spot[] = []
     let from = 0
     let hasMore = true
@@ -86,7 +87,7 @@ export default function Map() {
     while (hasMore) {
       const { data, error } = await supabase
         .from('spots')
-        .select('id, name, category, latitude, longitude, address, quality, is_free, gov_certified, description')
+        .select('id, name, name_en, category, latitude, longitude, address, quality, is_free, gov_certified, description')
         .range(from, from + PAGE_SIZE - 1)
         .order('id')
 
