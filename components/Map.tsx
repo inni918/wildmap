@@ -77,7 +77,8 @@ export default function Map() {
   )
 
   const fetchSpots = useCallback(async () => {
-    const PAGE_SIZE = 1000
+    // 地圖只需要最少欄位，詳情在 SpotDetail 裡再查
+    const PAGE_SIZE = 2000
     const allSpots: Spot[] = []
     let from = 0
     let hasMore = true
@@ -85,7 +86,7 @@ export default function Map() {
     while (hasMore) {
       const { data, error } = await supabase
         .from('spots')
-        .select('id, name, name_en, description, description_en, category, latitude, longitude, address, status, quality, is_free, is_private, created_by, managed_by, phone, website, facebook, instagram, line_id, email, google_maps_url, gov_certified, view_count, created_at, updated_at')
+        .select('id, name, category, latitude, longitude, address, quality, is_free, gov_certified, description')
         .range(from, from + PAGE_SIZE - 1)
         .order('id')
 
