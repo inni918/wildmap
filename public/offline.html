@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2D6A4F">
+  <title>離線 - Wildmap</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #FEFAF3;
+      color: #1B4332;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+    }
+    .container {
+      text-align: center;
+      max-width: 400px;
+    }
+    .icon {
+      font-size: 64px;
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-size: 24px;
+      color: #2D6A4F;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+    p {
+      font-size: 16px;
+      color: #52796F;
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+    .retry-btn {
+      display: inline-block;
+      padding: 12px 32px;
+      background-color: #2D6A4F;
+      color: #FEFAF3;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.2s;
+    }
+    .retry-btn:hover {
+      background-color: #1B4332;
+    }
+    .retry-btn:active {
+      transform: scale(0.98);
+    }
+    .brand {
+      margin-top: 48px;
+      font-size: 14px;
+      color: #95A8A0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon">🏕️</div>
+    <h1>目前沒有網路連線</h1>
+    <p>看來你正在一個訊號不太好的地方 🌲<br>請確認網路連線後再試一次。</p>
+    <button class="retry-btn" onclick="window.location.reload()">重新整理</button>
+    <div class="brand">Wildmap - 探索台灣戶外秘境</div>
+  </div>
+</body>
+</html>

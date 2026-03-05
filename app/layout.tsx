@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AuthProvider } from "@/lib/auth-context";
+import PWARegister from "@/components/PWARegister";
 import "@/lib/fontawesome";
 import "./globals.css";
 
@@ -29,10 +30,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-TW">
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#2D6A4F" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+      </head>
       <body className="font-sans antialiased bg-bg text-text-main">
         <AuthProvider>
           {children}
         </AuthProvider>
+        <PWARegister />
       </body>
     </html>
   );
