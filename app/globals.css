@@ -78,9 +78,11 @@ body {
   font-family: 'Noto Sans TC', sans-serif;
 }
 
-/* Links default to primary */
-a {
-  color: var(--color-primary);
+/* Links default to primary — 用 @layer base 確保 Tailwind utility 能覆蓋 */
+@layer base {
+  a {
+    color: var(--color-primary);
+  }
 }
 
 /* Selection highlight */
