@@ -429,6 +429,26 @@ export default function Map() {
             </div>
           )}
 
+          {/* Empty state for 0 results in map mode */}
+          {!loading && spots.length === 0 && (searchQuery || activeFilter !== 'all' || featureSpotIds !== null) && (
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 bg-surface/95 backdrop-blur-sm rounded-2xl shadow-lg border border-border p-6 max-w-xs text-center">
+              <div className="w-16 h-16 mx-auto rounded-full bg-surface-alt flex items-center justify-center mb-3">
+                <span className="text-3xl">🔍</span>
+              </div>
+              <p className="text-base font-semibold text-text-main mb-1">找不到符合條件的地點</p>
+              <p className="text-sm text-text-secondary mb-4">
+                試試調整篩選條件或搜尋其他關鍵字
+              </p>
+              <button
+                onClick={() => { setActiveFilter('all'); setSelectedFeatures([]); setSearchQuery('') }}
+                className="text-sm text-primary font-medium hover:text-primary-dark transition-colors flex items-center gap-1 mx-auto cursor-pointer"
+              >
+                <FontAwesomeIcon icon={NAV_ICONS.close} className="text-xs" />
+                清除所有篩選
+              </button>
+            </div>
+          )}
+
           {/* Add Spot Hint */}
           <div className="absolute bottom-8 right-4 z-10 bg-primary text-text-on-primary rounded-xl shadow-md px-4 py-2 text-sm flex items-center gap-2 md:bottom-8 bottom-20">
             點地圖新增地點

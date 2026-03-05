@@ -25,7 +25,7 @@ interface Props {
 type Tab = 'overview' | 'comments' | 'vote'
 
 const QUALITY_BADGE: Record<string, { label: string; color: string; bgColor: string }> = {
-  new: { label: '新建', color: '#EAB308', bgColor: '#EAB30820' },
+  new: { label: '待驗證', color: '#EAB308', bgColor: '#EAB30820' },
   community_verified: { label: '社群驗證', color: '#22C55E', bgColor: '#22C55E20' },
   featured: { label: '精選', color: '#D4A843', bgColor: '#D4A84320' },
 }
