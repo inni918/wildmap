@@ -1,12 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { supabase, type Spot } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth-context'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS } from '@/lib/icons'
 import {
-  faCampground, faVanShuttle, faFish, faMask, faWater, faMountain,
+  faCampground, faVanShuttle,
 } from '@fortawesome/free-solid-svg-icons'
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 
@@ -17,16 +17,20 @@ interface Props {
   onAdded: () => void
 }
 
+const MAX_PHOTOS = 5
+const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
+const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+
 // MVP 先只開放露營和車宿，其他分類之後再開放
 const CATEGORIES: { value: Spot['category']; label: string; emoji: string; icon: IconDefinition }[] = [
   { value: 'camping', label: '露營', emoji: '🏕️', icon: faCampground },
   { value: 'carcamp', label: '車宿', emoji: '🚐', icon: faVanShuttle },
-  // TODO: 之後開放
-  // { value: 'fishing', label: '釣魚', emoji: '🎣', icon: faFish },
-  // { value: 'diving', label: '潛水', emoji: '🤿', icon: faMask },
-  // { value: 'surfing', label: '衝浪', emoji: '🏄', icon: faWater },
-  // { value: 'hiking', label: '登山', emoji: '🏔️', icon: faMountain },
 ]
+
+interface PhotoPreview {
+  file: File
+  previewUrl: string
+}
 
 export default function AddSpotModal({ lat, lng, onClose, onAdded }: Props) {
   const { user, signInWithGoogle } = useAuth()
@@ -38,6 +42,79 @@ export default function AddSpotModal({ lat, lng, onClose, onAdded }: Props) {
   const [socialLink, setSocialLink] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [photos, setPhotos] = useState<PhotoPreview[]>([])
+  const photoInputRef = useRef<HTMLInputElement>(null)
+
+  const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files) return
+
+    // Reset file input
+    if (photoInputRef.current) photoInputRef.current.value = ''
+
+    const remaining = MAX_PHOTOS - photos.length
+    const newFiles = Array.from(files).slice(0, remaining)
+
+    for (const file of newFiles) {
+      if (!ACCEPTED_TYPES.includes(file.type)) {
+        setError('僅支援 JPG、PNG、WebP 格式')
+        setTimeout(() => setError(''), 3000)
+        return
+      }
+      if (file.size > MAX_FILE_SIZE) {
+        setError('每張照片不可超過 5MB')
+        setTimeout(() => setError(''), 3000)
+        return
+      }
+    }
+
+    const newPreviews: PhotoPreview[] = newFiles.map(file => ({
+      file,
+      previewUrl: URL.createObjectURL(file),
+    }))
+
+    setPhotos(prev => [...prev, ...newPreviews])
+  }
+
+  const removePhoto = (index: number) => {
+    setPhotos(prev => {
+      const updated = [...prev]
+      URL.revokeObjectURL(updated[index].previewUrl)
+      updated.splice(index, 1)
+      return updated
+    })
+  }
+
+  async function uploadPhotos(spotId: string, userId: string) {
+    for (const photo of photos) {
+      const ext = photo.file.name.split('.').pop() || 'jpg'
+      const fileName = `${userId}/${spotId}_${Date.now()}_${Math.random().toString(36).slice(2, 6)}.${ext}`
+
+      const { error: uploadError } = await supabase.storage
+        .from('spot-images')
+        .upload(fileName, photo.file, {
+          cacheControl: '3600',
+          upsert: false,
+        })
+
+      if (uploadError) {
+        console.error('Photo upload error:', uploadError)
+        continue
+      }
+
+      const { data: urlData } = supabase.storage
+        .from('spot-images')
+        .getPublicUrl(fileName)
+
+      await supabase
+        .from('spot_images')
+        .insert({
+          spot_id: spotId,
+          user_id: userId,
+          url: urlData.publicUrl,
+        })
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -59,14 +136,27 @@ export default function AddSpotModal({ lat, lng, onClose, onAdded }: Props) {
     if (phone.trim()) insertData.phone = phone.trim()
     if (socialLink.trim()) insertData.social_links = [socialLink.trim()]
 
-    const { error: err } = await supabase.from('spots').insert(insertData)
+    const { data, error: err } = await supabase
+      .from('spots')
+      .insert(insertData)
+      .select('id')
+      .single()
 
-    if (err) {
+    if (err || !data) {
       setError('新增失敗，請再試一次')
       setLoading(false)
-    } else {
-      onAdded()
+      return
     }
+
+    // Upload photos after spot creation
+    if (photos.length > 0) {
+      await uploadPhotos(data.id, user.id)
+    }
+
+    // Cleanup preview URLs
+    photos.forEach(p => URL.revokeObjectURL(p.previewUrl))
+
+    onAdded()
   }
 
   // 未登入畫面
@@ -206,6 +296,59 @@ export default function AddSpotModal({ lat, lng, onClose, onAdded }: Props) {
               placeholder="Facebook、Instagram 或官方網站"
               className="w-full border border-border rounded-[10px] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-light bg-surface"
             />
+          </div>
+
+          {/* 照片上傳 */}
+          <div>
+            <label className="text-sm font-medium text-text-main mb-2 block">
+              📷 新增照片（選填）
+            </label>
+
+            {/* Photo previews */}
+            {photos.length > 0 && (
+              <div className="flex gap-2 flex-wrap mb-2">
+                {photos.map((photo, idx) => (
+                  <div key={idx} className="relative w-16 h-16 rounded-lg overflow-hidden border border-border">
+                    <img
+                      src={photo.previewUrl}
+                      alt={`預覽 ${idx + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removePhoto(idx)}
+                      className="absolute top-0 right-0 w-5 h-5 bg-black/60 text-white rounded-bl-lg flex items-center justify-center text-[10px] cursor-pointer hover:bg-error"
+                    >
+                      <FontAwesomeIcon icon={NAV_ICONS.close} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {photos.length < MAX_PHOTOS && (
+              <div>
+                <input
+                  ref={photoInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  multiple
+                  onChange={handlePhotoSelect}
+                  className="hidden"
+                  id="add-spot-photos"
+                />
+                <label
+                  htmlFor="add-spot-photos"
+                  className="inline-flex items-center gap-2 px-3 py-2 border border-dashed border-border rounded-xl text-sm text-text-secondary hover:border-primary hover:text-primary transition-colors cursor-pointer"
+                >
+                  <FontAwesomeIcon icon={NAV_ICONS.camera} className="text-xs" />
+                  選擇照片（最多 {MAX_PHOTOS} 張）
+                </label>
+                <span className="text-xs text-text-secondary/60 ml-2">
+                  {photos.length}/{MAX_PHOTOS}
+                </span>
+              </div>
+            )}
           </div>
 
           <p className="text-xs text-text-secondary flex items-center gap-1">

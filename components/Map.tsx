@@ -11,6 +11,7 @@ import AddSpotModal from './AddSpotModal'
 import SpotDetail from './SpotDetail'
 import Header from './Header'
 import FeatureFilter from './FeatureFilter'
+import OnboardingOverlay from './OnboardingOverlay'
 
 const MAP_STYLE = {
   version: 8 as const,
@@ -543,16 +544,28 @@ export default function Map() {
                       </div>
                     </div>
                   </div>
-                  <button
-                    onClick={() => {
-                      setDetailSpotId(selectedSpot.id)
-                      setSelectedSpot(null)
-                    }}
-                    className="mt-1 w-full text-center text-sm font-semibold text-white bg-primary hover:bg-primary-dark py-2.5 rounded-xl transition-colors cursor-pointer flex items-center justify-center gap-1.5 active:scale-[0.98] min-h-[44px]"
-                  >
-                    查看詳情
-                    <FontAwesomeIcon icon={NAV_ICONS.chevronRight} className="text-xs" />
-                  </button>
+                  <div className="mt-1 flex gap-2">
+                    <button
+                      onClick={() => {
+                        setDetailSpotId(selectedSpot.id)
+                        setSelectedSpot(null)
+                      }}
+                      className="flex-1 text-center text-sm font-semibold text-white bg-primary hover:bg-primary-dark py-2.5 rounded-xl transition-colors cursor-pointer flex items-center justify-center gap-1.5 active:scale-[0.98] min-h-[44px]"
+                    >
+                      查看詳情
+                      <FontAwesomeIcon icon={NAV_ICONS.chevronRight} className="text-xs" />
+                    </button>
+                    <a
+                      href={`https://www.google.com/maps/dir/?api=1&destination=${selectedSpot.latitude},${selectedSpot.longitude}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="w-[44px] h-[44px] flex-shrink-0 rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-white flex items-center justify-center transition-colors active:scale-95"
+                      title="導航"
+                    >
+                      <FontAwesomeIcon icon={NAV_ICONS.navigate} className="text-base" />
+                    </a>
+                  </div>
                 </div>
               </Popup>
             )}
@@ -618,6 +631,8 @@ export default function Map() {
           onSpotUpdated={handleSpotUpdated}
         />
       )}
+
+      <OnboardingOverlay />
     </div>
   )
 }

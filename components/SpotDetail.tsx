@@ -169,11 +169,22 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
             <p className="text-sm text-text-secondary mt-2 line-clamp-3">{spot.description}</p>
           )}
 
-          {/* Coordinates */}
-          <p className="text-xs text-text-secondary/60 mt-2 flex items-center gap-1">
-            <FontAwesomeIcon icon={NAV_ICONS.location} className="text-primary text-[10px]" />
-            {spot.latitude.toFixed(4)}, {spot.longitude.toFixed(4)}
-          </p>
+          {/* Coordinates + Navigation */}
+          <div className="flex items-center gap-2 mt-2">
+            <p className="text-xs text-text-secondary/60 flex items-center gap-1">
+              <FontAwesomeIcon icon={NAV_ICONS.location} className="text-primary text-[10px]" />
+              {spot.latitude.toFixed(4)}, {spot.longitude.toFixed(4)}
+            </p>
+            <a
+              href={`https://www.google.com/maps/dir/?api=1&destination=${spot.latitude},${spot.longitude}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-[44px] h-[44px] rounded-full bg-primary text-text-on-primary flex items-center justify-center hover:bg-primary-dark active:scale-90 transition-all shadow-md"
+              title="用 Google Maps 導航"
+            >
+              <FontAwesomeIcon icon={NAV_ICONS.navigate} className="text-base" />
+            </a>
+          </div>
 
           {/* Contact icons */}
           <ContactIcons spot={spot} />

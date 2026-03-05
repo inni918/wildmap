@@ -181,10 +181,20 @@ export default function PhotoGrid({ spotId }: Props) {
 
       {/* Photo grid */}
       {images.length === 0 ? (
-        <div className="text-center py-6">
-          <FontAwesomeIcon icon={NAV_ICONS.image} className="text-3xl text-border mb-2" />
-          <p className="text-sm text-text-secondary">還沒有照片</p>
-          <p className="text-xs text-text-secondary/60 mt-1">上傳第一張照片吧！</p>
+        <div className="text-center py-6 bg-surface-alt/50 rounded-xl border border-dashed border-border">
+          <div className="text-3xl mb-2">📷</div>
+          <p className="text-sm font-medium text-text-main mb-1">成為第一個上傳照片的人！</p>
+          {user ? (
+            <label
+              htmlFor="photo-upload"
+              className="inline-flex items-center gap-2 mt-2 px-4 py-2 bg-primary text-text-on-primary rounded-xl text-sm font-medium hover:bg-primary-dark transition-colors cursor-pointer"
+            >
+              <FontAwesomeIcon icon={NAV_ICONS.camera} className="text-xs" />
+              上傳照片
+            </label>
+          ) : (
+            <p className="text-xs text-text-secondary/60 mt-1">登入後即可上傳照片</p>
+          )}
         </div>
       ) : (
         <div className="grid grid-cols-3 gap-2">

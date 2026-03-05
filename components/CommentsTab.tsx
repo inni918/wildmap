@@ -12,7 +12,9 @@ interface Comment {
   user_id: string
   content: string
   created_at: string
+  parent_id: string | null
   display_name?: string
+  replies?: Comment[]
 }
 
 interface Props {
@@ -26,15 +28,17 @@ export default function CommentsTab({ spotId }: Props) {
   const [newComment, setNewComment] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [replyingTo, setReplyingTo] = useState<string | null>(null)
+  const [replyContent, setReplyContent] = useState('')
 
   const fetchComments = useCallback(async () => {
     setLoading(true)
-    // Fetch comments
+    // Fetch all comments (top-level + replies)
     const { data: commentsData, error } = await supabase
       .from('comments')
-      .select('id, spot_id, user_id, content, created_at')
+      .select('id, spot_id, user_id, content, created_at, parent_id')
       .eq('spot_id', spotId)
-      .order('created_at', { ascending: false })
+      .order('created_at', { ascending: true })
 
     if (error || !commentsData) {
       setLoading(false)
@@ -45,7 +49,7 @@ export default function CommentsTab({ spotId }: Props) {
     const userIds = [...new Set(commentsData.map(c => c.user_id))]
 
     // Fetch display names
-    let userMap = new Map<string, string>()
+    const userMap = new Map<string, string>()
     if (userIds.length > 0) {
       const { data: users } = await supabase
         .from('users')
@@ -59,12 +63,35 @@ export default function CommentsTab({ spotId }: Props) {
       }
     }
 
+    // Enrich with display names
     const enriched: Comment[] = commentsData.map(c => ({
       ...c,
+      parent_id: c.parent_id ?? null,
       display_name: userMap.get(c.user_id) || '匿名用戶',
     }))
 
-    setComments(enriched)
+    // Organize: top-level comments (parent_id IS NULL) with nested replies
+    const topLevel: Comment[] = []
+    const replyMap = new Map<string, Comment[]>()
+
+    for (const c of enriched) {
+      if (!c.parent_id) {
+        topLevel.push({ ...c, replies: [] })
+      } else {
+        if (!replyMap.has(c.parent_id)) replyMap.set(c.parent_id, [])
+        replyMap.get(c.parent_id)!.push(c)
+      }
+    }
+
+    // Attach replies to their parents
+    for (const comment of topLevel) {
+      comment.replies = replyMap.get(comment.id) || []
+    }
+
+    // Sort top-level by newest first
+    topLevel.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+
+    setComments(topLevel)
     setLoading(false)
   }, [spotId])
 
@@ -83,10 +110,35 @@ export default function CommentsTab({ spotId }: Props) {
           spot_id: spotId,
           user_id: user.id,
           content: newComment.trim(),
+          parent_id: null,
         })
 
       if (!error) {
         setNewComment('')
+        await fetchComments()
+      }
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  const handleReplySubmit = async (parentId: string) => {
+    if (!user || !replyContent.trim() || submitting) return
+    setSubmitting(true)
+
+    try {
+      const { error } = await supabase
+        .from('comments')
+        .insert({
+          spot_id: spotId,
+          user_id: user.id,
+          content: replyContent.trim(),
+          parent_id: parentId,
+        })
+
+      if (!error) {
+        setReplyContent('')
+        setReplyingTo(null)
         await fetchComments()
       }
     } finally {
@@ -176,36 +228,124 @@ export default function CommentsTab({ spotId }: Props) {
       ) : (
         <div className="space-y-3">
           {comments.map(comment => (
-            <div
-              key={comment.id}
-              className="bg-surface-alt rounded-xl px-4 py-3 border border-border/50"
-            >
-              <div className="flex items-center justify-between mb-1.5">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-text-on-primary text-xs font-bold">
-                    {(comment.display_name || '?')[0].toUpperCase()}
+            <div key={comment.id}>
+              {/* Top-level comment */}
+              <div className="bg-surface-alt rounded-xl px-4 py-3 border border-border/50">
+                <div className="flex items-center justify-between mb-1.5">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-text-on-primary text-xs font-bold">
+                      {(comment.display_name || '?')[0].toUpperCase()}
+                    </div>
+                    <span className="text-sm font-medium text-text-main">
+                      {comment.display_name}
+                    </span>
+                    <span className="text-xs text-text-secondary/60">
+                      {formatTime(comment.created_at)}
+                    </span>
                   </div>
-                  <span className="text-sm font-medium text-text-main">
-                    {comment.display_name}
-                  </span>
-                  <span className="text-xs text-text-secondary/60">
-                    {formatTime(comment.created_at)}
-                  </span>
+                  <div className="flex items-center gap-1">
+                    {user && (
+                      <button
+                        onClick={() => {
+                          if (replyingTo === comment.id) {
+                            setReplyingTo(null)
+                            setReplyContent('')
+                          } else {
+                            setReplyingTo(comment.id)
+                            setReplyContent('')
+                          }
+                        }}
+                        className="text-text-secondary/60 hover:text-primary text-xs cursor-pointer transition-colors p-1 flex items-center gap-1"
+                        title="回覆"
+                      >
+                        <FontAwesomeIcon icon={NAV_ICONS.reply} />
+                        <span>回覆</span>
+                      </button>
+                    )}
+                    {user && user.id === comment.user_id && (
+                      <button
+                        onClick={() => handleDelete(comment.id)}
+                        disabled={deletingId === comment.id}
+                        className="text-text-secondary/40 hover:text-error text-xs cursor-pointer transition-colors p-1"
+                        title="刪除留言"
+                      >
+                        <FontAwesomeIcon icon={NAV_ICONS.trash} />
+                      </button>
+                    )}
+                  </div>
                 </div>
-                {user && user.id === comment.user_id && (
-                  <button
-                    onClick={() => handleDelete(comment.id)}
-                    disabled={deletingId === comment.id}
-                    className="text-text-secondary/40 hover:text-error text-xs cursor-pointer transition-colors p-1"
-                    title="刪除留言"
-                  >
-                    <FontAwesomeIcon icon={NAV_ICONS.trash} />
-                  </button>
-                )}
+                <p className="text-sm text-text-main leading-relaxed pl-8">
+                  {comment.content}
+                </p>
               </div>
-              <p className="text-sm text-text-main leading-relaxed pl-8">
-                {comment.content}
-              </p>
+
+              {/* Replies */}
+              {comment.replies && comment.replies.length > 0 && (
+                <div className="ml-8 mt-1 space-y-1">
+                  {comment.replies.map(reply => (
+                    <div
+                      key={reply.id}
+                      className="bg-surface-alt/60 rounded-lg px-3 py-2 border border-border/30"
+                    >
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center gap-2">
+                          <div className="w-5 h-5 rounded-full bg-primary/70 flex items-center justify-center text-text-on-primary text-[10px] font-bold">
+                            {(reply.display_name || '?')[0].toUpperCase()}
+                          </div>
+                          <span className="text-xs font-medium text-text-main">
+                            {reply.display_name}
+                          </span>
+                          <span className="text-[10px] text-text-secondary/60">
+                            {formatTime(reply.created_at)}
+                          </span>
+                        </div>
+                        {user && user.id === reply.user_id && (
+                          <button
+                            onClick={() => handleDelete(reply.id)}
+                            disabled={deletingId === reply.id}
+                            className="text-text-secondary/40 hover:text-error text-[10px] cursor-pointer transition-colors p-1"
+                            title="刪除留言"
+                          >
+                            <FontAwesomeIcon icon={NAV_ICONS.trash} />
+                          </button>
+                        )}
+                      </div>
+                      <p className="text-xs text-text-main leading-relaxed pl-7">
+                        {reply.content}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Reply input */}
+              {replyingTo === comment.id && user && (
+                <div className="ml-8 mt-1 flex gap-2">
+                  <input
+                    type="text"
+                    value={replyContent}
+                    onChange={(e) => setReplyContent(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter') handleReplySubmit(comment.id) }}
+                    placeholder="寫下你的回覆..."
+                    className="flex-1 px-3 py-1.5 text-xs border border-border rounded-lg bg-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
+                    maxLength={500}
+                    autoFocus
+                  />
+                  <button
+                    onClick={() => handleReplySubmit(comment.id)}
+                    disabled={!replyContent.trim() || submitting}
+                    className="px-2 py-1.5 bg-primary text-text-on-primary rounded-lg text-xs font-medium hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  >
+                    <FontAwesomeIcon icon={NAV_ICONS.send} className="text-[10px]" />
+                  </button>
+                  <button
+                    onClick={() => { setReplyingTo(null); setReplyContent('') }}
+                    className="px-2 py-1.5 text-text-secondary hover:text-text-main rounded-lg text-xs cursor-pointer"
+                  >
+                    <FontAwesomeIcon icon={NAV_ICONS.close} className="text-[10px]" />
+                  </button>
+                </div>
+              )}
             </div>
           ))}
         </div>
