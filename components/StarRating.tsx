@@ -105,11 +105,11 @@ export default function StarRating({ spotId }: Props) {
                 onMouseEnter={() => setHoverScore(star)}
                 onMouseLeave={() => setHoverScore(0)}
                 disabled={submitting}
-                className="p-0.5 cursor-pointer transition-transform hover:scale-110 disabled:opacity-50"
+                className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center cursor-pointer transition-transform hover:scale-110 active:scale-95 disabled:opacity-50"
               >
                 <FontAwesomeIcon
                   icon={star <= displayScore ? NAV_ICONS.starSolid : NAV_ICONS.starRegular}
-                  className={`text-base ${star <= displayScore ? 'text-accent' : 'text-border'}`}
+                  className={`text-xl ${star <= displayScore ? 'text-accent' : 'text-border'}`}
                 />
               </button>
             ))}

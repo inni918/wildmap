@@ -54,7 +54,7 @@ export default function Header({ spotCount, loading, searchQuery = '', onSearchC
   return (
     <div className="absolute top-0 left-0 right-0 z-10 bg-surface/90 backdrop-blur-sm shadow-sm border-b border-border">
       <div className="px-4 py-3 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 no-underline flex-shrink-0">
+        <Link href="/map" className="flex items-center gap-2 no-underline flex-shrink-0">
           <FontAwesomeIcon icon={NAV_ICONS.map} className="text-primary text-lg" />
           <h1 className="text-xl font-bold text-primary-dark">Wildmap</h1>
         </Link>
@@ -106,6 +106,14 @@ export default function Header({ spotCount, loading, searchQuery = '', onSearchC
                       Lv.{profile?.level || 1} · {profile?.points || 0} 分
                     </p>
                   </div>
+                  <Link
+                    href="/profile"
+                    onClick={() => setMenuOpen(false)}
+                    className="w-full text-left px-4 py-2 text-sm text-text-main hover:bg-surface-alt cursor-pointer flex items-center gap-2 no-underline"
+                  >
+                    <FontAwesomeIcon icon={NAV_ICONS.user} className="text-xs" />
+                    個人頁面
+                  </Link>
                   <button
                     onClick={() => { signOut(); setMenuOpen(false) }}
                     className="w-full text-left px-4 py-2 text-sm text-error hover:bg-error/10 cursor-pointer flex items-center gap-2"

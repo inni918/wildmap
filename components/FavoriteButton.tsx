@@ -64,7 +64,7 @@ export default function FavoriteButton({ spotId }: Props) {
     <button
       onClick={toggleFavorite}
       disabled={loading}
-      className={`p-1.5 rounded-full transition-all cursor-pointer ${
+      className={`p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full transition-all cursor-pointer active:scale-90 ${
         loading ? 'opacity-50' : ''
       } ${
         isFavorited
@@ -75,7 +75,7 @@ export default function FavoriteButton({ spotId }: Props) {
     >
       <FontAwesomeIcon
         icon={isFavorited ? NAV_ICONS.heartSolid : NAV_ICONS.heartRegular}
-        className="text-lg"
+        className="text-xl"
       />
     </button>
   )

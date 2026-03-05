@@ -257,7 +257,7 @@ export default function Map() {
       >
         <button
           onClick={() => setActiveFilter('all')}
-          className={`flex-shrink-0 px-3 py-1 rounded-full text-sm font-medium border transition-colors ${
+          className={`flex-shrink-0 px-4 py-2 min-h-[36px] rounded-full text-sm font-medium border transition-colors active:scale-95 ${
             activeFilter === 'all'
               ? 'bg-primary text-text-on-primary border-primary'
               : 'bg-surface text-text-secondary border-border'
@@ -269,7 +269,7 @@ export default function Map() {
           <button
             key={cat}
             onClick={() => setActiveFilter(cat)}
-            className={`flex-shrink-0 px-3 py-1 rounded-full text-sm font-medium border transition-colors ${
+            className={`flex-shrink-0 px-4 py-2 min-h-[36px] rounded-full text-sm font-medium border transition-colors active:scale-95 ${
               activeFilter === cat
                 ? 'bg-primary text-text-on-primary border-primary'
                 : 'bg-surface text-text-secondary border-border'
@@ -316,8 +316,20 @@ export default function Map() {
       {/* =================== 地圖模式 =================== */}
       {viewMode === 'map' && (
         <>
+          {/* Loading overlay */}
+          {loading && (
+            <div className="absolute inset-0 z-20 flex items-center justify-center bg-bg/80 backdrop-blur-sm">
+              <div className="flex flex-col items-center gap-3">
+                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center animate-pulse">
+                  <FontAwesomeIcon icon={NAV_ICONS.map} className="text-primary text-2xl animate-spin-slow" />
+                </div>
+                <p className="text-sm font-medium text-text-secondary">載入地圖中...</p>
+              </div>
+            </div>
+          )}
+
           {/* Add Spot Hint */}
-          <div className="absolute bottom-8 right-4 z-10 bg-primary text-text-on-primary rounded-xl shadow-md px-4 py-2 text-sm flex items-center gap-2">
+          <div className="absolute bottom-8 right-4 z-10 bg-primary text-text-on-primary rounded-xl shadow-md px-4 py-2 text-sm flex items-center gap-2 md:bottom-8 bottom-20">
             點地圖新增地點
             <FontAwesomeIcon icon={NAV_ICONS.plus} className="text-xs" />
           </div>
@@ -402,13 +414,14 @@ export default function Map() {
                 anchor="bottom"
                 onClose={() => setSelectedSpot(null)}
                 closeOnClick={false}
-                maxWidth="260px"
+                maxWidth="280px"
+                className="wildmap-popup"
               >
-                <div className="p-3">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-2xl">{CATEGORY_EMOJI[selectedSpot.category]}</span>
+                <div className="p-4">
+                  <div className="flex items-start gap-3 mb-3">
+                    <span className="text-2xl flex-shrink-0 mt-0.5">{CATEGORY_EMOJI[selectedSpot.category]}</span>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-text-main text-base truncate">{selectedSpot.name}</h3>
+                      <h3 className="font-bold text-text-main text-base leading-snug mb-1">{selectedSpot.name}</h3>
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <span className="text-xs text-primary font-medium">
                           {CATEGORY_LABEL[selectedSpot.category]}
@@ -431,25 +444,22 @@ export default function Map() {
                     </div>
                   </div>
                   {selectedSpot.description && (
-                    <p className="text-sm text-text-secondary mb-1">{selectedSpot.description}</p>
+                    <p className="text-sm text-text-secondary mb-2 line-clamp-2 leading-relaxed">{selectedSpot.description}</p>
                   )}
                   {selectedSpot.address && (
-                    <p className="text-xs text-text-secondary mb-1 flex items-center gap-1">
-                      <FontAwesomeIcon icon={NAV_ICONS.location} className="text-primary" />
-                      {selectedSpot.address}
+                    <p className="text-xs text-text-secondary mb-2 flex items-start gap-1.5">
+                      <FontAwesomeIcon icon={NAV_ICONS.location} className="text-primary mt-0.5 flex-shrink-0" />
+                      <span className="line-clamp-1">{selectedSpot.address}</span>
                     </p>
                   )}
-                  <p className="text-xs text-text-secondary/60 mt-1">
-                    {selectedSpot.latitude.toFixed(4)}, {selectedSpot.longitude.toFixed(4)}
-                  </p>
                   <button
                     onClick={() => {
                       setDetailSpot(selectedSpot)
                       setSelectedSpot(null)
                     }}
-                    className="mt-2 w-full text-center text-sm font-medium text-primary hover:text-primary-dark py-1.5 rounded-lg hover:bg-primary-light/10 transition-colors cursor-pointer flex items-center justify-center gap-1"
+                    className="mt-1 w-full text-center text-sm font-semibold text-white bg-primary hover:bg-primary-dark py-2.5 rounded-xl transition-colors cursor-pointer flex items-center justify-center gap-1.5 active:scale-[0.98] min-h-[44px]"
                   >
-                    查看特性詳情
+                    查看詳情
                     <FontAwesomeIcon icon={NAV_ICONS.chevronRight} className="text-xs" />
                   </button>
                 </div>
@@ -471,9 +481,21 @@ export default function Map() {
               載入中…
             </div>
           ) : sortedFilteredSpots.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-40 text-text-secondary gap-2">
-              <span className="text-4xl">🗺️</span>
-              <p>找不到符合條件的地點</p>
+            <div className="flex flex-col items-center justify-center h-60 text-text-secondary gap-3 px-4">
+              <div className="w-20 h-20 rounded-full bg-surface-alt flex items-center justify-center mb-1">
+                <span className="text-4xl">🔍</span>
+              </div>
+              <p className="text-base font-semibold text-text-main">找不到符合條件的地點</p>
+              <p className="text-sm text-text-secondary text-center max-w-xs">
+                試試調整篩選條件，或切換到地圖模式瀏覽附近地點
+              </p>
+              <button
+                onClick={() => { setActiveFilter('all'); setSelectedFeatures([]); setSearchQuery('') }}
+                className="mt-2 text-sm text-primary font-medium hover:text-primary-dark transition-colors flex items-center gap-1"
+              >
+                <FontAwesomeIcon icon={NAV_ICONS.close} className="text-xs" />
+                清除所有篩選
+              </button>
             </div>
           ) : (
             <div className="p-3 grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -505,6 +527,10 @@ export default function Map() {
         <SpotDetail
           spot={detailSpot}
           onClose={() => setDetailSpot(null)}
+          onSpotUpdated={() => {
+            setDetailSpot(null)
+            fetchSpots()
+          }}
         />
       )}
     </div>
@@ -516,22 +542,22 @@ function SpotCard({ spot, onDetail }: { spot: Spot; onDetail: () => void }) {
   return (
     <div
       onClick={onDetail}
-      className="bg-surface rounded-2xl shadow-sm border border-border hover:shadow-md hover:border-primary-light transition-all cursor-pointer overflow-hidden"
+      className="bg-surface rounded-2xl shadow-sm border border-border hover:shadow-lg hover:border-primary-light hover:-translate-y-0.5 transition-all duration-200 cursor-pointer overflow-hidden group"
     >
       {/* 卡片頂部色帶 */}
       <div
-        className="h-1.5 w-full"
-        style={{ backgroundColor: spot.category === 'camping' ? '#4CAF50' : '#FF9800' }}
+        className="h-1 w-full transition-all group-hover:h-1.5"
+        style={{ backgroundColor: spot.category === 'camping' ? '#2D6A4F' : '#D4A843' }}
       />
 
       <div className="p-4">
         {/* 標題行 */}
-        <div className="flex items-start gap-2 mb-2">
-          <span className="text-2xl flex-shrink-0 leading-none mt-0.5">
+        <div className="flex items-start gap-3 mb-2.5">
+          <span className="text-2xl flex-shrink-0 leading-none mt-0.5 group-hover:scale-110 transition-transform">
             {CATEGORY_EMOJI[spot.category]}
           </span>
           <div className="flex-1 min-w-0">
-            <h3 className="font-bold text-text-main text-sm leading-snug line-clamp-2">
+            <h3 className="font-bold text-text-main text-sm leading-snug line-clamp-2 group-hover:text-primary transition-colors">
               {spot.name}
             </h3>
             <span className="text-xs text-primary font-medium">
@@ -541,7 +567,7 @@ function SpotCard({ spot, onDetail }: { spot: Spot; onDetail: () => void }) {
         </div>
 
         {/* Badges */}
-        <div className="flex flex-wrap gap-1.5 mb-2">
+        <div className="flex flex-wrap gap-1.5 mb-2.5">
           {spot.is_free !== undefined && spot.is_free !== null && (
             <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
               spot.is_free
@@ -563,17 +589,22 @@ function SpotCard({ spot, onDetail }: { spot: Spot; onDetail: () => void }) {
           )}
         </div>
 
+        {/* Separator */}
+        <div className="border-t border-border/50 mb-2.5" />
+
         {/* 地址 */}
-        {spot.address && (
-          <p className="text-xs text-text-secondary flex items-start gap-1 line-clamp-1">
+        {spot.address ? (
+          <p className="text-xs text-text-secondary flex items-start gap-1.5 line-clamp-1 mb-2">
             <FontAwesomeIcon icon={NAV_ICONS.location} className="text-primary mt-0.5 flex-shrink-0 text-[10px]" />
             {spot.address}
           </p>
+        ) : (
+          <p className="text-xs text-text-secondary/50 mb-2">未提供地址</p>
         )}
 
         {/* 查看詳情 */}
-        <div className="mt-3 flex justify-end">
-          <span className="text-xs text-primary font-medium flex items-center gap-0.5">
+        <div className="flex justify-end">
+          <span className="text-xs text-primary font-semibold flex items-center gap-1 group-hover:gap-1.5 transition-all">
             查看詳情
             <FontAwesomeIcon icon={NAV_ICONS.chevronRight} className="text-[10px]" />
           </span>

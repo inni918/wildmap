@@ -14,10 +14,12 @@ import StarRating from './StarRating'
 import PhotoGrid from './PhotoGrid'
 import CommentsTab from './CommentsTab'
 import FavoriteButton from './FavoriteButton'
+import EditSpotModal from './EditSpotModal'
 
 interface Props {
   spot: Spot
   onClose: () => void
+  onSpotUpdated?: () => void
 }
 
 type Tab = 'overview' | 'comments' | 'vote'
@@ -28,12 +30,13 @@ const QUALITY_BADGE: Record<string, { label: string; color: string; bgColor: str
   featured: { label: '精選', color: '#D4A843', bgColor: '#D4A84320' },
 }
 
-export default function SpotDetail({ spot, onClose }: Props) {
+export default function SpotDetail({ spot, onClose, onSpotUpdated }: Props) {
   const { user } = useAuth()
   const [groups, setGroups] = useState<GroupedFeatures[]>([])
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<Tab>('overview')
   const [isClosing, setIsClosing] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
 
   const loadFeatures = useCallback(async () => {
     setLoading(true)
@@ -103,13 +106,22 @@ export default function SpotDetail({ spot, onClose }: Props) {
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-0.5">
+              {user && (
+                <button
+                  onClick={() => setShowEditModal(true)}
+                  className="text-text-secondary hover:text-primary p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center cursor-pointer active:scale-90 transition-all"
+                  title="編輯地點"
+                >
+                  <FontAwesomeIcon icon={NAV_ICONS.edit} className="text-sm" />
+                </button>
+              )}
               <FavoriteButton spotId={spot.id} />
               <button
                 onClick={handleClose}
-                className="text-text-secondary hover:text-text-main p-1 cursor-pointer"
+                className="text-text-secondary hover:text-text-main p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center cursor-pointer active:scale-90 transition-transform"
               >
-                <FontAwesomeIcon icon={NAV_ICONS.close} />
+                <FontAwesomeIcon icon={NAV_ICONS.close} className="text-lg" />
               </button>
             </div>
           </div>
@@ -193,6 +205,17 @@ export default function SpotDetail({ spot, onClose }: Props) {
           )}
         </div>
       </div>
+
+      {showEditModal && (
+        <EditSpotModal
+          spot={spot}
+          onClose={() => setShowEditModal(false)}
+          onSaved={() => {
+            setShowEditModal(false)
+            onSpotUpdated?.()
+          }}
+        />
+      )}
     </div>
   )
 }

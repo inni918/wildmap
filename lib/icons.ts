@@ -131,6 +131,7 @@ import {
   faTrash,
   faCommentDots,
   faPaperPlane,
+  faPenToSquare,
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
@@ -293,6 +294,7 @@ export const NAV_ICONS = {
   trash:       faTrash,
   commentDots: faCommentDots,
   send:        faPaperPlane,
+  edit:        faPenToSquare,
 } as const
 
 // Helper to get an icon for a feature key, with fallback

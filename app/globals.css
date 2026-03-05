@@ -118,3 +118,54 @@ a {
 .animate-fade-in {
   animation: fade-in 0.2s ease-out;
 }
+
+/* === Safe area for mobile tab bar === */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* === Count-up animation === */
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* === Smooth scroll === */
+html {
+  scroll-behavior: smooth;
+}
+
+/* === Loading spinner === */
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 2s linear infinite;
+}
+
+/* === Custom MapLibre popup styling === */
+.wildmap-popup .maplibregl-popup-content {
+  border-radius: 16px !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+  padding: 0 !important;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.wildmap-popup .maplibregl-popup-close-button {
+  font-size: 18px;
+  padding: 4px 8px;
+  color: var(--color-text-secondary);
+  right: 4px;
+  top: 4px;
+}
+
+.wildmap-popup .maplibregl-popup-close-button:hover {
+  color: var(--color-text);
+  background: transparent;
+}
+
+.wildmap-popup .maplibregl-popup-tip {
+  border-top-color: var(--color-surface) !important;
+}
