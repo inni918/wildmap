@@ -6,8 +6,8 @@ import { fetchSpotFeatures, type GroupedFeatures } from '@/lib/features'
 import { useAuth } from '@/lib/auth-context'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS, getFeatureIcon } from '@/lib/icons'
-import { faCircleQuestion, faCircleCheck, faPhone, faGlobe, faComment, faEnvelope, faMapLocationDot, faShieldHalved } from '@fortawesome/free-solid-svg-icons'
-import { faFacebookF, faInstagram } from '@fortawesome/free-brands-svg-icons'
+import { faCircleQuestion, faCircleCheck, faPhone, faGlobe, faEnvelope, faMapLocationDot, faShieldHalved } from '@fortawesome/free-solid-svg-icons'
+import { faFacebookF, faInstagram, faLine } from '@fortawesome/free-brands-svg-icons'
 import FeatureIcons from './FeatureIcons'
 import FeatureVoting from './FeatureVoting'
 import StarRating from './StarRating'
@@ -118,7 +118,7 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
                 {CATEGORY_EMOJI[spot.category]}
               </span>
               <div className="min-w-0">
-                <h2 className="text-lg font-bold text-text-main truncate">{spot.name}</h2>
+                <h2 className="text-lg font-bold text-text-main line-clamp-2" title={spot.name}>{spot.name}</h2>
                 <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                   <span className="text-xs font-medium text-primary">
                     {CATEGORY_LABEL[spot.category]}
@@ -272,9 +272,12 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
 // === Contact Icons ===
 
 function ContactIcons({ spot }: { spot: Spot }) {
-  const [showLineId, setShowLineId] = useState(false)
+  // LINE 連結：@ 開頭的官方帳號用 /ti/p/，其他也用 /ti/p/
+  function getLineUrl(lineId: string): string {
+    return `https://line.me/R/ti/p/${lineId}`
+  }
 
-  const contacts: { key: string; icon: typeof faPhone; href?: string; label: string; onClick?: () => void }[] = []
+  const contacts: { key: string; icon: typeof faPhone; href?: string; label: string }[] = []
 
   if (spot.phone) {
     contacts.push({ key: 'phone', icon: faPhone, href: `tel:${spot.phone}`, label: '電話' })
@@ -289,7 +292,7 @@ function ContactIcons({ spot }: { spot: Spot }) {
     contacts.push({ key: 'instagram', icon: faInstagram, href: spot.instagram, label: 'Instagram' })
   }
   if (spot.line_id) {
-    contacts.push({ key: 'line', icon: faComment, label: `LINE: ${spot.line_id}`, onClick: () => setShowLineId(!showLineId) })
+    contacts.push({ key: 'line', icon: faLine, href: getLineUrl(spot.line_id), label: `LINE: ${spot.line_id}` })
   }
   if (spot.email) {
     contacts.push({ key: 'email', icon: faEnvelope, href: `mailto:${spot.email}`, label: 'Email' })
@@ -309,19 +312,18 @@ function ContactIcons({ spot }: { spot: Spot }) {
               key={c.key}
               className="w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer"
               style={{
-                backgroundColor: '#2D6A4F15',
-                color: '#2D6A4F',
+                backgroundColor: c.key === 'line' ? '#06C75520' : '#2D6A4F15',
+                color: c.key === 'line' ? '#06C755' : '#2D6A4F',
               }}
               title={c.label}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#2D6A4F'
+                e.currentTarget.style.backgroundColor = c.key === 'line' ? '#06C755' : '#2D6A4F'
                 e.currentTarget.style.color = '#FFFFFF'
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#2D6A4F15'
-                e.currentTarget.style.color = '#2D6A4F'
+                e.currentTarget.style.backgroundColor = c.key === 'line' ? '#06C75520' : '#2D6A4F15'
+                e.currentTarget.style.color = c.key === 'line' ? '#06C755' : '#2D6A4F'
               }}
-              onClick={c.onClick}
             >
               <FontAwesomeIcon icon={c.icon} className="text-sm" />
             </div>
@@ -337,11 +339,6 @@ function ContactIcons({ spot }: { spot: Spot }) {
           return iconEl
         })}
       </div>
-      {showLineId && spot.line_id && (
-        <p className="text-xs text-text-secondary mt-1.5 pl-0.5">
-          LINE ID：<span className="font-medium text-text-main">{spot.line_id}</span>
-        </p>
-      )}
     </div>
   )
 }
