@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Wildmap Logo — 圓形徽章：帳篷+松樹剪影 -->
+  
+  <!-- 圓形背景 -->
+  <circle cx="256" cy="256" r="248" fill="#2D6A4F"/>
+  
+  <!-- 遠山剪影（底部裝飾） -->
+  <path d="M8 360 Q80 310 140 340 Q180 300 220 330 Q260 290 300 320 Q340 280 380 310 Q430 290 504 340 L504 504 L8 504 Z" fill="#1B4332" opacity="0.35"/>
+  
+  <!-- 左松樹（大） -->
+  <g>
+    <!-- 樹幹 -->
+    <rect x="100" y="310" width="10" height="45" rx="2" fill="#1B4332"/>
+    <!-- 樹冠三層 -->
+    <path d="M105 195 L70 280 L140 280 Z" fill="#52B788"/>
+    <path d="M105 225 L75 295 L135 295 Z" fill="#40916C"/>
+    <path d="M105 260 L80 320 L130 320 Z" fill="#2D6A4F" opacity="0.6"/>
+  </g>
+  
+  <!-- 帳篷（主體，居中偏大） -->
+  <g>
+    <path d="M256 105 L155 355 L357 355 Z" fill="#FEFAF3"/>
+    <!-- 帳篷門 -->
+    <path d="M256 215 L230 355 L282 355 Z" fill="#2D6A4F"/>
+    <!-- 帳篷頂部小旗 -->
+    <line x1="256" y1="105" x2="256" y2="85" stroke="#D4A843" stroke-width="4" stroke-linecap="round"/>
+    <path d="M256 85 L276 95 L256 100" fill="#D4A843"/>
+  </g>
+  
+  <!-- 右松樹（中） -->
+  <g>
+    <rect x="383" y="300" width="8" height="40" rx="2" fill="#1B4332"/>
+    <path d="M387 215 L360 285 L414 285 Z" fill="#52B788" opacity="0.9"/>
+    <path d="M387 245 L363 300 L411 300 Z" fill="#40916C" opacity="0.85"/>
+  </g>
+  
+  <!-- 右小松樹 -->
+  <g>
+    <rect x="423" y="315" width="6" height="30" rx="2" fill="#1B4332" opacity="0.7"/>
+    <path d="M426 260 L410 305 L442 305 Z" fill="#52B788" opacity="0.6"/>
+    <path d="M426 278 L413 315 L439 315 Z" fill="#40916C" opacity="0.55"/>
+  </g>
+  
+  <!-- 地面 -->
+  <ellipse cx="256" cy="360" rx="200" ry="8" fill="#1B4332" opacity="0.2"/>
+  
+  <!-- 星星（細節） -->
+  <circle cx="340" cy="130" r="3" fill="#FEFAF3" opacity="0.5"/>
+  <circle cx="160" cy="148" r="2" fill="#FEFAF3" opacity="0.35"/>
+  <circle cx="400" cy="165" r="2.5" fill="#FEFAF3" opacity="0.4"/>
+</svg>

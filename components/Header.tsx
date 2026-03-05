@@ -58,7 +58,7 @@ export default function Header({ spotCount, loading, searchQuery = '', searchExp
     <div className="absolute top-0 left-0 right-0 z-10 bg-surface/90 backdrop-blur-sm shadow-sm border-b border-border">
       <div className="px-4 py-3 flex items-center justify-between">
         <Link href="/map" className="flex items-center gap-2 no-underline flex-shrink-0">
-          <FontAwesomeIcon icon={NAV_ICONS.map} className="text-primary text-lg" />
+          <img src="/logo/wildmap-logo.svg" alt="Wildmap" className="w-8 h-8" />
           <h1 className="text-xl font-bold text-primary-dark">Wildmap</h1>
         </Link>
 

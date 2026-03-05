@@ -4,8 +4,22 @@ import "@/lib/fontawesome";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Wildmap - 台灣野營地圖",
-  description: "探索台灣最棒的露營、釣魚、潛水、衝浪秘境",
+  title: "Wildmap - 探索台灣戶外秘境",
+  description: "台灣最完整的露營、車宿地圖平台。3,200+ 個戶外地點、106 項特性投票、社群真實評價。",
+  icons: {
+    icon: [
+      { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon-16.png', sizes: '16x16', type: 'image/png' },
+    ],
+    apple: '/apple-touch-icon.png',
+  },
+  openGraph: {
+    title: 'Wildmap - 探索台灣戶外秘境',
+    description: '台灣最完整的露營、車宿地圖平台。3,200+ 個戶外地點、106 項特性投票。',
+    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+    type: 'website',
+    locale: 'zh_TW',
+  },
 };
 
 export default function RootLayout({

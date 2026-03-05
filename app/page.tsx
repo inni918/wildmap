@@ -83,7 +83,7 @@ export default function LandingPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-sm border-b border-border">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <FontAwesomeIcon icon={NAV_ICONS.map} className="text-primary text-lg" />
+            <img src="/logo/wildmap-logo.svg" alt="Wildmap" className="w-8 h-8" />
             <span className="text-xl font-bold text-primary-dark">Wildmap</span>
           </div>
           <div className="flex items-center gap-3">
@@ -251,7 +251,7 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <FontAwesomeIcon icon={NAV_ICONS.map} className="text-white/80" />
+              <img src="/logo/wildmap-logo.svg" alt="Wildmap" className="w-7 h-7 opacity-80" />
               <span className="font-bold text-white/80">Wildmap</span>
             </div>
             <p className="text-sm">
