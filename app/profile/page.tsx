@@ -198,13 +198,34 @@ export default function ProfilePage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-bg flex items-center justify-center">
+      <div className="min-h-screen bg-bg flex flex-col items-center justify-center gap-4">
         <FontAwesomeIcon icon={NAV_ICONS.spinner} className="text-primary text-2xl animate-spin" />
+        <p className="text-sm text-text-secondary">載入中...</p>
       </div>
     )
   }
 
-  if (!user) return null
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-bg flex flex-col items-center justify-center gap-4 px-4">
+        <FontAwesomeIcon icon={NAV_ICONS.map} className="text-primary text-4xl" />
+        <h2 className="text-lg font-bold text-text-main">請先登入</h2>
+        <p className="text-sm text-text-secondary text-center">登入後即可查看個人頁面、收藏地點和活動紀錄</p>
+        <Link
+          href="/login"
+          className="bg-primary hover:bg-primary-dark text-text-on-primary rounded-xl px-6 py-3 text-sm font-bold shadow-sm transition-colors no-underline"
+        >
+          前往登入
+        </Link>
+        <Link
+          href="/map"
+          className="text-sm text-text-secondary hover:text-primary transition-colors no-underline"
+        >
+          ← 返回地圖
+        </Link>
+      </div>
+    )
+  }
 
   const levelColor = getLevelColor(profile?.level || 1)
   const levelTitle = getLevelTitle(profile?.level || 1)
