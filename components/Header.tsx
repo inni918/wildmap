@@ -11,9 +11,10 @@ interface HeaderProps {
   loading: boolean
   searchQuery?: string
   onSearchChange?: (query: string) => void
+  onSearchExpandedChange?: (expanded: boolean) => void
 }
 
-export default function Header({ spotCount, loading, searchQuery = '', onSearchChange }: HeaderProps) {
+export default function Header({ spotCount, loading, searchQuery = '', onSearchChange, onSearchExpandedChange }: HeaderProps) {
   const { user, profile, loading: authLoading, signOut } = useAuth()
   const [menuOpen, setMenuOpen] = useState(false)
   const [searchExpanded, setSearchExpanded] = useState(false)
@@ -41,8 +42,10 @@ export default function Header({ spotCount, loading, searchQuery = '', onSearchC
       // If search is open with text, clear it
       onSearchChange?.('')
     } else {
-      setSearchExpanded(!searchExpanded)
-      if (searchExpanded) {
+      const next = !searchExpanded
+      setSearchExpanded(next)
+      onSearchExpandedChange?.(next)
+      if (!next) {
         onSearchChange?.('')
       }
     }

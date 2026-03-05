@@ -63,6 +63,7 @@ export default function Map() {
   const [addModal, setAddModal] = useState<{ lat: number; lng: number } | null>(null)
   const [detailSpot, setDetailSpot] = useState<Spot | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [searchExpanded, setSearchExpanded] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>('map')
   const [viewState, setViewState] = useState({
     longitude: 121.0,
@@ -232,10 +233,14 @@ export default function Map() {
         loading={loading}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
+        onSearchExpandedChange={setSearchExpanded}
       />
 
       {/* Category Filter Bar + 地圖/列表切換 */}
-      <div className="absolute top-14 left-0 right-0 z-10 px-3 py-2 flex gap-2 items-center overflow-x-auto bg-surface/80 backdrop-blur-sm">
+      <div
+        className="absolute left-0 right-0 z-10 px-3 py-2 flex gap-2 items-center overflow-x-auto bg-surface/80 backdrop-blur-sm transition-all duration-200"
+        style={{ top: searchExpanded ? '6.5rem' : '3.5rem' }}
+      >
         <button
           onClick={() => setActiveFilter('all')}
           className={`flex-shrink-0 px-3 py-1 rounded-full text-sm font-medium border transition-colors ${
@@ -291,6 +296,7 @@ export default function Map() {
       <FeatureFilter
         selectedFeatures={selectedFeatures}
         onFeaturesChange={setSelectedFeatures}
+        searchExpanded={searchExpanded}
       />
 
       {/* =================== 地圖模式 =================== */}
@@ -442,8 +448,8 @@ export default function Map() {
       {/* =================== 列表模式 =================== */}
       {viewMode === 'list' && (
         <div
-          className="absolute left-0 right-0 bottom-0 overflow-y-auto bg-surface"
-          style={{ top: '8.5rem' }}
+          className="absolute left-0 right-0 bottom-0 overflow-y-auto bg-surface transition-all duration-200"
+          style={{ top: searchExpanded ? '12rem' : '8.5rem' }}
         >
           {loading ? (
             <div className="flex items-center justify-center h-40 text-text-secondary">

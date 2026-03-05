@@ -8,9 +8,10 @@ import { NAV_ICONS, getFeatureIcon } from '@/lib/icons'
 interface Props {
   selectedFeatures: string[]
   onFeaturesChange: (ids: string[]) => void
+  searchExpanded?: boolean
 }
 
-export default function FeatureFilter({ selectedFeatures, onFeaturesChange }: Props) {
+export default function FeatureFilter({ selectedFeatures, onFeaturesChange, searchExpanded = false }: Props) {
   const [expanded, setExpanded] = useState(false)
   const [features, setFeatures] = useState<FeatureDefinition[]>([])
   const [loading, setLoading] = useState(true)
@@ -54,7 +55,10 @@ export default function FeatureFilter({ selectedFeatures, onFeaturesChange }: Pr
   if (loading) return null
 
   return (
-    <div className="absolute top-[6.5rem] left-0 right-0 z-10">
+    <div
+      className="absolute left-0 right-0 z-10 transition-all duration-200"
+      style={{ top: searchExpanded ? '10rem' : '6.5rem' }}
+    >
       {/* Toggle button */}
       <div className="px-3 pb-1">
         <button
