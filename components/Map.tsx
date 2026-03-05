@@ -13,6 +13,83 @@ import Header from './Header'
 import FeatureFilter from './FeatureFilter'
 import OnboardingOverlay from './OnboardingOverlay'
 
+// ====== Nominatim 地理編碼 ======
+let lastNominatimCall = 0
+
+async function geocodeWithNominatim(query: string): Promise<{
+  lat: number
+  lon: number
+  displayName: string
+  zoom: number
+} | null> {
+  // 每秒最多 1 次請求
+  const now = Date.now()
+  const elapsed = now - lastNominatimCall
+  if (elapsed < 1000) {
+    await new Promise(resolve => setTimeout(resolve, 1000 - elapsed))
+  }
+  lastNominatimCall = Date.now()
+
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&countrycodes=tw&format=json&limit=1`,
+      {
+        headers: { 'User-Agent': 'Wildmap/1.0' },
+      }
+    )
+    if (!res.ok) return null
+    const data = await res.json()
+    if (!data || data.length === 0) return null
+
+    const result = data[0]
+    const lat = parseFloat(result.lat)
+    const lon = parseFloat(result.lon)
+    const displayName = result.display_name?.split(',')[0] || query
+
+    // 根據 boundingbox 計算適當的 zoom level
+    let zoom = 12
+    if (result.boundingbox) {
+      const [south, north, west, east] = result.boundingbox.map(Number)
+      const latDiff = Math.abs(north - south)
+      const lonDiff = Math.abs(east - west)
+      const maxDiff = Math.max(latDiff, lonDiff)
+      if (maxDiff > 2) zoom = 8
+      else if (maxDiff > 1) zoom = 9
+      else if (maxDiff > 0.5) zoom = 10
+      else if (maxDiff > 0.2) zoom = 11
+      else if (maxDiff > 0.1) zoom = 12
+      else if (maxDiff > 0.05) zoom = 13
+      else zoom = 14
+    }
+
+    return { lat, lon, displayName, zoom }
+  } catch {
+    return null
+  }
+}
+
+// ====== Retry helper（指數退避） ======
+async function withRetry<T>(
+  fn: () => Promise<T>,
+  maxRetries: number = 3,
+  onRetry?: (attempt: number) => void,
+): Promise<T> {
+  let lastError: unknown
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn()
+    } catch (err) {
+      lastError = err
+      if (attempt < maxRetries) {
+        const delay = Math.pow(2, attempt) * 1000 // 1s, 2s, 4s
+        onRetry?.(attempt + 1)
+        await new Promise(resolve => setTimeout(resolve, delay))
+      }
+    }
+  }
+  throw lastError
+}
+
 const MAP_STYLE = {
   version: 8 as const,
   sources: {
@@ -84,6 +161,9 @@ export default function Map() {
   const [searchExpanded, setSearchExpanded] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>('map')
   const [totalCount, setTotalCount] = useState(0)
+  const [geoHint, setGeoHint] = useState<string | null>(null) // 地理搜尋提示
+  const [loadError, setLoadError] = useState<string | null>(null) // 載入失敗訊息
+  const [retrying, setRetrying] = useState(false) // 重試中
   const [viewState, setViewState] = useState({
     longitude: 121.0,
     latitude: 23.8,
@@ -97,48 +177,72 @@ export default function Map() {
 
   // Debounce timer ref
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  // Geocoding debounce timer ref
+  const geoDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  // Geo hint timer ref
+  const geoHintTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  // ====== Viewport-based fetch ======
+  // ====== Viewport-based fetch（含 retry 機制） ======
   const fetchViewportSpots = useCallback(async (
     bounds: [number, number, number, number],
     category: SpotCategory | 'all',
     search: string,
     featureIds: Set<string> | null,
   ) => {
-    const [west, south, east, north] = bounds
+    setLoadError(null)
 
-    let query = supabase
-      .from('spots')
-      .select('id, name, category, latitude, longitude, is_free, gov_certified, quality')
-      .gte('latitude', south)
-      .lte('latitude', north)
-      .gte('longitude', west)
-      .lte('longitude', east)
+    try {
+      const data = await withRetry(
+        async () => {
+          const [west, south, east, north] = bounds
 
-    if (category !== 'all') {
-      query = query.eq('category', category)
+          let query = supabase
+            .from('spots')
+            .select('id, name, category, latitude, longitude, is_free, gov_certified, quality')
+            .gte('latitude', south)
+            .lte('latitude', north)
+            .gte('longitude', west)
+            .lte('longitude', east)
+
+          if (category !== 'all') {
+            query = query.eq('category', category)
+          }
+
+          if (search.trim()) {
+            query = query.ilike('name', `%${search.trim()}%`)
+          }
+
+          if (featureIds !== null) {
+            query = query.in('id', Array.from(featureIds))
+          }
+
+          query = query.limit(500)
+
+          const { data, error } = await query
+
+          if (error) {
+            throw error
+          }
+
+          return (data || []) as SpotSummary[]
+        },
+        3,
+        (attempt) => {
+          console.log(`Supabase fetch retry attempt ${attempt}`)
+          setRetrying(true)
+        }
+      )
+
+      setSpots(data)
+      setLoading(false)
+      setRetrying(false)
+      setLoadError(null)
+    } catch (err) {
+      console.error('fetchViewportSpots failed after retries:', err)
+      setRetrying(false)
+      setLoading(false)
+      setLoadError('載入失敗，請重新整理頁面')
     }
-
-    if (search.trim()) {
-      query = query.ilike('name', `%${search.trim()}%`)
-    }
-
-    if (featureIds !== null) {
-      // 篩選 feature_votes 過濾出來的 spot_ids
-      query = query.in('id', Array.from(featureIds))
-    }
-
-    query = query.limit(500)
-
-    const { data, error } = await query
-
-    if (error) {
-      console.error('fetchViewportSpots error:', error)
-      return
-    }
-
-    setSpots((data || []) as SpotSummary[])
-    setLoading(false)
   }, [])
 
   // ====== Count query（帶 filter） ======
@@ -197,6 +301,47 @@ export default function Map() {
     fetchTotalCount(activeFilter, searchQuery, featureSpotIds)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // ====== P1-1：地理搜尋（Nominatim geocoding） ======
+  useEffect(() => {
+    if (geoDebounceRef.current) {
+      clearTimeout(geoDebounceRef.current)
+    }
+
+    const trimmed = searchQuery.trim()
+    if (!trimmed || trimmed.length < 2) {
+      return
+    }
+
+    geoDebounceRef.current = setTimeout(async () => {
+      const result = await geocodeWithNominatim(trimmed)
+      if (result) {
+        // flyTo 到搜尋結果位置
+        mapRef.current?.flyTo({
+          center: [result.lon, result.lat],
+          zoom: result.zoom,
+          duration: 1000,
+        })
+
+        // 顯示地理搜尋提示
+        setGeoHint(`📍 已移動到${result.displayName}區域`)
+
+        // 3 秒後自動隱藏提示
+        if (geoHintTimerRef.current) {
+          clearTimeout(geoHintTimerRef.current)
+        }
+        geoHintTimerRef.current = setTimeout(() => {
+          setGeoHint(null)
+        }, 3000)
+      }
+    }, 500) // 500ms debounce
+
+    return () => {
+      if (geoDebounceRef.current) {
+        clearTimeout(geoDebounceRef.current)
+      }
+    }
+  }, [searchQuery])
 
   // 當選擇特性篩選時，查詢符合條件的 spot ids
   useEffect(() => {
@@ -347,9 +492,22 @@ export default function Map() {
         spotCount={totalCount}
         loading={loading}
         searchQuery={searchQuery}
+        searchExpanded={searchExpanded}
         onSearchChange={setSearchQuery}
         onSearchExpandedChange={setSearchExpanded}
       />
+
+      {/* 地理搜尋提示 */}
+      {geoHint && (
+        <div
+          className="absolute left-0 right-0 z-20 flex justify-center transition-all duration-300"
+          style={{ top: searchExpanded ? '6rem' : '3.2rem' }}
+        >
+          <div className="bg-primary/90 text-text-on-primary text-sm px-4 py-1.5 rounded-full shadow-md backdrop-blur-sm animate-fade-in">
+            {geoHint}
+          </div>
+        </div>
+      )}
 
       {/* Category Filter Bar + 地圖/列表切換 */}
       <div
@@ -417,14 +575,43 @@ export default function Map() {
       {/* =================== 地圖模式 =================== */}
       {viewMode === 'map' && (
         <>
-          {/* Loading overlay — 只在第一次載入時顯示 */}
-          {loading && spots.length === 0 && (
+          {/* Loading / Retry / Error overlay — 只在第一次載入時顯示 */}
+          {(loading || loadError) && spots.length === 0 && (
             <div className="absolute inset-0 z-20 flex items-center justify-center bg-bg/80 backdrop-blur-sm">
               <div className="flex flex-col items-center gap-3">
-                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center animate-pulse">
-                  <FontAwesomeIcon icon={NAV_ICONS.map} className="text-primary text-2xl animate-spin-slow" />
-                </div>
-                <p className="text-sm font-medium text-text-secondary">載入地圖中...</p>
+                {loadError ? (
+                  <>
+                    <div className="w-16 h-16 rounded-full bg-error/10 flex items-center justify-center">
+                      <FontAwesomeIcon icon={NAV_ICONS.warning} className="text-error text-2xl" />
+                    </div>
+                    <p className="text-sm font-medium text-text-main">{loadError}</p>
+                    <button
+                      onClick={() => {
+                        setLoading(true)
+                        setLoadError(null)
+                        fetchViewportSpots(mapBounds, activeFilter, searchQuery, featureSpotIds)
+                        fetchTotalCount(activeFilter, searchQuery, featureSpotIds)
+                      }}
+                      className="mt-2 px-6 py-2.5 bg-primary text-text-on-primary rounded-xl text-sm font-semibold hover:bg-primary-dark transition-colors cursor-pointer active:scale-95"
+                    >
+                      重試
+                    </button>
+                  </>
+                ) : retrying ? (
+                  <>
+                    <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center animate-pulse">
+                      <FontAwesomeIcon icon={NAV_ICONS.spinner} className="text-primary text-2xl animate-spin" />
+                    </div>
+                    <p className="text-sm font-medium text-text-secondary">正在重新載入...</p>
+                  </>
+                ) : (
+                  <>
+                    <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center animate-pulse">
+                      <FontAwesomeIcon icon={NAV_ICONS.map} className="text-primary text-2xl animate-spin-slow" />
+                    </div>
+                    <p className="text-sm font-medium text-text-secondary">載入地圖中...</p>
+                  </>
+                )}
               </div>
             </div>
           )}
@@ -433,18 +620,24 @@ export default function Map() {
           {!loading && spots.length === 0 && (searchQuery || activeFilter !== 'all' || featureSpotIds !== null) && (
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 bg-surface/95 backdrop-blur-sm rounded-2xl shadow-lg border border-border p-6 max-w-xs text-center">
               <div className="w-16 h-16 mx-auto rounded-full bg-surface-alt flex items-center justify-center mb-3">
-                <span className="text-3xl">🔍</span>
+                <span className="text-3xl">😕</span>
               </div>
-              <p className="text-base font-semibold text-text-main mb-1">找不到符合條件的地點</p>
+              <p className="text-base font-semibold text-text-main mb-1">
+                {selectedFeatures.length > 0 && !searchQuery && activeFilter === 'all'
+                  ? '沒有符合篩選條件的地點'
+                  : '找不到符合條件的地點'}
+              </p>
               <p className="text-sm text-text-secondary mb-4">
-                試試調整篩選條件或搜尋其他關鍵字
+                {selectedFeatures.length > 0 && !searchQuery && activeFilter === 'all'
+                  ? '試試減少特性篩選條件'
+                  : '試試調整篩選條件或搜尋其他關鍵字'}
               </p>
               <button
                 onClick={() => { setActiveFilter('all'); setSelectedFeatures([]); setSearchQuery('') }}
                 className="text-sm text-primary font-medium hover:text-primary-dark transition-colors flex items-center gap-1 mx-auto cursor-pointer"
               >
                 <FontAwesomeIcon icon={NAV_ICONS.close} className="text-xs" />
-                清除所有篩選
+                清除篩選
               </button>
             </div>
           )}
@@ -542,7 +735,7 @@ export default function Map() {
                   <div className="flex items-start gap-3 mb-3">
                     <span className="text-2xl flex-shrink-0 mt-0.5">{CATEGORY_EMOJI[selectedSpot.category]}</span>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-text-main text-base leading-snug mb-1">{selectedSpot.name}</h3>
+                      <h3 className="font-bold text-text-main text-base leading-snug mb-1 line-clamp-2" title={selectedSpot.name}>{selectedSpot.name}</h3>
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <span className="text-xs text-primary font-medium">
                           {CATEGORY_LABEL[selectedSpot.category]}
@@ -677,7 +870,7 @@ function SpotCard({ spot, onDetail }: { spot: SpotSummary; onDetail: () => void 
             {CATEGORY_EMOJI[spot.category]}
           </span>
           <div className="flex-1 min-w-0">
-            <h3 className="font-bold text-text-main text-sm leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+            <h3 className="font-bold text-text-main text-sm leading-snug line-clamp-2 group-hover:text-primary transition-colors" title={spot.name}>
               {spot.name}
             </h3>
             <span className="text-xs text-primary font-medium">

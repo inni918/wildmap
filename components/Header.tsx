@@ -10,14 +10,17 @@ interface HeaderProps {
   spotCount: number
   loading: boolean
   searchQuery?: string
+  searchExpanded?: boolean
   onSearchChange?: (query: string) => void
   onSearchExpandedChange?: (expanded: boolean) => void
 }
 
-export default function Header({ spotCount, loading, searchQuery = '', onSearchChange, onSearchExpandedChange }: HeaderProps) {
+export default function Header({ spotCount, loading, searchQuery = '', searchExpanded: searchExpandedProp, onSearchChange, onSearchExpandedChange }: HeaderProps) {
   const { user, profile, loading: authLoading, signOut } = useAuth()
   const [menuOpen, setMenuOpen] = useState(false)
-  const [searchExpanded, setSearchExpanded] = useState(false)
+  const [searchExpandedLocal, setSearchExpandedLocal] = useState(false)
+  // 使用 controlled prop 或 local state
+  const searchExpanded = searchExpandedProp !== undefined ? searchExpandedProp : searchExpandedLocal
   const searchInputRef = useRef<HTMLInputElement>(null)
   const menuRef = useRef<HTMLDivElement>(null)
 
@@ -43,7 +46,7 @@ export default function Header({ spotCount, loading, searchQuery = '', onSearchC
       onSearchChange?.('')
     } else {
       const next = !searchExpanded
-      setSearchExpanded(next)
+      setSearchExpandedLocal(next)
       onSearchExpandedChange?.(next)
       if (!next) {
         onSearchChange?.('')
@@ -148,7 +151,7 @@ export default function Header({ spotCount, loading, searchQuery = '', onSearchC
               type="text"
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              placeholder="搜尋地點名稱..."
+              placeholder="搜尋地點名稱或地區（如：苗栗、日月潭）..."
               className="w-full pl-9 pr-9 py-2 text-sm border border-border rounded-xl bg-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
             />
             {searchQuery && (
