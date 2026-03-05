@@ -77,11 +77,25 @@ export default function Map() {
   )
 
   const fetchSpots = useCallback(async () => {
-    const { data, error } = await supabase
-      .from('spots')
-      .select('id, name, name_en, description, description_en, category, latitude, longitude, address, status, quality, is_free, is_private, created_by, managed_by, phone, website, facebook, instagram, line_id, email, google_maps_url, gov_certified, view_count, created_at, updated_at')
-      .range(0, 9999)
-    if (!error && data) setSpots(data as Spot[])
+    const PAGE_SIZE = 1000
+    const allSpots: Spot[] = []
+    let from = 0
+    let hasMore = true
+
+    while (hasMore) {
+      const { data, error } = await supabase
+        .from('spots')
+        .select('id, name, name_en, description, description_en, category, latitude, longitude, address, status, quality, is_free, is_private, created_by, managed_by, phone, website, facebook, instagram, line_id, email, google_maps_url, gov_certified, view_count, created_at, updated_at')
+        .range(from, from + PAGE_SIZE - 1)
+        .order('id')
+
+      if (error || !data) break
+      allSpots.push(...(data as Spot[]))
+      hasMore = data.length === PAGE_SIZE
+      from += PAGE_SIZE
+    }
+
+    setSpots(allSpots)
     setLoading(false)
   }, [])
 
