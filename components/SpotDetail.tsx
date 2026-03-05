@@ -41,22 +41,41 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
   const [showEditModal, setShowEditModal] = useState(false)
 
   // 用 spotId 撈完整資料
+  // 撈 spot + features 一氣呵成（減少等待）
   useEffect(() => {
-    async function fetchFullSpot() {
+    let cancelled = false
+    async function fetchAll() {
       setSpotLoading(true)
-      const { data, error } = await supabase
+      setLoading(true)
+
+      const { data: spotData, error: spotError } = await supabase
         .from('spots')
         .select('*')
         .eq('id', spotId)
         .single()
 
-      if (!error && data) {
-        setSpot(data as Spot)
+      if (spotError || !spotData || cancelled) {
+        setSpotLoading(false)
+        setLoading(false)
+        return
       }
-      setSpotLoading(false)
+
+      const fullSpot = spotData as Spot
+      if (!cancelled) {
+        setSpot(fullSpot)
+        setSpotLoading(false)
+      }
+
+      // spot 拿到後立刻撈 features（不等 React re-render）
+      const result = await fetchSpotFeatures(fullSpot.id, fullSpot.category, user?.id)
+      if (!cancelled) {
+        setGroups(result)
+        setLoading(false)
+      }
     }
-    fetchFullSpot()
-  }, [spotId])
+    fetchAll()
+    return () => { cancelled = true }
+  }, [spotId, user?.id])
 
   const loadFeatures = useCallback(async () => {
     if (!spot) return
@@ -65,12 +84,6 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
     setGroups(result)
     setLoading(false)
   }, [spot, user?.id])
-
-  useEffect(() => {
-    if (spot) {
-      loadFeatures()
-    }
-  }, [spot, loadFeatures])
 
   const handleClose = () => {
     setIsClosing(true)

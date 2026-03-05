@@ -35,23 +35,26 @@ export async function fetchSpotFeatures(
   category: SpotCategory,
   userId?: string
 ): Promise<GroupedFeatures[]> {
-  // Fetch feature definitions for this category
-  const { data: definitions, error: defError } = await supabase
-    .from('feature_definitions')
-    .select('*')
-    .contains('applicable_categories', [category])
-    .order('sort_order')
+  // 並行撈 definitions + votes（省一次 round trip）
+  const [defResult, voteResult] = await Promise.all([
+    supabase
+      .from('feature_definitions')
+      .select('*')
+      .contains('applicable_categories', [category])
+      .order('sort_order'),
+    supabase
+      .from('feature_votes')
+      .select('*')
+      .eq('spot_id', spotId),
+  ])
+
+  const { data: definitions, error: defError } = defResult
+  const { data: votes, error: voteError } = voteResult
 
   if (defError || !definitions) {
     console.error('Error fetching feature definitions:', defError)
     return []
   }
-
-  // Fetch all votes for this spot
-  const { data: votes, error: voteError } = await supabase
-    .from('feature_votes')
-    .select('*')
-    .eq('spot_id', spotId)
 
   if (voteError) {
     console.error('Error fetching votes:', voteError)
