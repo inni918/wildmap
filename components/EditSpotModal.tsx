@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { supabase, type Spot } from '@/lib/supabase'
+import { useAchievements } from '@/lib/achievement-context'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS } from '@/lib/icons'
 
@@ -12,6 +13,7 @@ interface Props {
 }
 
 export default function EditSpotModal({ spot, onClose, onSaved }: Props) {
+  const { triggerCheck } = useAchievements()
   const [name, setName] = useState(spot.name)
   const [description, setDescription] = useState(spot.description || '')
   const [address, setAddress] = useState(spot.address || '')
@@ -59,6 +61,7 @@ export default function EditSpotModal({ spot, onClose, onSaved }: Props) {
       setLoading(false)
     } else {
       setSuccess(true)
+      triggerCheck()
       setTimeout(() => {
         onSaved()
       }, 500)

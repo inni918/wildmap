@@ -1,0 +1,2 @@
+-- 031: placeholder (previously applied migration)
+-- This migration was already applied to the remote database.

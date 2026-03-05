@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth-context'
+import { useAchievements } from '@/lib/achievement-context'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS } from '@/lib/icons'
 
@@ -24,6 +25,7 @@ const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 
 export default function PhotoGrid({ spotId }: Props) {
   const { user } = useAuth()
+  const { triggerCheck } = useAchievements()
   const [images, setImages] = useState<SpotImage[]>([])
   const [loading, setLoading] = useState(true)
   const [uploading, setUploading] = useState(false)
@@ -114,6 +116,7 @@ export default function PhotoGrid({ spotId }: Props) {
       }
 
       await fetchImages()
+      triggerCheck()
     } finally {
       setUploading(false)
     }

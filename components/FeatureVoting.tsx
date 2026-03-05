@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import type { GroupedFeatures, FeatureWithVotes } from '@/lib/features'
 import { castVote } from '@/lib/features'
+import { useAchievements } from '@/lib/achievement-context'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS, getFeatureIcon } from '@/lib/icons'
 import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons'
@@ -28,6 +29,7 @@ function FeatureRow({
   onVoted: () => void
 }) {
   const [voting, setVoting] = useState(false)
+  const { triggerCheck } = useAchievements()
 
   const handleVote = async (vote: boolean) => {
     if (!userId) return
@@ -35,6 +37,7 @@ function FeatureRow({
     const result = await castVote(spotId, feature.id, userId, vote)
     if (result.success) {
       onVoted()
+      triggerCheck()
     }
     setVoting(false)
   }

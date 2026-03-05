@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth-context'
+import { useAchievements } from '@/lib/achievement-context'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS } from '@/lib/icons'
 
@@ -12,6 +13,7 @@ interface Props {
 
 export default function FavoriteButton({ spotId }: Props) {
   const { user } = useAuth()
+  const { triggerCheck } = useAchievements()
   const [isFavorited, setIsFavorited] = useState(false)
   const [loading, setLoading] = useState(false)
 
@@ -52,6 +54,7 @@ export default function FavoriteButton({ spotId }: Props) {
           .from('favorites')
           .insert({ spot_id: spotId, user_id: user.id })
         setIsFavorited(true)
+        triggerCheck()
       }
     } finally {
       setLoading(false)

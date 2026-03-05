@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react'
 import { supabase, type Spot } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth-context'
+import { useAchievements } from '@/lib/achievement-context'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS } from '@/lib/icons'
 import {
@@ -34,6 +35,7 @@ interface PhotoPreview {
 
 export default function AddSpotModal({ lat, lng, onClose, onAdded }: Props) {
   const { user, signInWithGoogle } = useAuth()
+  const { triggerCheck } = useAchievements()
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [category, setCategory] = useState<Spot['category']>('camping')
@@ -157,6 +159,7 @@ export default function AddSpotModal({ lat, lng, onClose, onAdded }: Props) {
     photos.forEach(p => URL.revokeObjectURL(p.previewUrl))
 
     onAdded()
+    triggerCheck()
   }
 
   // 未登入畫面
