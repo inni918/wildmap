@@ -33,7 +33,27 @@ export type Spot = {
   email?: string
   google_maps_url?: string
   gov_certified?: boolean
+  claimed_by?: string
+  claimed_at?: string
+  is_claimed?: boolean
   view_count: number
+  created_at: string
+  updated_at: string
+}
+
+export type BusinessClaim = {
+  id: string
+  spot_id: string
+  user_id: string
+  business_name: string
+  contact_phone?: string
+  contact_email?: string
+  proof_url?: string
+  notes?: string
+  status: 'pending' | 'approved' | 'rejected'
+  reviewed_at?: string
+  reviewed_by?: string
+  rejection_reason?: string
   created_at: string
   updated_at: string
 }

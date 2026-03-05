@@ -9,6 +9,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS } from '@/lib/icons'
 import { faTrophy, faChartLine, faPen } from '@fortawesome/free-solid-svg-icons'
 import MobileTabBar from '@/components/MobileTabBar'
+import AchievementGrid from '@/components/AchievementGrid'
+import ClaimStatus from '@/components/ClaimStatus'
 
 // 等級名稱
 function getLevelTitle(level: number): string {
@@ -351,6 +353,26 @@ export default function ProfilePage() {
               <div className="text-[10px] text-text-secondary">{stat.label}</div>
             </div>
           ))}
+        </div>
+
+        {/* 商家認證狀態 */}
+        <ClaimStatus />
+
+        {/* 成就區域 */}
+        <div className="bg-surface rounded-2xl border border-border p-4 shadow-sm">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-bold text-text-main flex items-center gap-1.5">
+              <span>🏅</span>
+              成就徽章
+            </h3>
+            <Link
+              href="/profile/achievements"
+              className="text-xs text-primary hover:text-primary-dark transition-colors no-underline font-medium"
+            >
+              查看全部 →
+            </Link>
+          </div>
+          <AchievementGrid summary />
         </div>
 
         {/* Content Sections */}

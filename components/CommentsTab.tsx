@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth-context'
+import { useAchievements } from '@/lib/achievement-context'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS } from '@/lib/icons'
 
@@ -19,10 +20,12 @@ interface Comment {
 
 interface Props {
   spotId: string
+  claimedBy?: string
 }
 
-export default function CommentsTab({ spotId }: Props) {
+export default function CommentsTab({ spotId, claimedBy }: Props) {
   const { user } = useAuth()
+  const { triggerCheck } = useAchievements()
   const [comments, setComments] = useState<Comment[]>([])
   const [loading, setLoading] = useState(true)
   const [newComment, setNewComment] = useState('')
@@ -116,6 +119,7 @@ export default function CommentsTab({ spotId }: Props) {
       if (!error) {
         setNewComment('')
         await fetchComments()
+        triggerCheck()
       }
     } finally {
       setSubmitting(false)
@@ -140,6 +144,7 @@ export default function CommentsTab({ spotId }: Props) {
         setReplyContent('')
         setReplyingTo(null)
         await fetchComments()
+        triggerCheck()
       }
     } finally {
       setSubmitting(false)
@@ -230,7 +235,11 @@ export default function CommentsTab({ spotId }: Props) {
           {comments.map(comment => (
             <div key={comment.id}>
               {/* Top-level comment */}
-              <div className="bg-surface-alt rounded-xl px-4 py-3 border border-border/50">
+              <div className={`rounded-xl px-4 py-3 border ${
+                claimedBy && comment.user_id === claimedBy
+                  ? 'bg-blue-50/50 border-blue-200/50'
+                  : 'bg-surface-alt border-border/50'
+              }`}>
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-2">
                     <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-text-on-primary text-xs font-bold">
@@ -239,6 +248,12 @@ export default function CommentsTab({ spotId }: Props) {
                     <span className="text-sm font-medium text-text-main">
                       {comment.display_name}
                     </span>
+                    {claimedBy && comment.user_id === claimedBy && (
+                      <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-0.5 rounded-full"
+                        style={{ backgroundColor: '#3B82F620', color: '#3B82F6' }}>
+                        🏪 商家
+                      </span>
+                    )}
                     <span className="text-xs text-text-secondary/60">
                       {formatTime(comment.created_at)}
                     </span>
@@ -285,7 +300,11 @@ export default function CommentsTab({ spotId }: Props) {
                   {comment.replies.map(reply => (
                     <div
                       key={reply.id}
-                      className="bg-surface-alt/60 rounded-lg px-3 py-2 border border-border/30"
+                      className={`rounded-lg px-3 py-2 border ${
+                        claimedBy && reply.user_id === claimedBy
+                          ? 'bg-blue-50/40 border-blue-200/30'
+                          : 'bg-surface-alt/60 border-border/30'
+                      }`}
                     >
                       <div className="flex items-center justify-between mb-1">
                         <div className="flex items-center gap-2">
@@ -295,6 +314,12 @@ export default function CommentsTab({ spotId }: Props) {
                           <span className="text-xs font-medium text-text-main">
                             {reply.display_name}
                           </span>
+                          {claimedBy && reply.user_id === claimedBy && (
+                            <span className="inline-flex items-center gap-0.5 text-[9px] font-semibold px-1 py-0.5 rounded-full"
+                              style={{ backgroundColor: '#3B82F620', color: '#3B82F6' }}>
+                              🏪 商家
+                            </span>
+                          )}
                           <span className="text-[10px] text-text-secondary/60">
                             {formatTime(reply.created_at)}
                           </span>

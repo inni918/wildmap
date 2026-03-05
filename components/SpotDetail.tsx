@@ -15,6 +15,7 @@ import PhotoGrid from './PhotoGrid'
 import CommentsTab from './CommentsTab'
 import FavoriteButton from './FavoriteButton'
 import EditSpotModal from './EditSpotModal'
+import ClaimButton from './ClaimButton'
 
 interface Props {
   spotId: string
@@ -131,7 +132,15 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
                 {CATEGORY_EMOJI[spot.category]}
               </span>
               <div className="min-w-0">
-                <h2 className="text-lg font-bold text-text-main line-clamp-2" title={spot.name}>{spot.name}</h2>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-lg font-bold text-text-main line-clamp-2" title={spot.name}>{spot.name}</h2>
+                  {spot.is_claimed && (
+                    <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full whitespace-nowrap"
+                      style={{ backgroundColor: '#3B82F620', color: '#3B82F6' }}>
+                      ✅ 認證商家
+                    </span>
+                  )}
+                </div>
                 <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                   <span className="text-xs font-medium text-primary">
                     {CATEGORY_LABEL[spot.category]}
@@ -202,6 +211,11 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
           {/* Contact icons */}
           <ContactIcons spot={spot} />
 
+          {/* Claim button */}
+          <div className="mt-2">
+            <ClaimButton spot={spot} />
+          </div>
+
           {/* Compact feature icons */}
           {!loading && groups.length > 0 && (
             <div className="mt-3">
@@ -256,7 +270,7 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
               <OverviewTab spotId={spot.id} groups={groups} />
             )
           ) : activeTab === 'comments' ? (
-            <CommentsTab spotId={spot.id} />
+            <CommentsTab spotId={spot.id} claimedBy={spot.claimed_by} />
           ) : (
             <VoteTab
               spotId={spot.id}
