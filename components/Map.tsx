@@ -93,19 +93,18 @@ async function withRetry<T>(
 const MAP_STYLE = {
   version: 8 as const,
   sources: {
-    carto: {
+    osm: {
       type: 'raster' as const,
       tiles: [
-        'https://a.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}.png',
-        'https://b.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}.png',
-        'https://c.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}.png',
-        'https://d.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}.png',
+        'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        'https://b.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png',
       ],
       tileSize: 256,
-      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>',
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     },
   },
-  layers: [{ id: 'carto', type: 'raster' as const, source: 'carto' }],
+  layers: [{ id: 'osm', type: 'raster' as const, source: 'osm' }],
 }
 
 const QUALITY_BADGE: Record<string, { label: string; color: string }> = {
