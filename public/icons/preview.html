@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wildmap Icon 預覽</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8faf9;
+      color: #1a1a1a;
+      padding: 2rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      color: #2D6A4F;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .controls input[type="text"] {
+      padding: 0.5rem 1rem;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      width: 280px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .controls input[type="text"]:focus {
+      border-color: #2D6A4F;
+    }
+
+    .size-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .size-controls label { font-size: 0.85rem; color: #666; }
+
+    .size-controls input[type="range"] {
+      width: 120px;
+      accent-color: #2D6A4F;
+    }
+
+    .color-toggle {
+      display: flex;
+      gap: 0.25rem;
+    }
+
+    .color-toggle button {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid #ddd;
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+
+    .color-toggle button:hover { transform: scale(1.15); }
+    .color-toggle button.active { border-color: #333; box-shadow: 0 0 0 2px rgba(0,0,0,0.15); }
+
+    .stats {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 1rem;
+    }
+
+    section {
+      margin-bottom: 2.5rem;
+    }
+
+    section h2 {
+      font-size: 1.15rem;
+      color: #2D6A4F;
+      border-bottom: 2px solid #52B788;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 1rem;
+    }
+
+    .icon-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0.75rem 0.5rem;
+      border-radius: 10px;
+      background: white;
+      border: 1px solid #eee;
+      transition: all 0.2s;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .icon-card:hover {
+      border-color: #52B788;
+      box-shadow: 0 2px 12px rgba(45, 106, 79, 0.12);
+      transform: translateY(-2px);
+    }
+
+    .icon-card .icon-wrapper {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.4rem;
+    }
+
+    .icon-card .icon-wrapper img {
+      width: 100%;
+      height: 100%;
+    }
+
+    .icon-card .icon-name {
+      font-size: 0.7rem;
+      color: #666;
+      text-align: center;
+      word-break: break-all;
+      line-height: 1.2;
+    }
+
+    .icon-card .icon-label {
+      font-size: 0.72rem;
+      color: #333;
+      text-align: center;
+      margin-top: 0.15rem;
+      font-weight: 500;
+    }
+
+    .icon-card.hidden { display: none; }
+
+    .copied-toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #2D6A4F;
+      color: white;
+      padding: 0.6rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      transition: transform 0.3s;
+      z-index: 99;
+    }
+
+    .copied-toast.show { transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 600px) {
+      body { padding: 1rem; }
+      .grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 0.5rem; }
+      .icon-card .icon-wrapper { width: 36px; height: 36px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🗺️ Wildmap Icon 預覽</h1>
+  <p>台灣戶外活動地圖平台 — 共 116 個 SVG Icon</p>
+</header>
+
+<div class="controls">
+  <input type="text" id="search" placeholder="搜尋 icon（名稱或中文）...">
+  <div class="size-controls">
+    <label>大小</label>
+    <input type="range" id="sizeSlider" min="24" max="72" value="48">
+    <span id="sizeLabel">48px</span>
+  </div>
+  <div class="color-toggle">
+    <button style="background:#1a1a1a" data-color="#1a1a1a" class="active" title="深色"></button>
+    <button style="background:#2D6A4F" data-color="#2D6A4F" title="森林綠"></button>
+    <button style="background:#52B788" data-color="#52B788" title="淺綠"></button>
+    <button style="background:#E76F51" data-color="#E76F51" title="橘紅"></button>
+    <button style="background:#999" data-color="#999" title="灰色"></button>
+  </div>
+</div>
+
+<div class="stats" id="stats">顯示 116 / 116 個 icon</div>
+
+<div id="content"></div>
+
+<div class="copied-toast" id="toast">已複製路徑！</div>
+
+<script>
+const ICONS = {
+  '分類 icon（6 個）': {
+    camping: '露營',
+    carcamp: '車宿',
+    fishing: '釣魚',
+    diving: '潛水',
+    surfing: '衝浪',
+    hiking: '登山',
+  },
+  '營地特性 camp_traits（21 個）': {
+    tent_site: '帳篷營位',
+    car_beside_tent: '車停帳邊',
+    rv_site: '露營車營位',
+    glamping: '豪華帳篷',
+    cabin: '小木屋',
+    covered_area: '雨棚',
+    small_group_area: '小包區',
+    grassland: '大草皮',
+    gravel_site: '碎石地',
+    flat_ground: '平坦地面',
+    shaded: '有遮蔭',
+    night_view: '夜景',
+    sunrise_view: '日出',
+    sea_of_clouds: '雲海',
+    stargazing: '觀星',
+    seasonal_flowers: '季節花卉',
+    fireflies: '螢火蟲',
+    pet_friendly: '寵物友善',
+    family_friendly: '親子友善',
+    beginner_friendly: '新手友善',
+    quiet_zone: '安靜區',
+  },
+  '設施與服務 facilities（22 個）': {
+    flush_toilet: '沖水廁所',
+    squat_toilet: '蹲式廁所',
+    shower: '淋浴',
+    hot_water: '熱水',
+    sink: '洗滌槽',
+    shared_kitchen: '公用廚房',
+    electricity: '電力供應',
+    wifi: 'WiFi',
+    '4g_5g': '手機訊號',
+    drinking_water: '飲用水',
+    trash_disposal: '垃圾處理',
+    fire_pit: '營火區',
+    bbq_area: '烤肉區',
+    playground: '遊樂設施',
+    swimming_pool: '戲水池',
+    equipment_rental: '租借裝備',
+    food_service: '餐飲服務',
+    convenience_store: '便利商店',
+    gas_station: '加油站',
+    managed: '有管理員',
+    reservation_required: '需預約',
+    free_camping: '免費',
+  },
+  '周邊環境 environment（20 個）': {
+    river_stream: '溪流',
+    lake: '湖泊',
+    ocean_view: '海景',
+    beach: '沙灘',
+    mountain_view: '山景',
+    forest: '森林',
+    hot_spring: '溫泉',
+    wild_hot_spring: '野溪溫泉',
+    waterfall: '瀑布',
+    farm_experience: '農場體驗',
+    aboriginal_culture: '原住民文化',
+    temple_nearby: '寺廟附近',
+    scenic_trail: '步道',
+    cycling_path: '自行車道',
+    bird_watching: '賞鳥',
+    wildlife: '野生動物',
+    botanical: '植物生態',
+    rock_formation: '特殊地質',
+    historical_site: '歷史古蹟',
+    panoramic_view: '全景視野',
+  },
+  '可進行活動 activities（18 個）': {
+    hiking_activity: '登山健行',
+    fishing_activity: '釣魚',
+    swimming: '游泳/玩水',
+    kayaking: '划船/獨木舟',
+    cycling: '自行車',
+    rock_climbing: '攀岩',
+    paragliding: '飛行傘',
+    photography: '攝影',
+    meditation: '冥想/靜心',
+    yoga: '瑜珈',
+    astronomy: '天文觀測',
+    foraging: '採集',
+    cooking_outdoor: '戶外烹飪',
+    campfire: '營火活動',
+    night_hiking: '夜間健行',
+    grass_sledding: '滑草',
+    farm_picking: '採果',
+    diy_craft: 'DIY 手作',
+  },
+  '區域與限制 restrictions（14 個）': {
+    no_pets: '禁止寵物',
+    no_smoking: '禁止吸菸',
+    no_alcohol: '禁止飲酒',
+    no_campfire: '禁止營火',
+    no_music: '禁止喧嘩',
+    quiet_hours: '安靜時段',
+    check_in_time: '入場時間',
+    check_out_time: '退場時間',
+    max_capacity: '人數上限',
+    age_restriction: '年齡限制',
+    vehicle_restriction: '車輛限制',
+    seasonal_open: '季節性開放',
+    permit_required: '需要許可證',
+    indigenous_land: '原住民保留地',
+  },
+  '注意事項 warnings（11 個）': {
+    steep_terrain: '地形陡峭',
+    flood_risk: '水災風險',
+    landslide_risk: '落石風險',
+    insect_warning: '蚊蟲多',
+    snake_warning: '蛇類出沒',
+    boar_warning: '山豬出沒',
+    leech_warning: '螞蝗',
+    no_cell_signal: '無手機訊號',
+    road_condition: '路況差',
+    limited_parking: '停車位少',
+    bear_warning: '熊出沒',
+  },
+  '導航/UI icon（10 個）': {
+    navigate: '導航',
+    favorite: '收藏',
+    share: '分享',
+    edit: '編輯',
+    report: '檢舉',
+    verified: '已驗證',
+    photo: '照片',
+    comment: '評論',
+    star: '星星評分',
+    filter: '篩選',
+  },
+};
+
+const content = document.getElementById('content');
+let allCards = [];
+
+// Build the page
+for (const [section, icons] of Object.entries(ICONS)) {
+  const sec = document.createElement('section');
+  sec.innerHTML = `<h2>${section}</h2>`;
+  const grid = document.createElement('div');
+  grid.className = 'grid';
+
+  for (const [key, label] of Object.entries(icons)) {
+    const card = document.createElement('div');
+    card.className = 'icon-card';
+    card.dataset.key = key;
+    card.dataset.label = label;
+    card.innerHTML = `
+      <div class="icon-wrapper">
+        <img src="${key}.svg" alt="${label}" loading="lazy">
+      </div>
+      <div class="icon-name">${key}</div>
+      <div class="icon-label">${label}</div>
+    `;
+    card.addEventListener('click', () => {
+      navigator.clipboard.writeText(`/icons/${key}.svg`);
+      showToast(`已複製：/icons/${key}.svg`);
+    });
+    grid.appendChild(card);
+    allCards.push(card);
+  }
+
+  sec.appendChild(grid);
+  content.appendChild(sec);
+}
+
+// Search
+const searchInput = document.getElementById('search');
+const statsEl = document.getElementById('stats');
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.toLowerCase();
+  let visible = 0;
+  allCards.forEach(card => {
+    const match = card.dataset.key.includes(q) || card.dataset.label.includes(q);
+    card.classList.toggle('hidden', !match);
+    if (match) visible++;
+  });
+  statsEl.textContent = `顯示 ${visible} / ${allCards.length} 個 icon`;
+});
+
+// Size slider
+const sizeSlider = document.getElementById('sizeSlider');
+const sizeLabel = document.getElementById('sizeLabel');
+sizeSlider.addEventListener('input', () => {
+  const sz = sizeSlider.value;
+  sizeLabel.textContent = sz + 'px';
+  document.querySelectorAll('.icon-wrapper').forEach(w => {
+    w.style.width = sz + 'px';
+    w.style.height = sz + 'px';
+  });
+});
+
+// Color toggle
+document.querySelectorAll('.color-toggle button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.color-toggle button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.icon-card').forEach(card => {
+      card.style.color = btn.dataset.color;
+    });
+  });
+});
+
+// Toast
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 1500);
+}
+</script>
+
+</body>
+</html>
