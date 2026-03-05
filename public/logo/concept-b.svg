@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- 概念 B：極簡帳篷+松樹，無背景，適合各種底色 -->
+  <!-- 松樹（左） -->
+  <path d="M140 380 L140 180" stroke="#2D6A4F" stroke-width="12" stroke-linecap="round"/>
+  <path d="M140 300 L100 330 M140 260 L90 300 M140 220 L105 255 M140 180 L118 210" stroke="#2D6A4F" stroke-width="10" stroke-linecap="round"/>
+  <path d="M140 300 L180 330 M140 260 L190 300 M140 220 L175 255 M140 180 L162 210" stroke="#2D6A4F" stroke-width="10" stroke-linecap="round"/>
+  <!-- 帳篷（中右） -->
+  <path d="M300 140 L190 380 L410 380 Z" fill="none" stroke="#2D6A4F" stroke-width="14" stroke-linejoin="round"/>
+  <!-- 帳篷門 -->
+  <path d="M300 250 L270 380 L330 380 Z" fill="#52B788" opacity="0.4"/>
+  <!-- 帳篷頂旗 -->
+  <path d="M300 140 L300 110" stroke="#2D6A4F" stroke-width="8" stroke-linecap="round"/>
+  <path d="M300 110 L325 125" stroke="#D4A843" stroke-width="6" stroke-linecap="round"/>
+</svg>

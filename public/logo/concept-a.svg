@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- 概念 A：帳篷 + 樹的組合剪影，圓形背景 -->
+  <circle cx="256" cy="256" r="240" fill="#2D6A4F"/>
+  <!-- 帳篷 -->
+  <path d="M256 120 L160 340 L352 340 Z" fill="#FEFAF3" opacity="0.95"/>
+  <!-- 帳篷門 -->
+  <path d="M256 220 L232 340 L280 340 Z" fill="#2D6A4F"/>
+  <!-- 左邊樹 -->
+  <path d="M108 340 L108 260 L80 260 L108 200 L88 200 L108 150 L128 200 L108 200 L136 260 L108 260 Z" fill="#52B788"/>
+  <!-- 右邊樹 -->
+  <path d="M390 340 L390 240 L365 240 L390 170 L415 240 L390 240 Z" fill="#52B788" opacity="0.8"/>
+  <!-- 小樹（右後方） -->
+  <path d="M420 340 L420 290 L405 290 L420 240 L435 290 L420 290 Z" fill="#52B788" opacity="0.6"/>
+  <!-- 地面線 -->
+  <line x1="60" y1="340" x2="452" y2="340" stroke="#FEFAF3" stroke-width="3" opacity="0.3"/>
+</svg>
