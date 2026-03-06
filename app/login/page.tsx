@@ -97,7 +97,7 @@ export default function LoginPage() {
             <FontAwesomeIcon icon={NAV_ICONS.map} className="text-primary text-2xl" />
             <h1 className="text-3xl font-bold text-primary-dark">Wildmap</h1>
           </Link>
-          <p className="text-text-secondary mt-2">探索台灣最棒的戶外秘境</p>
+          <p className="text-text-secondary mt-2">台灣最完整的露營地圖平台</p>
         </div>
 
         {/* Card */}

@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS } from '@/lib/icons'
-import { faCampground, faVanShuttle, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import { faCampground, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 
 // 預載地圖頁的 JS chunk — 用戶看 Landing Page 時就背景下載
 if (typeof window !== 'undefined') {
@@ -56,8 +56,8 @@ function AnimatedCounter({ target, duration = 2000, suffix = '' }: { target: num
 const FEATURES = [
   {
     icon: '🗺️',
-    title: '3,000+ 個戶外地點',
-    description: '涵蓋全台灣露營場、車宿點，持續新增中',
+    title: '1,900+ 個露營場',
+    description: '涵蓋全台灣合法登記與社群回報的露營場地，持續新增中',
   },
   {
     icon: '⭐',
@@ -66,13 +66,13 @@ const FEATURES = [
   },
   {
     icon: '🏕️',
-    title: '露營 + 車宿一站搞定',
-    description: '不管你是帳篷派還是車泊族，這裡都找得到',
+    title: '找營地，就這麼簡單',
+    description: '篩選特性、查看評價、收藏比較，輕鬆找到理想營地',
   },
   {
     icon: '📱',
     title: '手機隨時查看',
-    description: '響應式設計，出門在外也能輕鬆查找附近地點',
+    description: '響應式設計，出門在外也能輕鬆查找附近營地',
   },
 ]
 
@@ -114,16 +114,16 @@ export default function LandingPage() {
         <div className="relative max-w-6xl mx-auto px-4 text-center">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-primary-light/10 text-primary-dark rounded-full px-4 py-1.5 text-sm font-medium mb-6">
-            🌲 台灣最完整的戶外地點地圖
+            🌲 台灣最完整的露營地圖平台
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-text-main leading-tight mb-4">
             探索台灣
-            <span className="text-primary">戶外秘境</span>
+            <span className="text-primary">露營秘境</span>
           </h1>
 
           <p className="text-lg sm:text-xl text-text-secondary max-w-2xl mx-auto mb-8 leading-relaxed">
-            露營、車宿、釣魚、潛水 —— 找到你的下一個冒險目的地
+            從露營開始，探索台灣每一個角落
           </p>
 
           {/* CTA Buttons */}
@@ -147,12 +147,10 @@ export default function LandingPage() {
           {/* Hero visual - Category pills */}
           <div className="flex items-center justify-center gap-3 mt-10 flex-wrap">
             {[
-              { emoji: '🏕️', label: '露營', color: 'bg-green-50 text-green-700 border-green-200' },
-              { emoji: '🚐', label: '車宿', color: 'bg-orange-50 text-orange-700 border-orange-200' },
-              { emoji: '🎣', label: '釣魚', color: 'bg-blue-50 text-blue-700 border-blue-200' },
-              { emoji: '🤿', label: '潛水', color: 'bg-cyan-50 text-cyan-700 border-cyan-200' },
-              { emoji: '🏄', label: '衝浪', color: 'bg-purple-50 text-purple-700 border-purple-200' },
-              { emoji: '🏔️', label: '登山', color: 'bg-amber-50 text-amber-700 border-amber-200' },
+              { emoji: '🏕️', label: '營地搜尋', color: 'bg-green-50 text-green-700 border-green-200' },
+              { emoji: '⭐', label: '特性投票', color: 'bg-amber-50 text-amber-700 border-amber-200' },
+              { emoji: '📸', label: '照片分享', color: 'bg-blue-50 text-blue-700 border-blue-200' },
+              { emoji: '💬', label: '真實評價', color: 'bg-purple-50 text-purple-700 border-purple-200' },
             ].map(cat => (
               <span
                 key={cat.label}
@@ -172,18 +170,18 @@ export default function LandingPage() {
           <div className="grid grid-cols-2 gap-4 text-center">
             <div>
               <div className="text-3xl sm:text-4xl font-extrabold text-white mb-1">
-                <AnimatedCounter target={1913} />
-              </div>
-              <p className="text-sm text-white/70">戶外地點</p>
-            </div>
-            <div>
-              <div className="text-3xl sm:text-4xl font-extrabold text-white mb-1">
-                <AnimatedCounter target={1913} />
+                <AnimatedCounter target={1900} suffix="+" />
               </div>
               <div className="flex items-center justify-center gap-1 text-sm text-white/70">
                 <FontAwesomeIcon icon={faCampground} className="text-xs" />
                 <span>露營場</span>
               </div>
+            </div>
+            <div>
+              <div className="text-3xl sm:text-4xl font-extrabold text-white mb-1">
+                <AnimatedCounter target={106} />
+              </div>
+              <p className="text-sm text-white/70">項特性投票</p>
             </div>
           </div>
         </div>
@@ -197,7 +195,7 @@ export default function LandingPage() {
               為什麼選擇 Wildmap？
             </h2>
             <p className="text-text-secondary max-w-lg mx-auto">
-              我們致力於打造台灣最完整、最好用的戶外地點平台
+              我們致力於打造台灣最完整、最好用的露營地圖平台
             </p>
           </div>
 
@@ -225,7 +223,7 @@ export default function LandingPage() {
             準備好出發了嗎？
           </h2>
           <p className="text-text-secondary mb-8 max-w-lg mx-auto">
-            超過 3,000 個戶外地點等你探索，找到屬於你的秘境
+            超過 1,900 個露營場等你探索，找到屬於你的秘境
           </p>
           <Link
             href="/map"

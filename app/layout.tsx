@@ -9,8 +9,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://wildmap-dusky.vercel.app'),
-  title: "Wildmap - 探索台灣戶外秘境",
-  description: "台灣最完整的露營地圖平台。1,900+ 個露營場、106 項特性投票、社群真實評價。",
+  title: "Wildmap - 台灣最完整的露營地圖",
+  description: "從露營開始，探索台灣每一個角落。1,900+ 個露營場、106 項特性投票、社群真實評價。",
   icons: {
     icon: [
       { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
@@ -19,8 +19,8 @@ export const metadata: Metadata = {
     apple: '/apple-touch-icon.png',
   },
   openGraph: {
-    title: 'Wildmap - 探索台灣戶外秘境',
-    description: '台灣最完整的露營地圖平台。1,900+ 個露營場、106 項特性投票。',
+    title: 'Wildmap - 台灣最完整的露營地圖',
+    description: '從露營開始，探索台灣每一個角落。1,900+ 個露營場、106 項特性投票。',
     images: [{ url: '/og-image.png', width: 1200, height: 630 }],
     type: 'website',
     locale: 'zh_TW',

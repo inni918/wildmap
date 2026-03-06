@@ -106,7 +106,7 @@ VALUES
  '車宿入門', 'Car Camping Beginner',
  '查看 10 個車宿點',
  '🚐', 'exploration', 10, 'bronze',
- '{"type": "view_category", "category": "carcamp", "threshold": 10}',
+ '{"type": "view_category", "category": "carcamp", "threshold": 10, "reserved": true}',
  109),
 
 ('explore_expert',

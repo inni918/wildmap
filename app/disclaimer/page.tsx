@@ -34,7 +34,7 @@ export default function DisclaimerPage() {
         <div className="bg-amber-50 border border-amber-200 rounded-xl p-5 mb-8">
           <p className="text-sm font-semibold text-amber-800 mb-2">⚠️ 重要提示</p>
           <p className="text-sm text-amber-700 leading-relaxed">
-            Wildmap 是一個<strong>戶外活動地點資訊彙整平台</strong>，提供的所有地點資訊僅供參考。
+            Wildmap 是一個<strong>露營等戶外活動地點資訊彙整平台</strong>，提供的所有地點資訊僅供參考。
             我們不是旅行社、露營場營運者或活動組織者。在前往任何地點前，請務必自行評估安全風險並遵守當地法規。
           </p>
         </div>
@@ -44,11 +44,11 @@ export default function DisclaimerPage() {
           <section>
             <h2 className="text-xl font-bold text-primary-dark border-b border-border pb-2 mb-4">一、平台性質說明</h2>
             <p className="leading-relaxed text-text-secondary">
-              Wildmap（以下簡稱「本平台」）為戶外活動地點資訊彙整服務。本平台上呈現的地點資訊來源包括：
+              Wildmap（以下簡稱「本平台」）為露營等戶外活動地點資訊彙整服務。本平台上呈現的地點資訊來源包括：
             </p>
             <ul className="list-disc pl-5 space-y-1.5 text-text-secondary mt-3">
               <li><strong>政府公開資料：</strong>依據「政府資料開放授權條款」（OGDL）取得的合法登記露營場等資料。</li>
-              <li><strong>社群回報：</strong>由社群或使用者回報的地點資訊，如車宿泊點。這些資訊未經本平台實地查核。</li>
+              <li><strong>社群回報：</strong>由社群或使用者回報的地點資訊。這些資訊未經本平台實地查核。</li>
               <li><strong>使用者投稿：</strong>由平台使用者新增或編輯的地點資訊。</li>
             </ul>
             <p className="leading-relaxed text-text-secondary mt-3">
@@ -81,9 +81,9 @@ export default function DisclaimerPage() {
               <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
                 <p className="font-semibold text-blue-800 mb-1">📍 社群回報</p>
                 <p className="text-sm text-blue-700">
-                  由社群或使用者回報的地點（如車宿泊點、野營地等）。
+                  由社群或使用者回報的地點。
                   這些地點未經本平台實地查核，僅為社群分享的資訊彙整。
-                  在這些地點進行戶外活動前，請確認當地法規及停車規定，並注意自身安全。
+                  在這些地點進行戶外活動前，請確認當地法規，並注意自身安全。
                   本平台不保證這些地點可合法進行特定活動。
                 </p>
               </div>
@@ -104,7 +104,7 @@ export default function DisclaimerPage() {
           <section>
             <h2 className="text-xl font-bold text-primary-dark border-b border-border pb-2 mb-4">四、戶外活動風險</h2>
             <p className="leading-relaxed text-text-secondary mb-3">
-              戶外活動（包括但不限於露營、車宿、登山、釣魚、潛水、衝浪等）本身具有一定風險。使用者應瞭解並自行承擔以下風險：
+              戶外活動（包括但不限於露營、登山等）本身具有一定風險。使用者應瞭解並自行承擔以下風險：
             </p>
             <ul className="list-disc pl-5 space-y-1.5 text-text-secondary">
               <li><strong>天氣風險：</strong>颱風、豪雨、落雷、高溫等極端天氣可能危及安全。請於出發前查看氣象預報。</li>
@@ -175,7 +175,7 @@ export default function DisclaimerPage() {
                 </p>
               </div>
               <div>
-                <p className="font-semibold text-text-main">車宿泊點資料</p>
+                <p className="font-semibold text-text-main">社群回報地點資料</p>
                 <p className="text-sm">資料來源：社群回報彙整</p>
                 <p className="text-sm">這些資訊為社群回報的彙整，未經本平台實地查核。</p>
               </div>

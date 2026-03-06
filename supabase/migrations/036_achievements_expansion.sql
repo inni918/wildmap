@@ -67,7 +67,7 @@ VALUES
  '車宿達人', 'Car Camping Expert',
  '打卡 50 個車宿點',
  '🚙', 'exploration', 20, 'silver',
- '{"type": "view_category", "category": "carcamp", "threshold": 50}',
+ '{"type": "view_category", "category": "carcamp", "threshold": 50, "reserved": true}',
  114),
 
 ('altitude_variety',

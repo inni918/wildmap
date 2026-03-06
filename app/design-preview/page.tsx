@@ -1079,7 +1079,7 @@ function TypographySection({ theme }: { theme: DesignTheme }) {
               margin: 0,
             }}
           >
-            Wildmap 是一個專為台灣戶外愛好者打造的地圖平台，涵蓋露營、車宿、釣魚、潛水、衝浪、登山等多元活動類型。
+            Wildmap 是台灣最完整的露營地圖平台，收錄 1,900+ 個露營場，提供特性投票、真實評價與照片分享。
           </p>
         </div>
         <div>
@@ -1220,7 +1220,7 @@ export default function DesignPreviewPage() {
                     fontFamily: theme.fonts.body,
                   }}
                 >
-                  台灣戶外活動地圖平台 — UI 設計方案比較
+                  台灣露營地圖平台 — UI 設計方案比較
                 </p>
               </div>
 

@@ -43,10 +43,10 @@ export default function TermsPage() {
           <section>
             <h2 className="text-xl font-bold text-primary-dark border-b border-border pb-2 mb-4">二、服務描述</h2>
             <p className="leading-relaxed text-text-secondary mb-3">
-              Wildmap 是一個台灣戶外活動地點資訊彙整平台，提供以下服務：
+              Wildmap 是一個台灣露營等戶外活動地點資訊彙整平台，提供以下服務：
             </p>
             <ul className="list-disc pl-5 space-y-1.5 text-text-secondary">
-              <li>戶外活動地點地圖瀏覽與搜尋（包括露營場、車宿泊點、釣魚點等）</li>
+              <li>露營場地地圖瀏覽與搜尋</li>
               <li>地點詳細資訊查看（設施、環境、特性等）</li>
               <li>使用者評論、評分與特性投票</li>
               <li>照片上傳與分享</li>
