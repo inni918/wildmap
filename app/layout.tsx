@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { AuthProvider } from "@/lib/auth-context";
 import { AchievementProvider } from "@/lib/achievement-context";
+import { LevelProvider } from "@/lib/level-context";
 import PWARegister from "@/components/PWARegister";
 import "@/lib/fontawesome";
 import "./globals.css";
@@ -39,9 +40,11 @@ export default function RootLayout({
       </head>
       <body className="font-sans antialiased bg-bg text-text-main">
         <AuthProvider>
-          <AchievementProvider>
-            {children}
-          </AchievementProvider>
+          <LevelProvider>
+            <AchievementProvider>
+              {children}
+            </AchievementProvider>
+          </LevelProvider>
         </AuthProvider>
         <PWARegister />
       </body>
