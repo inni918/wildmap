@@ -7,6 +7,7 @@ import { useAchievements } from '@/lib/achievement-context'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS, getFeatureIcon } from '@/lib/icons'
 import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons'
+import { usePermission } from './PermissionGate'
 
 interface Props {
   spotId: string

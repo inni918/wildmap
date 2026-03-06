@@ -16,6 +16,7 @@ import CommentsTab from './CommentsTab'
 import FavoriteButton from './FavoriteButton'
 import EditSpotModal from './EditSpotModal'
 import ClaimButton from './ClaimButton'
+import { usePermission } from './PermissionGate'
 
 interface Props {
   spotId: string
@@ -79,6 +80,7 @@ function getDisclaimerText(spot: Spot): string | null {
 
 export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
   const { user } = useAuth()
+  const editPerm = usePermission('edit_spot_info')
   const [spot, setSpot] = useState<Spot | null>(null)
   const [spotLoading, setSpotLoading] = useState(true)
   const [groups, setGroups] = useState<GroupedFeatures[]>([])
@@ -220,11 +222,20 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
               </div>
             </div>
             <div className="flex items-center gap-0.5">
-              {user && (
+              {user && editPerm.allowed && (
                 <button
                   onClick={() => setShowEditModal(true)}
                   className="text-text-secondary hover:text-primary p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center cursor-pointer active:scale-90 transition-all"
                   title="編輯地點"
+                >
+                  <FontAwesomeIcon icon={NAV_ICONS.edit} className="text-sm" />
+                </button>
+              )}
+              {user && !editPerm.allowed && (
+                <button
+                  className="text-text-secondary/30 p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center"
+                  title={`需要 Lv.${editPerm.requiredLevel} 才能編輯`}
+                  disabled
                 >
                   <FontAwesomeIcon icon={NAV_ICONS.edit} className="text-sm" />
                 </button>

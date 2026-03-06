@@ -6,6 +6,7 @@ import { useAuth } from '@/lib/auth-context'
 import { useAchievements } from '@/lib/achievement-context'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS } from '@/lib/icons'
+import { usePermission } from '@/components/PermissionGate'
 
 interface Comment {
   id: string
@@ -26,6 +27,8 @@ interface Props {
 export default function CommentsTab({ spotId, claimedBy }: Props) {
   const { user } = useAuth()
   const { triggerCheck } = useAchievements()
+  const writeReviewPerm = usePermission('write_review')
+  const replyPerm = usePermission('reply_comment')
   const [comments, setComments] = useState<Comment[]>([])
   const [loading, setLoading] = useState(true)
   const [newComment, setNewComment] = useState('')
@@ -196,24 +199,32 @@ export default function CommentsTab({ spotId, claimedBy }: Props) {
     <div className="space-y-4">
       {/* New comment input */}
       {user ? (
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit() }}
-            placeholder="分享你的體驗..."
-            className="flex-1 px-3 py-2 text-sm border border-border rounded-xl bg-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
-            maxLength={500}
-          />
-          <button
-            onClick={handleSubmit}
-            disabled={!newComment.trim() || submitting}
-            className="px-3 py-2 bg-primary text-text-on-primary rounded-xl text-sm font-medium hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1"
-          >
-            <FontAwesomeIcon icon={NAV_ICONS.send} className="text-xs" />
-          </button>
-        </div>
+        writeReviewPerm.allowed ? (
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit() }}
+              placeholder="分享你的體驗..."
+              className="flex-1 px-3 py-2 text-sm border border-border rounded-xl bg-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
+              maxLength={500}
+            />
+            <button
+              onClick={handleSubmit}
+              disabled={!newComment.trim() || submitting}
+              className="px-3 py-2 bg-primary text-text-on-primary rounded-xl text-sm font-medium hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1"
+            >
+              <FontAwesomeIcon icon={NAV_ICONS.send} className="text-xs" />
+            </button>
+          </div>
+        ) : (
+          <div className="text-center py-3 bg-surface-alt rounded-xl border border-border">
+            <p className="text-sm text-text-secondary">
+              🔒 需要 Lv.{writeReviewPerm.requiredLevel} 才能留言
+            </p>
+          </div>
+        )
       ) : (
         <div className="text-center py-3 bg-surface-alt rounded-xl border border-border">
           <p className="text-sm text-text-secondary">

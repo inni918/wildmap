@@ -12,6 +12,7 @@ import SpotDetail from './SpotDetail'
 import Header from './Header'
 import FeatureFilter from './FeatureFilter'
 import OnboardingOverlay from './OnboardingOverlay'
+import { usePermission } from './PermissionGate'
 
 // ====== Nominatim 地理編碼 ======
 let lastNominatimCall = 0
@@ -148,6 +149,7 @@ type ViewMode = 'map' | 'list'
 
 export default function Map() {
   const mapRef = useRef<MapRef>(null)
+  const addSpotPerm = usePermission('add_spot')
   const [spots, setSpots] = useState<SpotSummary[]>([])
   const [selectedSpot, setSelectedSpot] = useState<SpotSummary | null>(null)
   const [loading, setLoading] = useState(true)
@@ -828,12 +830,30 @@ export default function Map() {
       )}
 
       {addModal && viewMode === 'map' && (
-        <AddSpotModal
-          lat={addModal.lat}
-          lng={addModal.lng}
-          onClose={() => setAddModal(null)}
-          onAdded={handleSpotAdded}
-        />
+        addSpotPerm.allowed ? (
+          <AddSpotModal
+            lat={addModal.lat}
+            lng={addModal.lng}
+            onClose={() => setAddModal(null)}
+            onAdded={handleSpotAdded}
+          />
+        ) : (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={() => setAddModal(null)}>
+            <div className="bg-surface rounded-2xl border border-border p-6 mx-4 max-w-sm text-center shadow-xl" onClick={e => e.stopPropagation()}>
+              <div className="text-3xl mb-3">🔒</div>
+              <h3 className="text-base font-bold text-text-main mb-2">需要更高等級</h3>
+              <p className="text-sm text-text-secondary mb-4">
+                新增地點需要 Lv.{addSpotPerm.requiredLevel} 才能使用。繼續累積積分升級吧！
+              </p>
+              <button
+                onClick={() => setAddModal(null)}
+                className="px-6 py-2.5 bg-primary text-text-on-primary rounded-xl text-sm font-medium cursor-pointer"
+              >
+                我知道了
+              </button>
+            </div>
+          </div>
+        )
       )}
 
       {detailSpotId && (
