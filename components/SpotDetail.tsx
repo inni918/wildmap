@@ -6,7 +6,7 @@ import { fetchSpotFeatures, type GroupedFeatures } from '@/lib/features'
 import { useAuth } from '@/lib/auth-context'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS, getFeatureIcon } from '@/lib/icons'
-import { faCircleQuestion, faCircleCheck, faPhone, faGlobe, faEnvelope, faMapLocationDot, faShieldHalved } from '@fortawesome/free-solid-svg-icons'
+import { faCircleQuestion, faCircleCheck, faPhone, faGlobe, faEnvelope, faMapLocationDot, faShieldHalved, faTriangleExclamation, faLocationDot } from '@fortawesome/free-solid-svg-icons'
 import { faFacebookF, faInstagram, faLine } from '@fortawesome/free-brands-svg-icons'
 import FeatureIcons from './FeatureIcons'
 import FeatureVoting from './FeatureVoting'
@@ -29,6 +29,52 @@ const QUALITY_BADGE: Record<string, { label: string; color: string; bgColor: str
   new: { label: '待驗證', color: '#EAB308', bgColor: '#EAB30820' },
   community_verified: { label: '社群驗證', color: '#22C55E', bgColor: '#22C55E20' },
   featured: { label: '精選', color: '#D4A843', bgColor: '#D4A84320' },
+}
+
+/** 地點分類標示：合法登記 / 未登記場地 / 社群回報 */
+function getRegistrationBadge(spot: Spot): { label: string; icon: typeof faShieldHalved; color: string; bgColor: string; borderColor: string } | null {
+  // 車宿泊點 → 社群回報
+  if (spot.category === 'carcamp') {
+    return {
+      label: '📍 社群回報',
+      icon: faLocationDot,
+      color: '#2563EB',
+      bgColor: '#2563EB15',
+      borderColor: '#2563EB30',
+    }
+  }
+  // 露營場：有政府登記
+  if (spot.gov_certified) {
+    return {
+      label: '✅ 政府登記',
+      icon: faShieldHalved,
+      color: '#16A34A',
+      bgColor: '#16A34A15',
+      borderColor: '#16A34A30',
+    }
+  }
+  // 露營場：未登記
+  if (spot.category === 'camping' && !spot.gov_certified) {
+    return {
+      label: '⚠️ 未登記場地',
+      icon: faTriangleExclamation,
+      color: '#D97706',
+      bgColor: '#D9770615',
+      borderColor: '#D9770630',
+    }
+  }
+  return null
+}
+
+/** 取得地點免責提示文字 */
+function getDisclaimerText(spot: Spot): string | null {
+  if (spot.category === 'carcamp') {
+    return '本泊點資訊由社群回報，Wildmap 未實地查核。車宿前請確認當地法規，注意停車規定及安全。本平台不保證此地點可合法進行車宿活動。'
+  }
+  if (spot.category === 'camping' && !spot.gov_certified) {
+    return '本露營場尚未取得合法登記。未登記露營場可能存在安全設施不足、用地不合法等風險。前往前請自行評估風險，並注意自身安全。本平台僅提供資訊彙整，不構成推薦或保證。'
+  }
+  return null
 }
 
 export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
@@ -154,15 +200,22 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
                   >
                     {qualityConfig.label}
                   </span>
-                  {spot.gov_certified && (
-                    <span
-                      className="inline-flex items-center justify-center w-5 h-5 rounded-full cursor-help"
-                      style={{ backgroundColor: '#2D6A4F20', color: '#2D6A4F' }}
-                      title="政府登記露營場"
-                    >
-                      <FontAwesomeIcon icon={faShieldHalved} className="text-[11px]" />
-                    </span>
-                  )}
+                  {(() => {
+                    const regBadge = getRegistrationBadge(spot)
+                    if (!regBadge) return null
+                    return (
+                      <span
+                        className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full"
+                        style={{
+                          backgroundColor: regBadge.bgColor,
+                          color: regBadge.color,
+                          border: `1px solid ${regBadge.borderColor}`,
+                        }}
+                      >
+                        {regBadge.label}
+                      </span>
+                    )
+                  })()}
                 </div>
               </div>
             </div>
@@ -267,7 +320,7 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
                 <span className="text-sm text-text-secondary">載入中...</span>
               </div>
             ) : (
-              <OverviewTab spotId={spot.id} groups={groups} />
+              <OverviewTab spotId={spot.id} spot={spot} groups={groups} />
             )
           ) : activeTab === 'comments' ? (
             <CommentsTab spotId={spot.id} claimedBy={spot.claimed_by} />
@@ -372,11 +425,43 @@ function ContactIcons({ spot }: { spot: Spot }) {
 
 // === Overview Tab: Features + Rating + Photos ===
 
-function OverviewTab({ spotId, groups }: { spotId: string; groups: GroupedFeatures[] }) {
+function OverviewTab({ spotId, spot, groups }: { spotId: string; spot: Spot; groups: GroupedFeatures[] }) {
   const hasAnyFeature = groups.some(g => g.features.some(f => f.status !== 'absent'))
+  const disclaimerText = getDisclaimerText(spot)
 
   return (
     <div className="space-y-6">
+      {/* Disclaimer Banner */}
+      {disclaimerText && (
+        <div
+          className="rounded-xl p-3 text-xs leading-relaxed"
+          style={{
+            backgroundColor: spot.category === 'carcamp' ? '#2563EB10' : '#D9770610',
+            border: `1px solid ${spot.category === 'carcamp' ? '#2563EB25' : '#D9770625'}`,
+            color: spot.category === 'carcamp' ? '#1E40AF' : '#92400E',
+          }}
+        >
+          <p className="font-semibold mb-1">
+            {spot.category === 'carcamp' ? 'ℹ️ 社群回報地點' : '⚠️ 未登記場地提醒'}
+          </p>
+          <p>{disclaimerText}</p>
+        </div>
+      )}
+
+      {/* Data Source */}
+      {spot.category === 'carcamp' && (
+        <div className="flex items-center gap-1.5 text-[11px] text-text-secondary/70">
+          <span>📋</span>
+          <span>資料來源：社群回報</span>
+        </div>
+      )}
+      {spot.gov_certified && (
+        <div className="flex items-center gap-1.5 text-[11px] text-text-secondary/70">
+          <span>📋</span>
+          <span>資料來源：交通部觀光署（政府資料開放授權條款）</span>
+        </div>
+      )}
+
       {/* Rating Section */}
       <div>
         <h3 className="text-sm font-semibold text-text-main mb-2 flex items-center gap-1.5">
