@@ -19,14 +19,25 @@ CREATE TABLE IF NOT EXISTS featured_achievements (
 -- RLS
 ALTER TABLE featured_achievements ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users can view anyone's featured achievements"
-  ON featured_achievements FOR SELECT
-  USING (true);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies WHERE tablename = 'featured_achievements' AND policyname = 'Users can view anyone''s featured achievements'
+  ) THEN
+    CREATE POLICY "Users can view anyone's featured achievements"
+      ON featured_achievements FOR SELECT
+      USING (true);
+  END IF;
 
-CREATE POLICY "Users can manage their own featured achievements"
-  ON featured_achievements FOR ALL
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies WHERE tablename = 'featured_achievements' AND policyname = 'Users can manage their own featured achievements'
+  ) THEN
+    CREATE POLICY "Users can manage their own featured achievements"
+      ON featured_achievements FOR ALL
+      USING (auth.uid() = user_id)
+      WITH CHECK (auth.uid() = user_id);
+  END IF;
+END $$;
 
 -- ============================================
 -- 2. 新增 20 個成就
