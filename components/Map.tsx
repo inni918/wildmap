@@ -599,7 +599,7 @@ export default function Map() {
         >
           全部
         </button>
-        {(['camping', 'carcamp'] as SpotCategory[]).map(cat => (
+        {(['camping'] as SpotCategory[]).map(cat => (
           <button
             key={cat}
             onClick={() => setActiveFilter(cat)}

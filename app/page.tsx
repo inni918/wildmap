@@ -169,10 +169,10 @@ export default function LandingPage() {
       {/* Stats Section */}
       <section className="py-12 bg-primary-dark">
         <div className="max-w-4xl mx-auto px-4">
-          <div className="grid grid-cols-3 gap-4 text-center">
+          <div className="grid grid-cols-2 gap-4 text-center">
             <div>
               <div className="text-3xl sm:text-4xl font-extrabold text-white mb-1">
-                <AnimatedCounter target={3203} />
+                <AnimatedCounter target={1913} />
               </div>
               <p className="text-sm text-white/70">戶外地點</p>
             </div>
@@ -183,15 +183,6 @@ export default function LandingPage() {
               <div className="flex items-center justify-center gap-1 text-sm text-white/70">
                 <FontAwesomeIcon icon={faCampground} className="text-xs" />
                 <span>露營場</span>
-              </div>
-            </div>
-            <div>
-              <div className="text-3xl sm:text-4xl font-extrabold text-white mb-1">
-                <AnimatedCounter target={1290} />
-              </div>
-              <div className="flex items-center justify-center gap-1 text-sm text-white/70">
-                <FontAwesomeIcon icon={faVanShuttle} className="text-xs" />
-                <span>車宿點</span>
               </div>
             </div>
           </div>

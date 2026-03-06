@@ -239,13 +239,14 @@ COMMENT ON VIEW user_spot_signals IS '推薦引擎統一信號 VIEW：整合所�
 
 -- 每日摘要表（壓縮用，Phase 2 才需要資料）
 CREATE TABLE IF NOT EXISTS user_events_daily_summary (
+  id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id    UUID,
   event_date DATE,
   event_type TEXT,
   spot_id    UUID,
   count      INT DEFAULT 0,
-  metadata   JSONB DEFAULT '{}',  -- 聚合資訊（如 avg_dwell_seconds）
-  PRIMARY KEY (user_id, event_date, event_type, COALESCE(spot_id, '00000000-0000-0000-0000-000000000000'::UUID))
+  metadata   JSONB DEFAULT '{}',
+  UNIQUE (user_id, event_date, event_type, spot_id)
 );
 
 COMMENT ON TABLE user_events_daily_summary IS '行為事件每日摘要（壓縮舊資料用），Phase 2 啟用';
