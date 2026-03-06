@@ -70,14 +70,14 @@ async function geocodeWithNominatim(query: string): Promise<{
 }
 
 // ====== Timeout helper ======
-function withTimeout<T>(promise: Promise<T>, ms: number, label = 'operation'): Promise<T> {
+function withTimeout<T>(promise: PromiseLike<T>, ms: number, label = 'operation'): Promise<T> {
   return new Promise<T>((resolve, reject) => {
     const timer = setTimeout(() => {
       reject(new Error(`${label} timed out after ${ms}ms`))
     }, ms)
     promise.then(
       (val) => { clearTimeout(timer); resolve(val) },
-      (err) => { clearTimeout(timer); reject(err) },
+      (err: unknown) => { clearTimeout(timer); reject(err) },
     )
   })
 }
@@ -95,7 +95,7 @@ async function withRetry<T>(
     } catch (err) {
       lastError = err
       if (attempt < maxRetries) {
-        const delay = Math.pow(2, attempt) * 1000 // 1s, 2s, 4s
+        const delay = Math.pow(2, attempt) * 500 // 0.5s, 1s, 2s（更快重試）
         onRetry?.(attempt + 1)
         await new Promise(resolve => setTimeout(resolve, delay))
       }
@@ -240,12 +240,8 @@ export default function Map() {
 
           query = query.limit(500)
 
-          // 加入 10 秒 timeout 防止查詢無限等待
-          const result = await withTimeout(
-            Promise.resolve(query),
-            10000,
-            'Supabase spots query',
-          )
+          // 加入 8 秒 timeout 防止查詢無限等待
+          const result = await withTimeout(query, 8000, 'Supabase spots query')
 
           if (result.error) {
             throw result.error
@@ -301,7 +297,7 @@ export default function Map() {
         query = query.in('id', Array.from(featureIds))
       }
 
-      const result = await withTimeout(Promise.resolve(query), 10000, 'Supabase count query')
+      const result = await withTimeout(query, 8000, 'Supabase count query')
 
       if (!result.error && result.count !== null) {
         setTotalCount(result.count)
@@ -423,7 +419,7 @@ export default function Map() {
           .select('spot_id, feature_id, vote')
           .in('feature_id', selectedFeatures)
 
-        const result = await withTimeout(Promise.resolve(query), 10000, 'feature_votes query')
+        const result = await withTimeout(query, 8000, 'feature_votes query')
         if (result.error || !result.data) {
           setFeatureSpotIds(new Set())
           return
