@@ -7,29 +7,13 @@ import { useAuth } from '@/lib/auth-context'
 import { supabase } from '@/lib/supabase'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS } from '@/lib/icons'
-import { faTrophy, faChartLine, faPen } from '@fortawesome/free-solid-svg-icons'
+import { faTrophy, faChartLine, faPen, faLock, faUnlock } from '@fortawesome/free-solid-svg-icons'
 import MobileTabBar from '@/components/MobileTabBar'
 import AchievementGrid from '@/components/AchievementGrid'
 import FeaturedBadges from '@/components/FeaturedBadges'
 import ClaimStatus from '@/components/ClaimStatus'
-
-// 等級名稱
-function getLevelTitle(level: number): string {
-  if (level >= 10) return '探險大師'
-  if (level >= 7) return '資深玩家'
-  if (level >= 5) return '戶外達人'
-  if (level >= 3) return '冒險新手'
-  return '初來乍到'
-}
-
-// 等級顏色
-function getLevelColor(level: number): string {
-  if (level >= 10) return '#D4A843'
-  if (level >= 7) return '#2D6A4F'
-  if (level >= 5) return '#52B788'
-  if (level >= 3) return '#8B6914'
-  return '#5C5C5C'
-}
+import { LEVELS, getLevel, getNextLevel, getLevelProgress, getPointsToNextLevel } from '@/lib/levels'
+import { getPermissionsForLevel, getNewPermissionsAtLevel, PERMISSION_MATRIX } from '@/lib/permissions'
 
 interface UserStats {
   ratingsCount: number
@@ -230,8 +214,16 @@ export default function ProfilePage() {
     )
   }
 
-  const levelColor = getLevelColor(profile?.level || 1)
-  const levelTitle = getLevelTitle(profile?.level || 1)
+  const userPoints = profile?.points || 0
+  const currentLevel = getLevel(userPoints)
+  const nextLevel = getNextLevel(userPoints)
+  const progress = getLevelProgress(userPoints)
+  const pointsNeeded = getPointsToNextLevel(userPoints)
+  const levelColor = currentLevel.color
+  const levelTitle = currentLevel.name
+
+  // 已解鎖功能
+  const unlockedPermissions = getPermissionsForLevel(currentLevel.level)
 
   return (
     <div className="min-h-screen bg-bg pb-20 md:pb-0">
@@ -272,7 +264,7 @@ export default function ProfilePage() {
                 className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center text-white text-[10px] font-bold border-2 border-surface"
                 style={{ backgroundColor: levelColor }}
               >
-                {profile?.level || 1}
+                {currentLevel.level}
               </div>
             </div>
 
@@ -321,12 +313,12 @@ export default function ProfilePage() {
                   className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full text-white"
                   style={{ backgroundColor: levelColor }}
                 >
-                  <FontAwesomeIcon icon={faTrophy} className="text-[10px]" />
-                  {levelTitle}
+                  <span>{currentLevel.icon}</span>
+                  Lv.{currentLevel.level} {levelTitle}
                 </span>
                 <span className="text-xs text-text-secondary flex items-center gap-1">
                   <FontAwesomeIcon icon={faChartLine} className="text-[10px]" />
-                  {profile?.points || 0} 積分
+                  {userPoints} 積分
                 </span>
               </div>
 
@@ -334,6 +326,102 @@ export default function ProfilePage() {
                 加入於 {profile?.created_at ? formatDate(profile.created_at) : '—'}
               </p>
             </div>
+          </div>
+
+          {/* 等級進度條 */}
+          <div className="mt-5 pt-4 border-t border-border">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-medium text-text-secondary">
+                {currentLevel.icon} Lv.{currentLevel.level} {currentLevel.name}
+              </span>
+              {nextLevel ? (
+                <span className="text-xs text-text-secondary">
+                  {nextLevel.icon} Lv.{nextLevel.level} {nextLevel.name}
+                </span>
+              ) : (
+                <span className="text-xs font-medium" style={{ color: levelColor }}>
+                  ⭐ 最高等級
+                </span>
+              )}
+            </div>
+
+            {/* Progress bar */}
+            <div className="relative h-3 bg-border/30 rounded-full overflow-hidden">
+              <div
+                className="absolute inset-y-0 left-0 rounded-full transition-all duration-700 ease-out"
+                style={{
+                  width: `${progress}%`,
+                  backgroundColor: levelColor,
+                  boxShadow: progress > 0 ? `0 0 8px ${levelColor}40` : undefined,
+                }}
+              />
+            </div>
+
+            {/* 進度文字 */}
+            <div className="flex items-center justify-between mt-1.5">
+              <span className="text-[10px] text-text-secondary">
+                {progress}%
+              </span>
+              {pointsNeeded !== null ? (
+                <span className="text-[10px] text-text-secondary">
+                  還差 <span className="font-bold" style={{ color: levelColor }}>{pointsNeeded}</span> 分升級
+                </span>
+              ) : (
+                <span className="text-[10px] font-medium" style={{ color: levelColor }}>
+                  已達最高等級 🎉
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* 已解鎖功能 */}
+        <div className="bg-surface rounded-2xl border border-border p-4 shadow-sm">
+          <h3 className="text-sm font-bold text-text-main flex items-center gap-1.5 mb-3">
+            <FontAwesomeIcon icon={faUnlock} className="text-xs" style={{ color: levelColor }} />
+            已解鎖功能
+            <span className="text-xs text-text-secondary font-normal">
+              （{unlockedPermissions.length} 項）
+            </span>
+          </h3>
+
+          <div className="grid grid-cols-2 gap-2">
+            {LEVELS.map(lv => {
+              const permsAtLevel = getNewPermissionsAtLevel(lv.level)
+              if (permsAtLevel.length === 0) return null
+              const isUnlocked = currentLevel.level >= lv.level
+
+              return (
+                <div key={lv.level} className="space-y-1">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs">{lv.icon}</span>
+                    <span className={`text-[10px] font-bold ${isUnlocked ? 'text-text-main' : 'text-text-secondary/50'}`}>
+                      Lv.{lv.level} {lv.name}
+                    </span>
+                  </div>
+                  {permsAtLevel.slice(0, 4).map(perm => (
+                    <div
+                      key={perm}
+                      className={`flex items-center gap-1.5 pl-4 ${isUnlocked ? '' : 'opacity-40'}`}
+                    >
+                      <FontAwesomeIcon
+                        icon={isUnlocked ? faUnlock : faLock}
+                        className="text-[8px]"
+                        style={{ color: isUnlocked ? lv.color : undefined }}
+                      />
+                      <span className="text-[10px] text-text-secondary">
+                        {PERMISSION_MATRIX[perm].description}
+                      </span>
+                    </div>
+                  ))}
+                  {permsAtLevel.length > 4 && (
+                    <span className="text-[10px] text-text-secondary/60 pl-4">
+                      +{permsAtLevel.length - 4} 項更多...
+                    </span>
+                  )}
+                </div>
+              )
+            })}
           </div>
         </div>
 

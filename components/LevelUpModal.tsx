@@ -158,32 +158,19 @@ export default function LevelUpModal({ newLevel, onClose }: Props) {
         </div>
       </div>
 
-      <style jsx>{`
+      {/* Animations via global style tag */}
+      <style dangerouslySetInnerHTML={{ __html: `
         @keyframes float-particle {
-          0%, 100% {
-            transform: translateY(0) scale(1);
-            opacity: 0.3;
-          }
-          50% {
-            transform: translateY(-30px) scale(1.5);
-            opacity: 0.6;
-          }
+          0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
+          50% { transform: translateY(-30px) scale(1.5); opacity: 0.6; }
         }
         @keyframes bounce-gentle {
-          0%, 100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-8px);
-          }
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-8px); }
         }
-        .animate-float-particle {
-          animation: float-particle 3s ease-in-out infinite;
-        }
-        .animate-bounce-gentle {
-          animation: bounce-gentle 2s ease-in-out infinite;
-        }
-      `}</style>
+        .animate-float-particle { animation: float-particle 3s ease-in-out infinite; }
+        .animate-bounce-gentle { animation: bounce-gentle 2s ease-in-out infinite; }
+      `}} />
     </div>
   )
 }
