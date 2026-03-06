@@ -257,12 +257,22 @@ export default function LandingPage() {
             <p className="text-sm">
               © {new Date().getFullYear()} Wildmap. All rights reserved.
             </p>
-            <div className="flex items-center gap-4 text-sm">
+            <div className="flex items-center gap-4 text-sm flex-wrap justify-center sm:justify-end">
               <Link href="/map" className="text-white/60 hover:text-white transition-colors no-underline">
                 地圖
               </Link>
               <Link href="/login" className="text-white/60 hover:text-white transition-colors no-underline">
                 登入
+              </Link>
+              <span className="text-white/30 hidden sm:inline">|</span>
+              <Link href="/privacy" className="text-white/60 hover:text-white transition-colors no-underline">
+                隱私權政策
+              </Link>
+              <Link href="/terms" className="text-white/60 hover:text-white transition-colors no-underline">
+                服務條款
+              </Link>
+              <Link href="/disclaimer" className="text-white/60 hover:text-white transition-colors no-underline">
+                免責聲明
               </Link>
             </div>
           </div>
