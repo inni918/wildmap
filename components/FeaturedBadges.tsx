@@ -116,8 +116,7 @@ export default function FeaturedBadges() {
                       e.stopPropagation()
                       handleRemoveSlot(slot)
                     }}
-                    className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-error/80 text-white text-[10px] 
-                             flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                    className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-error/80 text-white text-[10px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                   >
                     ×
                   </button>
@@ -125,9 +124,7 @@ export default function FeaturedBadges() {
               ) : (
                 <button
                   onClick={() => handleSelectSlot(slot)}
-                  className="w-full py-3 rounded-xl border-2 border-dashed border-border hover:border-primary/30 
-                           text-text-secondary/40 hover:text-primary/40 transition-colors cursor-pointer
-                           flex items-center justify-center gap-1 text-sm"
+                  className="w-full py-3 rounded-xl border-2 border-dashed border-border hover:border-primary/30 text-text-secondary/40 hover:text-primary/40 transition-colors cursor-pointer flex items-center justify-center gap-1 text-sm"
                 >
                   <span className="text-lg">+</span>
                 </button>
