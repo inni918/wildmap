@@ -416,12 +416,26 @@ export default function Map() {
     }
 
     async function fetchFeatureFilteredSpots() {
-      const { data: votes, error } = await supabase
-        .from('feature_votes')
-        .select('spot_id, feature_id, vote')
-        .in('feature_id', selectedFeatures)
+      let votes: { spot_id: string; feature_id: string; vote: boolean }[] | null = null
+      try {
+        const query = supabase
+          .from('feature_votes')
+          .select('spot_id, feature_id, vote')
+          .in('feature_id', selectedFeatures)
 
-      if (error || !votes) {
+        const result = await withTimeout(Promise.resolve(query), 10000, 'feature_votes query')
+        if (result.error || !result.data) {
+          setFeatureSpotIds(new Set())
+          return
+        }
+        votes = result.data as { spot_id: string; feature_id: string; vote: boolean }[]
+      } catch (err) {
+        console.error('fetchFeatureFilteredSpots failed:', err)
+        setFeatureSpotIds(new Set())
+        return
+      }
+
+      if (!votes || votes.length === 0) {
         setFeatureSpotIds(new Set())
         return
       }
