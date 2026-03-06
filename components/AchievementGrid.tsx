@@ -222,6 +222,9 @@ export default function AchievementGrid({ summary }: Props) {
         <div>
           <h4 className="text-xs font-semibold text-text-secondary mb-2 flex items-center gap-1">
             🔒 未解鎖 ({lockedList.length})
+            <span className="text-[10px] font-normal text-text-secondary/50 ml-1">
+              — 灰色徽章含解鎖提示
+            </span>
           </h4>
           <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
             {lockedList.map(a => (
@@ -338,8 +341,13 @@ function AchievementDetailModal({
               ✅ 已解鎖
             </div>
           ) : (
-            <div className="mt-3 text-xs text-text-secondary flex items-center justify-center gap-1">
-              🔒 尚未解鎖
+            <div className="mt-3 space-y-1">
+              <div className="text-xs text-text-secondary flex items-center justify-center gap-1">
+                🔒 尚未解鎖
+              </div>
+              <div className="text-[10px] text-text-secondary/50 text-center">
+                💡 {achievement.description_zh}
+              </div>
             </div>
           )}
         </div>
