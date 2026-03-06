@@ -589,3 +589,326 @@ async function getInteractedSpotIds(userId: string): Promise<string[]> {
 
   return Array.from(spotIds)
 }
+
+// === 新增成就輔助函式 ===
+
+/**
+ * Meta 成就：檢查一組子成就是否全部解鎖
+ */
+async function checkMetaAchievement(userId: string, requiredKeys: string[]): Promise<boolean> {
+  // 取得所有 required keys 對應的 achievement ids
+  const { data: requiredAchievements } = await supabase
+    .from('achievements')
+    .select('id, key')
+    .in('key', requiredKeys)
+
+  if (!requiredAchievements || requiredAchievements.length !== requiredKeys.length) return false
+
+  const requiredIds = requiredAchievements.map(a => a.id)
+
+  // 檢查用戶是否已解鎖這些成就
+  const { data: unlocked } = await supabase
+    .from('user_achievements')
+    .select('achievement_id')
+    .eq('user_id', userId)
+    .in('achievement_id', requiredIds)
+
+  return (unlocked?.length || 0) >= requiredIds.length
+}
+
+/**
+ * 海拔收集者：各海拔帶至少有一個互動地點
+ * bands: [0, 500, 1500, 3000] → 0-500, 500-1500, 1500-3000, 3000+
+ */
+async function checkAltitudeVariety(userId: string, bands: number[]): Promise<boolean> {
+  const spotIds = await getInteractedSpotIds(userId)
+  if (spotIds.length === 0) return false
+
+  // 取得所有互動地點的海拔
+  const elevations: number[] = []
+  const batchSize = 50
+  for (let i = 0; i < spotIds.length; i += batchSize) {
+    const batch = spotIds.slice(i, i + batchSize)
+    const { data } = await supabase
+      .from('spots')
+      .select('elevation')
+      .in('id', batch)
+      .not('elevation', 'is', null)
+
+    if (data) {
+      elevations.push(...data.map(s => s.elevation as number))
+    }
+  }
+
+  if (elevations.length === 0) return false
+
+  // 檢查每個海拔帶是否至少有一個
+  for (let i = 0; i < bands.length; i++) {
+    const lower = bands[i]
+    const upper = i < bands.length - 1 ? bands[i + 1] : Infinity
+    const hasSpot = elevations.some(e => e >= lower && e < upper)
+    if (!hasSpot) return false
+  }
+
+  return true
+}
+
+/**
+ * 詳細評論：字數 >= minLength 的評論數
+ */
+async function getDetailedCommentCount(userId: string, minLength: number): Promise<number> {
+  const { data } = await supabase
+    .from('comments')
+    .select('content')
+    .eq('user_id', userId)
+    .is('parent_id', null)
+
+  if (!data) return 0
+  return data.filter(c => c.content && c.content.length >= minLength).length
+}
+
+/**
+ * 在地達人：用戶在單一縣市的最大貢獻數（新增地點 + 評論 + 投票等）
+ */
+async function getMaxCountyContributions(userId: string): Promise<number> {
+  const spotIds = await getInteractedSpotIds(userId)
+  if (spotIds.length === 0) return 0
+
+  const countyCount: Record<string, number> = {}
+  const allCounties = [
+    '台北市', '臺北市', '新北市', '基隆市', '桃園市', '新竹市', '新竹縣',
+    '宜蘭縣', '苗栗縣', '台中市', '臺中市', '彰化縣', '南投縣', '雲林縣',
+    '嘉義市', '嘉義縣', '台南市', '臺南市', '高雄市', '屏東縣',
+    '花蓮縣', '台東縣', '臺東縣', '澎湖縣', '金門縣', '連江縣',
+  ]
+
+  const batchSize = 50
+  for (let i = 0; i < spotIds.length; i += batchSize) {
+    const batch = spotIds.slice(i, i + batchSize)
+    const { data } = await supabase
+      .from('spots')
+      .select('address')
+      .in('id', batch)
+
+    if (data) {
+      for (const spot of data) {
+        if (spot.address) {
+          for (const county of allCounties) {
+            if (spot.address.includes(county)) {
+              const normalized = county.replace('臺', '台')
+              countyCount[normalized] = (countyCount[normalized] || 0) + 1
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return Math.max(0, ...Object.values(countyCount))
+}
+
+/**
+ * 連續使用天數（基於互動紀錄）
+ */
+async function getConsecutiveDays(userId: string): Promise<number> {
+  // 從各表取得最近的活動日期
+  const [ratings, comments, votes] = await Promise.all([
+    supabase.from('ratings').select('created_at').eq('user_id', userId).order('created_at', { ascending: false }).limit(60),
+    supabase.from('comments').select('created_at').eq('user_id', userId).order('created_at', { ascending: false }).limit(60),
+    supabase.from('feature_votes').select('created_at').eq('user_id', userId).order('created_at', { ascending: false }).limit(60),
+  ])
+
+  // 收集所有活動日期（以台灣時間的日期為單位）
+  const daySet = new Set<string>()
+  const allDates = [
+    ...(ratings.data || []).map(r => r.created_at),
+    ...(comments.data || []).map(c => c.created_at),
+    ...(votes.data || []).map(v => v.created_at),
+  ]
+
+  for (const dateStr of allDates) {
+    const d = new Date(dateStr)
+    const twDate = d.toLocaleDateString('en-CA', { timeZone: 'Asia/Taipei' }) // YYYY-MM-DD
+    daySet.add(twDate)
+  }
+
+  if (daySet.size === 0) return 0
+
+  // 排序日期，從最近開始倒數連續天數
+  const sortedDays = Array.from(daySet).sort().reverse()
+  let streak = 1
+  for (let i = 1; i < sortedDays.length; i++) {
+    const prev = new Date(sortedDays[i - 1])
+    const curr = new Date(sortedDays[i])
+    const diffMs = prev.getTime() - curr.getTime()
+    const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24))
+    if (diffDays === 1) {
+      streak++
+    } else {
+      break
+    }
+  }
+
+  return streak
+}
+
+/**
+ * 四季探索者：春夏秋冬都使用過
+ */
+async function hasAllSeasons(userId: string): Promise<boolean> {
+  const { data } = await supabase
+    .from('ratings')
+    .select('created_at')
+    .eq('user_id', userId)
+
+  if (!data || data.length === 0) return false
+
+  const seasons = new Set<number>()
+  for (const row of data) {
+    const month = new Date(row.created_at).getMonth() + 1
+    if (month >= 3 && month <= 5) seasons.add(0) // 春
+    else if (month >= 6 && month <= 8) seasons.add(1) // 夏
+    else if (month >= 9 && month <= 11) seasons.add(2) // 秋
+    else seasons.add(3) // 冬
+  }
+
+  return seasons.size >= 4
+}
+
+// === 成就進度計算（即將解鎖提示用）===
+
+export interface AchievementProgress {
+  achievement: Achievement
+  current: number
+  target: number
+  percent: number
+}
+
+/**
+ * 計算用戶未解鎖成就的進度（用於「即將解鎖」提示）
+ * 只回傳進度 >= 70% 的成就
+ */
+export async function getNearlyUnlockedAchievements(userId: string): Promise<AchievementProgress[]> {
+  if (!userId) return []
+
+  const allAchievements = await getAllAchievements()
+  const { data: userAchievements } = await supabase
+    .from('user_achievements')
+    .select('achievement_id')
+    .eq('user_id', userId)
+
+  const unlockedIds = new Set((userAchievements || []).map((ua: { achievement_id: string }) => ua.achievement_id))
+  const locked = allAchievements.filter(a => !unlockedIds.has(a.id))
+  if (locked.length === 0) return []
+
+  const stats = await getUserStats(userId)
+  const results: AchievementProgress[] = []
+
+  for (const achievement of locked) {
+    const criteria = achievement.criteria as Record<string, unknown>
+    if (!criteria || !criteria.type) continue
+    if (criteria.reserved) continue
+
+    const threshold = (criteria.threshold as number) || 0
+    if (threshold <= 0) continue
+
+    const type = criteria.type as string
+    let current = 0
+
+    // 計算當前進度
+    switch (type) {
+      case 'view_spots':
+        current = await getViewedSpotCount(userId)
+        break
+      case 'add_spots':
+        current = stats.addedSpots
+        break
+      case 'upload_photos':
+        current = stats.photos
+        break
+      case 'comments':
+        current = stats.comments
+        break
+      case 'votes':
+        current = stats.votes
+        break
+      case 'edits':
+        current = stats.edits
+        break
+      case 'ratings':
+        current = stats.ratings
+        break
+      case 'replies':
+        current = stats.replies
+        break
+      case 'favorites':
+        current = stats.favorites
+        break
+      case 'reports':
+        current = stats.reports
+        break
+      case 'spot_favorited':
+        current = await getSpotFavoritedCount(userId)
+        break
+      case 'view_all_counties':
+        current = await getViewedCountiesCount(userId)
+        break
+      case 'detailed_comments':
+        current = await getDetailedCommentCount(userId, (criteria.min_length as number) || 200)
+        break
+      case 'consecutive_days':
+        current = await getConsecutiveDays(userId)
+        break
+      default:
+        continue // 跳過無法計算進度的類型
+    }
+
+    const percent = Math.min(100, (current / threshold) * 100)
+    if (percent >= 70 && percent < 100) {
+      results.push({ achievement, current, target: threshold, percent })
+    }
+  }
+
+  // 按進度排序（最接近的排前面）
+  results.sort((a, b) => b.percent - a.percent)
+  return results.slice(0, 3) // 最多顯示 3 個
+}
+
+// === 精選徽章 API ===
+
+export async function getFeaturedAchievements(userId: string): Promise<Achievement[]> {
+  const { data } = await supabase
+    .from('featured_achievements')
+    .select('slot, achievement:achievements(*)')
+    .eq('user_id', userId)
+    .order('slot', { ascending: true })
+
+  if (!data) return []
+  return data
+    .map((d: Record<string, unknown>) => d.achievement as Achievement)
+    .filter(Boolean)
+}
+
+export async function setFeaturedAchievement(userId: string, achievementId: string, slot: number): Promise<boolean> {
+  const { error } = await supabase
+    .from('featured_achievements')
+    .upsert({
+      user_id: userId,
+      achievement_id: achievementId,
+      slot,
+    }, {
+      onConflict: 'user_id,slot',
+    })
+
+  return !error
+}
+
+export async function removeFeaturedAchievement(userId: string, slot: number): Promise<boolean> {
+  const { error } = await supabase
+    .from('featured_achievements')
+    .delete()
+    .eq('user_id', userId)
+    .eq('slot', slot)
+
+  return !error
+}
