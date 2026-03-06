@@ -101,11 +101,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { error: error.message }
     }
 
-    // 註冊成功後，更新 users 表的 display_name
+    // 註冊成功後，更新 users 表的 display_name 並記錄同意條款時間
     if (data.user) {
       await supabase
         .from('users')
-        .update({ display_name: displayName })
+        .update({ display_name: displayName, tos_accepted_at: new Date().toISOString() })
         .eq('id', data.user.id)
     }
 

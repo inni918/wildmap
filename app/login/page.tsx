@@ -19,6 +19,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [displayName, setDisplayName] = useState('')
+  const [tosAccepted, setTosAccepted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [toast, setToast] = useState('')
@@ -56,6 +57,10 @@ export default function LoginPage() {
     }
     if (!displayName.trim()) {
       setError('請輸入顯示名稱')
+      return
+    }
+    if (!tosAccepted) {
+      setError('請先同意服務條款和隱私權政策')
       return
     }
 
@@ -213,9 +218,28 @@ export default function LoginPage() {
                     className="w-full px-4 py-2.5 border border-border rounded-[10px] focus:ring-2 focus:ring-primary-light focus:border-primary outline-none text-sm transition-shadow bg-surface"
                   />
                 </div>
+                <div className="flex items-start gap-2">
+                  <input
+                    type="checkbox"
+                    id="tos-checkbox"
+                    checked={tosAccepted}
+                    onChange={e => setTosAccepted(e.target.checked)}
+                    className="mt-1 w-4 h-4 rounded border-border text-primary focus:ring-primary-light cursor-pointer accent-primary"
+                  />
+                  <label htmlFor="tos-checkbox" className="text-sm text-text-secondary cursor-pointer select-none">
+                    我已閱讀並同意{' '}
+                    <Link href="/terms" target="_blank" className="text-primary hover:text-primary-dark font-medium">
+                      服務條款
+                    </Link>
+                    {' '}和{' '}
+                    <Link href="/privacy" target="_blank" className="text-primary hover:text-primary-dark font-medium">
+                      隱私權政策
+                    </Link>
+                  </label>
+                </div>
                 <button
                   type="submit"
-                  disabled={loading}
+                  disabled={loading || !tosAccepted}
                   className="w-full bg-primary hover:bg-primary-dark text-text-on-primary font-semibold py-2.5 rounded-[10px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {loading ? '註冊中...' : '建立帳號'}
