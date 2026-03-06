@@ -3,6 +3,7 @@ import { AuthProvider } from "@/lib/auth-context";
 import { AchievementProvider } from "@/lib/achievement-context";
 import { LevelProvider } from "@/lib/level-context";
 import PWARegister from "@/components/PWARegister";
+import CookieConsent from "@/components/CookieConsent";
 import "@/lib/fontawesome";
 import "./globals.css";
 
@@ -47,6 +48,7 @@ export default function RootLayout({
           </LevelProvider>
         </AuthProvider>
         <PWARegister />
+        <CookieConsent />
       </body>
     </html>
   );
