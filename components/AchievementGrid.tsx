@@ -13,6 +13,8 @@ import {
   type AchievementCategory,
 } from '@/lib/achievements'
 import AchievementBadge from './AchievementBadge'
+import AchievementIcon from './AchievementIcon'
+import { CATEGORY_SVG_ICONS } from '@/lib/achievement-icons'
 
 interface Props {
   /** 是否只顯示摘要（profile 頁嵌入用） */
@@ -188,7 +190,13 @@ export default function AchievementGrid({ summary }: Props) {
                   : 'border-transparent text-text-secondary hover:text-text-main'
               }`}
             >
-              <span className="mr-1">{CATEGORY_ICONS[cat]}</span>
+              <span className="mr-1 inline-flex items-center">
+                {CATEGORY_SVG_ICONS[cat] ? (
+                  <img src={CATEGORY_SVG_ICONS[cat]} alt="" width={16} height={16} className="inline-block" />
+                ) : (
+                  CATEGORY_ICONS[cat]
+                )}
+              </span>
               {CATEGORY_LABELS[cat]}
               <span className="ml-1 text-[10px] opacity-60">
                 {catUnlocked}/{catAchievements.length}
@@ -306,8 +314,8 @@ function AchievementDetailModal({
               />
             </svg>
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className={`text-4xl ${unlocked ? '' : 'grayscale opacity-40'}`}>
-                {achievement.icon}
+              <span className={`${unlocked ? '' : 'grayscale opacity-40'}`}>
+                <AchievementIcon achievementKey={achievement.key} emoji={achievement.icon} size={40} />
               </span>
             </div>
           </div>

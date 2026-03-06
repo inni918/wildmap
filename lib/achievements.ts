@@ -45,6 +45,7 @@ export const CATEGORY_LABELS: Record<AchievementCategory, string> = {
   special: '特殊',
 }
 
+/** @deprecated 使用 CATEGORY_SVG_ICONS from '@/lib/achievement-icons' */
 export const CATEGORY_ICONS: Record<AchievementCategory, string> = {
   exploration: '🗺️',
   contribution: '📝',

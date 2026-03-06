@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import type { UnlockedAchievement } from '@/lib/achievements'
+import AchievementIcon from './AchievementIcon'
 
 interface Props {
   achievements: UnlockedAchievement[]
@@ -127,7 +128,7 @@ export default function AchievementToast({ achievements, onDismiss }: Props) {
               border: `2px solid ${tier.border}`,
             }}
           >
-            <span className="text-2xl">{current.achievement.icon}</span>
+            <AchievementIcon achievementKey={current.achievement.key} emoji={current.achievement.icon} size={28} />
           </div>
           {/* 光環脈衝效果 */}
           <div

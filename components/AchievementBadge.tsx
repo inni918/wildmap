@@ -1,6 +1,7 @@
 'use client'
 
 import type { Achievement, AchievementTier } from '@/lib/achievements'
+import AchievementIcon from './AchievementIcon'
 
 interface Props {
   achievement: Achievement
@@ -103,8 +104,8 @@ export default function AchievementBadge({ achievement, unlocked, compact, onCli
         }}
         title={unlocked ? (achievement.description_zh || achievement.name_zh) : lockedHint}
       >
-        <span className={`text-lg ${unlocked ? '' : 'opacity-50'}`}>
-          {achievement.icon}
+        <span className={`${unlocked ? '' : 'opacity-50'}`}>
+          <AchievementIcon achievementKey={achievement.key} emoji={achievement.icon} size={20} />
         </span>
         <span className={`text-xs font-medium ${unlocked ? 'text-text-main' : 'text-text-secondary/60'}`}>
           {achievement.name_zh}
@@ -162,10 +163,10 @@ export default function AchievementBadge({ achievement, unlocked, compact, onCli
             opacity={unlocked ? 0.5 : 0.2}
           />
         </svg>
-        {/* Emoji icon */}
+        {/* Achievement SVG icon */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className={`text-2xl ${unlocked ? '' : 'opacity-30'}`}>
-            {achievement.icon}
+          <span className={`${unlocked ? '' : 'opacity-30'}`}>
+            <AchievementIcon achievementKey={achievement.key} emoji={achievement.icon} size={28} />
           </span>
         </div>
         {/* 鎖頭（未解鎖） */}
