@@ -147,15 +147,11 @@ export default function ProfilePage() {
   }, [user])
 
   useEffect(() => {
-    if (!authLoading && !user) {
-      router.push('/login')
-      return
-    }
     if (user) {
       fetchData()
       setNewDisplayName(profile?.display_name || '')
     }
-  }, [user, authLoading, fetchData, profile?.display_name, router])
+  }, [user, fetchData, profile?.display_name])
 
   const handleSaveName = async () => {
     if (!user || !newDisplayName.trim() || savingName) return

@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useState, useCallback, useRef, type ReactNode } from 'react'
 import { supabase, type UserProfile } from './supabase'
 import type { User } from '@supabase/supabase-js'
 
@@ -33,6 +33,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
+  const loadingResolved = useRef(false)
 
   const fetchProfile = useCallback(async (userId: string) => {
     const { data } = await supabase
@@ -44,27 +45,61 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   useEffect(() => {
+    let cancelled = false
+
+    const resolveLoading = () => {
+      if (!loadingResolved.current && !cancelled) {
+        loadingResolved.current = true
+        setLoading(false)
+      }
+    }
+
+    // Safety timeout：如果 getSession() 因為 navigator.locks 卡住，
+    // 最多 3 秒後強制結束 loading 狀態（Supabase 的 lock timeout 是 5 秒，
+    // 我們比它早一步解除 UI 阻塞）
+    const safetyTimer = setTimeout(() => {
+      if (!loadingResolved.current) {
+        console.warn('[AuthProvider] getSession() timed out after 3s, forcing loading=false')
+        resolveLoading()
+      }
+    }, 3000)
+
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null)
-      if (session?.user) fetchProfile(session.user.id)
-      setLoading(false)
-    })
+    supabase.auth.getSession()
+      .then(({ data: { session } }) => {
+        if (cancelled) return
+        setUser(session?.user ?? null)
+        if (session?.user) fetchProfile(session.user.id)
+        resolveLoading()
+      })
+      .catch((err) => {
+        console.error('[AuthProvider] getSession() failed:', err)
+        if (!cancelled) {
+          setUser(null)
+          setProfile(null)
+          resolveLoading()
+        }
+      })
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
+        if (cancelled) return
         setUser(session?.user ?? null)
         if (session?.user) {
           await fetchProfile(session.user.id)
         } else {
           setProfile(null)
         }
-        setLoading(false)
+        resolveLoading()
       }
     )
 
-    return () => subscription.unsubscribe()
+    return () => {
+      cancelled = true
+      clearTimeout(safetyTimer)
+      subscription.unsubscribe()
+    }
   }, [fetchProfile])
 
   const signInWithGoogle = async () => {
