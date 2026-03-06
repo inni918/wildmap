@@ -4,6 +4,8 @@
  * - 回傳新解鎖的成就列表供 Toast 顯示
  */
 import { supabase } from './supabase'
+// 等級定義從 levels.ts 引入（共用模組）
+export { LEVELS, getLevel, getNextLevel } from './levels'
 
 export type AchievementCategory = 'exploration' | 'contribution' | 'community' | 'special'
 export type AchievementTier = 'bronze' | 'silver' | 'gold'
@@ -33,28 +35,6 @@ export interface UserAchievement {
 export interface UnlockedAchievement {
   achievement: Achievement
   unlocked_at: string
-}
-
-// 等級定義
-export const LEVELS = [
-  { level: 1, name: '探索者', minPoints: 0 },
-  { level: 2, name: '開拓者', minPoints: 50 },
-  { level: 3, name: '嚮導', minPoints: 200 },
-  { level: 4, name: '守護者', minPoints: 500 },
-  { level: 5, name: '先驅者', minPoints: 1000 },
-] as const
-
-export function getLevel(points: number): typeof LEVELS[number] {
-  for (let i = LEVELS.length - 1; i >= 0; i--) {
-    if (points >= LEVELS[i].minPoints) return LEVELS[i]
-  }
-  return LEVELS[0]
-}
-
-export function getNextLevel(points: number): typeof LEVELS[number] | null {
-  const current = getLevel(points)
-  const idx = LEVELS.findIndex(l => l.level === current.level)
-  return idx < LEVELS.length - 1 ? LEVELS[idx + 1] : null
 }
 
 // 分類顯示名稱
@@ -330,9 +310,76 @@ async function checkCriteria(
     }
 
     case 'consecutive_weekends':
-    case 'consecutive_days':
+      // 需要 activity_log 追蹤，暫時 false
+      return false
+
+    case 'consecutive_days': {
+      const days = await getConsecutiveDays(userId)
+      return days >= threshold
+    }
+
     case 'all_seasons':
-      // 這些需要更複雜的追蹤，先標記為 false，後續實作
+      return await hasAllSeasons(userId)
+
+    // === 新增成就類型 ===
+
+    case 'meta_achievement': {
+      // Meta 成就：檢查所有子成就是否已解鎖
+      const requiredKeys = criteria.required_keys as string[]
+      if (!requiredKeys || requiredKeys.length === 0) return false
+      return await checkMetaAchievement(userId, requiredKeys)
+    }
+
+    case 'altitude_variety': {
+      // 海拔收集者：各海拔帶至少一個
+      const bands = criteria.bands as number[]
+      if (!bands) return false
+      return await checkAltitudeVariety(userId, bands)
+    }
+
+    case 'detailed_comments': {
+      // 詳細評論家：長評論數量
+      const minLength = (criteria.min_length as number) || 200
+      return await getDetailedCommentCount(userId, minLength) >= threshold
+    }
+
+    case 'local_contributions': {
+      // 在地達人：同一縣市貢獻數
+      return await getMaxCountyContributions(userId) >= threshold
+    }
+
+    case 'time_category_checkin': {
+      // 日出露營家等：特定時段 + 類別
+      const startH = criteria.start_hour as number
+      const endH = criteria.end_hour as number
+      const cat = criteria.category as string
+      // 簡化版：用 currentHour + 最近互動行為判斷
+      if (stats.currentHour >= startH && stats.currentHour < endH) {
+        return await getCategoryViewCount(userId, cat) >= 1
+      }
+      return false
+    }
+
+    case 'night_altitude_checkin': {
+      // 觀星者：夜間 + 高海拔
+      const minElev = criteria.min_elevation as number
+      const sH = criteria.start_hour as number
+      const eH = criteria.end_hour as number
+      const isNight = stats.currentHour >= sH || stats.currentHour < eH
+      if (isNight) {
+        return await getElevationViewCount(userId, minElev) >= 1
+      }
+      return false
+    }
+
+    case 'vote_accuracy':
+    case 'comment_helpful':
+    case 'mentor_replies':
+    case 'spot_views':
+    case 'weather_checkin':
+    case 'date_range_checkin':
+    case 'group_checkins':
+      // 預留功能（reserved: true 已在上層過濾，這裡雙重保護）
       return false
 
     default:
