@@ -5,7 +5,4 @@
   <path d="M8 21h6"/>
   <path d="M11 19l-3 2"/>
   <path d="M11 19l3 2"/>
-  <circle cx="4" cy="4" r="1" fill="currentColor"/>
-  <circle cx="18" cy="8" r="0.5" fill="currentColor"/>
-  <circle cx="6" cy="9" r="0.5" fill="currentColor"/>
 </svg>

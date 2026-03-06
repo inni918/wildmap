@@ -2,9 +2,7 @@
   <path d="M5 8c0-2 1-4 3-4 1 0 2 1 2 2"/>
   <path d="M19 8c0-2-1-4-3-4-1 0-2 1-2 2"/>
   <ellipse cx="12" cy="12" rx="6" ry="5"/>
-  <circle cx="10" cy="11" r="1" fill="currentColor"/>
-  <circle cx="14" cy="11" r="1" fill="currentColor"/>
-  <ellipse cx="12" cy="14" rx="1.5" ry="1" fill="currentColor"/>
-  <path d="M8 17l-2 4"/>
-  <path d="M16 17l2 4"/>
+  <circle cx="10" cy="11" r="0.8" fill="currentColor"/>
+  <circle cx="14" cy="11" r="0.8" fill="currentColor"/>
+  <ellipse cx="12" cy="14" rx="1.5" ry="1"/>
 </svg>

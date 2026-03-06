@@ -3,10 +3,6 @@
   <path d="M12 8v5"/>
   <path d="M8 10l-3 3"/>
   <path d="M16 10l3 3"/>
-  <path d="M7 15h10"/>
-  <path d="M6 18h12"/>
-  <path d="M8 21h8"/>
-  <path d="M9 15v3"/>
-  <path d="M12 15v6"/>
-  <path d="M15 15v3"/>
+  <path d="M7 16h10"/>
+  <path d="M8 20h8"/>
 </svg>
