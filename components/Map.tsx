@@ -4,7 +4,7 @@ import { useRef, useCallback, useState, useEffect, useMemo } from 'react'
 import ReactMapGL, { Marker, Popup, NavigationControl, MapRef, MapMouseEvent } from 'react-map-gl/maplibre'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import Supercluster from 'supercluster'
-import { supabase, type Spot, type SpotCategory, CATEGORY_EMOJI, CATEGORY_LABEL } from '@/lib/supabase'
+import { supabase, type SpotCategory, CATEGORY_EMOJI, CATEGORY_LABEL } from '@/lib/supabase'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS } from '@/lib/icons'
 import AddSpotModal from './AddSpotModal'
@@ -67,6 +67,19 @@ async function geocodeWithNominatim(query: string): Promise<{
   } catch {
     return null
   }
+}
+
+// ====== Timeout helper ======
+function withTimeout<T>(promise: Promise<T>, ms: number, label = 'operation'): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(() => {
+      reject(new Error(`${label} timed out after ${ms}ms`))
+    }, ms)
+    promise.then(
+      (val) => { clearTimeout(timer); resolve(val) },
+      (err) => { clearTimeout(timer); reject(err) },
+    )
+  })
 }
 
 // ====== Retry helper（指數退避） ======
@@ -183,7 +196,7 @@ export default function Map() {
   // Geo hint timer ref
   const geoHintTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  // ====== Viewport-based fetch（含 retry 機制） ======
+  // ====== Viewport-based fetch（含 retry + timeout 機制） ======
   const fetchViewportSpots = useCallback(async (
     bounds: [number, number, number, number],
     category: SpotCategory | 'all',
@@ -191,6 +204,14 @@ export default function Map() {
     featureIds: Set<string> | null,
   ) => {
     setLoadError(null)
+
+    // 若 featureIds 為空集合，不需查詢，直接設為空結果
+    if (featureIds !== null && featureIds.size === 0) {
+      setSpots([])
+      setLoading(false)
+      setRetrying(false)
+      return
+    }
 
     try {
       const data = await withRetry(
@@ -219,15 +240,20 @@ export default function Map() {
 
           query = query.limit(500)
 
-          const { data, error } = await query
+          // 加入 10 秒 timeout 防止查詢無限等待
+          const result = await withTimeout(
+            Promise.resolve(query),
+            10000,
+            'Supabase spots query',
+          )
 
-          if (error) {
-            throw error
+          if (result.error) {
+            throw result.error
           }
 
-          return (data || []) as SpotSummary[]
+          return (result.data || []) as SpotSummary[]
         },
-        3,
+        2, // 最多重試 2 次（共 3 次嘗試）
         (attempt) => {
           console.log(`Supabase fetch retry attempt ${attempt}`)
           setRetrying(true)
@@ -252,26 +278,36 @@ export default function Map() {
     search: string,
     featureIds: Set<string> | null,
   ) => {
-    let query = supabase
-      .from('spots')
-      .select('id', { count: 'exact', head: true })
-
-    if (category !== 'all') {
-      query = query.eq('category', category)
+    // 若 featureIds 為空集合，count 直接為 0
+    if (featureIds !== null && featureIds.size === 0) {
+      setTotalCount(0)
+      return
     }
 
-    if (search.trim()) {
-      query = query.ilike('name', `%${search.trim()}%`)
-    }
+    try {
+      let query = supabase
+        .from('spots')
+        .select('id', { count: 'exact', head: true })
 
-    if (featureIds !== null) {
-      query = query.in('id', Array.from(featureIds))
-    }
+      if (category !== 'all') {
+        query = query.eq('category', category)
+      }
 
-    const { count, error } = await query
+      if (search.trim()) {
+        query = query.ilike('name', `%${search.trim()}%`)
+      }
 
-    if (!error && count !== null) {
-      setTotalCount(count)
+      if (featureIds !== null) {
+        query = query.in('id', Array.from(featureIds))
+      }
+
+      const result = await withTimeout(Promise.resolve(query), 10000, 'Supabase count query')
+
+      if (!result.error && result.count !== null) {
+        setTotalCount(result.count)
+      }
+    } catch (err) {
+      console.error('fetchTotalCount failed:', err)
     }
   }, [])
 
@@ -291,17 +327,27 @@ export default function Map() {
     }, 300)
   }, [fetchViewportSpots, fetchTotalCount])
 
-  // ====== 初次載入 + filter/search 改變時重新 fetch ======
+  // ====== 初次載入：直接 fetch（不經過 debounce） ======
+  const initialFetchDone = useRef(false)
   useEffect(() => {
+    if (!initialFetchDone.current) {
+      initialFetchDone.current = true
+      fetchViewportSpots(mapBounds, activeFilter, searchQuery, featureSpotIds)
+      fetchTotalCount(activeFilter, searchQuery, featureSpotIds)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // ====== filter/search 改變時重新 fetch（debounced） ======
+  const filterChangeCount = useRef(0)
+  useEffect(() => {
+    // 跳過初次渲染（由上面的 effect 處理）
+    filterChangeCount.current++
+    if (filterChangeCount.current <= 1) return
+
     triggerFetch(mapBounds, activeFilter, searchQuery, featureSpotIds)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeFilter, searchQuery, featureSpotIds])
-
-  // 初次載入也要算 count
-  useEffect(() => {
-    fetchTotalCount(activeFilter, searchQuery, featureSpotIds)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   // ====== P1-1：地理搜尋（Nominatim geocoding） ======
   useEffect(() => {
@@ -324,6 +370,23 @@ export default function Map() {
           duration: 1000,
         })
 
+        // flyTo 完成後，手動用新位置觸發一次 fetch
+        // 確保搜尋結果在新 viewport 內正確顯示
+        const newZoom = result.zoom
+        const latSpan = 180 / Math.pow(2, newZoom)
+        const lonSpan = 360 / Math.pow(2, newZoom)
+        const newBounds: [number, number, number, number] = [
+          result.lon - lonSpan / 2,
+          result.lat - latSpan / 2,
+          result.lon + lonSpan / 2,
+          result.lat + latSpan / 2,
+        ]
+        // 延遲到 flyTo 動畫結束後 fetch，避免被中途 onMove 覆蓋
+        setTimeout(() => {
+          fetchViewportSpots(newBounds, activeFilter, trimmed, featureSpotIds)
+          fetchTotalCount(activeFilter, trimmed, featureSpotIds)
+        }, 1100)
+
         // 顯示地理搜尋提示
         setGeoHint(`📍 已移動到${result.displayName}區域`)
 
@@ -342,6 +405,7 @@ export default function Map() {
         clearTimeout(geoDebounceRef.current)
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery])
 
   // 當選擇特性篩選時，查詢符合條件的 spot ids
