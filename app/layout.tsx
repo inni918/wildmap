@@ -8,6 +8,7 @@ import "@/lib/fontawesome";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://wildmap-dusky.vercel.app'),
   title: "Wildmap - 探索台灣戶外秘境",
   description: "台灣最完整的露營、車宿地圖平台。3,200+ 個戶外地點、106 項特性投票、社群真實評價。",
   icons: {
