@@ -30,7 +30,7 @@ function FeatureRow({
   onVoted: () => void
 }) {
   const [voting, setVoting] = useState(false)
-  const { triggerCheck } = useAchievements()
+  const { earnAction } = useAchievements()
 
   const handleVote = async (vote: boolean) => {
     if (!userId) return
@@ -38,7 +38,7 @@ function FeatureRow({
     const result = await castVote(spotId, feature.id, userId, vote)
     if (result.success) {
       onVoted()
-      triggerCheck()
+      earnAction('vote_helpful', feature.id)
     }
     setVoting(false)
   }

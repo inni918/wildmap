@@ -26,7 +26,7 @@ interface Props {
 
 export default function CommentsTab({ spotId, claimedBy }: Props) {
   const { user } = useAuth()
-  const { triggerCheck } = useAchievements()
+  const { earnReview, earnAction } = useAchievements()
   const writeReviewPerm = usePermission('write_review')
   const replyPerm = usePermission('reply_comment')
   const [comments, setComments] = useState<Comment[]>([])
@@ -120,9 +120,10 @@ export default function CommentsTab({ spotId, claimedBy }: Props) {
         })
 
       if (!error) {
+        const commentText = newComment.trim()
         setNewComment('')
         await fetchComments()
-        triggerCheck()
+        earnReview(spotId, commentText)
       }
     } finally {
       setSubmitting(false)
@@ -147,7 +148,7 @@ export default function CommentsTab({ spotId, claimedBy }: Props) {
         setReplyContent('')
         setReplyingTo(null)
         await fetchComments()
-        triggerCheck()
+        earnAction('reply_discussion', spotId)
       }
     } finally {
       setSubmitting(false)

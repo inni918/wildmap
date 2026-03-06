@@ -13,7 +13,7 @@ interface Props {
 
 export default function FavoriteButton({ spotId }: Props) {
   const { user } = useAuth()
-  const { triggerCheck } = useAchievements()
+  const { triggerCheck } = useAchievements()  // 收藏不需要積分，只觸發成就檢查
   const [isFavorited, setIsFavorited] = useState(false)
   const [loading, setLoading] = useState(false)
 

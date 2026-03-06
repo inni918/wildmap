@@ -35,7 +35,7 @@ interface PhotoPreview {
 
 export default function AddSpotModal({ lat, lng, onClose, onAdded }: Props) {
   const { user, signInWithGoogle } = useAuth()
-  const { triggerCheck } = useAchievements()
+  const { earnAction } = useAchievements()
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [category, setCategory] = useState<Spot['category']>('camping')
@@ -159,7 +159,7 @@ export default function AddSpotModal({ lat, lng, onClose, onAdded }: Props) {
     photos.forEach(p => URL.revokeObjectURL(p.previewUrl))
 
     onAdded()
-    triggerCheck()
+    earnAction('add_spot')
   }
 
   // 未登入畫面

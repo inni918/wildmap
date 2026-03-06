@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default function EditSpotModal({ spot, onClose, onSaved }: Props) {
-  const { triggerCheck } = useAchievements()
+  const { earnAction } = useAchievements()
   const [name, setName] = useState(spot.name)
   const [description, setDescription] = useState(spot.description || '')
   const [address, setAddress] = useState(spot.address || '')
@@ -61,7 +61,7 @@ export default function EditSpotModal({ spot, onClose, onSaved }: Props) {
       setLoading(false)
     } else {
       setSuccess(true)
-      triggerCheck()
+      earnAction('edit_spot')
       setTimeout(() => {
         onSaved()
       }, 500)

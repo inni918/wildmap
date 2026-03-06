@@ -13,7 +13,7 @@ interface Props {
 
 export default function StarRating({ spotId }: Props) {
   const { user } = useAuth()
-  const { triggerCheck } = useAchievements()
+  const { earnAction } = useAchievements()
   const [avgScore, setAvgScore] = useState<number>(0)
   const [ratingCount, setRatingCount] = useState<number>(0)
   const [userScore, setUserScore] = useState<number | null>(null)
@@ -67,8 +67,8 @@ export default function StarRating({ spotId }: Props) {
           .insert({ spot_id: spotId, user_id: user.id, score })
       }
       await fetchRatings()
-      // 觸發成就檢查
-      triggerCheck()
+      // 發放積分 + 成就檢查
+      earnAction('rating', spotId)
     } finally {
       setSubmitting(false)
     }

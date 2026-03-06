@@ -25,7 +25,7 @@ const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 
 export default function PhotoGrid({ spotId }: Props) {
   const { user } = useAuth()
-  const { triggerCheck } = useAchievements()
+  const { earnAction } = useAchievements()
   const [images, setImages] = useState<SpotImage[]>([])
   const [loading, setLoading] = useState(true)
   const [uploading, setUploading] = useState(false)
@@ -116,7 +116,7 @@ export default function PhotoGrid({ spotId }: Props) {
       }
 
       await fetchImages()
-      triggerCheck()
+      earnAction('upload_photo', spotId)
     } finally {
       setUploading(false)
     }
