@@ -10,6 +10,7 @@ import { NAV_ICONS } from '@/lib/icons'
 import { faTrophy, faChartLine, faPen } from '@fortawesome/free-solid-svg-icons'
 import MobileTabBar from '@/components/MobileTabBar'
 import AchievementGrid from '@/components/AchievementGrid'
+import FeaturedBadges from '@/components/FeaturedBadges'
 import ClaimStatus from '@/components/ClaimStatus'
 
 // 等級名稱
@@ -357,6 +358,11 @@ export default function ProfilePage() {
 
         {/* 商家認證狀態 */}
         <ClaimStatus />
+
+        {/* 精選徽章 */}
+        <div className="bg-surface rounded-2xl border border-border p-4 shadow-sm">
+          <FeaturedBadges />
+        </div>
 
         {/* 成就區域 */}
         <div className="bg-surface rounded-2xl border border-border p-4 shadow-sm">
