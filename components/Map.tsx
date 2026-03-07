@@ -782,6 +782,11 @@ export default function Map() {
             style={{ width: '100%', height: '100%' }}
             mapStyle={MAP_STYLE}
             cursor="crosshair"
+            maxBounds={[
+              [118.0, 21.0],  // 西南角（涵蓋金門）
+              [123.0, 26.5],  // 東北角（涵蓋馬祖）
+            ]}
+            minZoom={6}
           >
             <NavigationControl position="top-right" />
 
