@@ -4,6 +4,7 @@ import { AchievementProvider } from "@/lib/achievement-context";
 import { LevelProvider } from "@/lib/level-context";
 import PWARegister from "@/components/PWARegister";
 import CookieConsent from "@/components/CookieConsent";
+import TrackerInit from "@/components/TrackerInit";
 import "@/lib/fontawesome";
 import "./globals.css";
 
@@ -50,6 +51,7 @@ export default function RootLayout({
         </AuthProvider>
         <PWARegister />
         <CookieConsent />
+        <TrackerInit />
       </body>
     </html>
   );

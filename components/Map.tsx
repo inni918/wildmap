@@ -13,6 +13,7 @@ import Header from './Header'
 import FeatureFilter from './FeatureFilter'
 import OnboardingOverlay from './OnboardingOverlay'
 import { usePermission } from './PermissionGate'
+import { track } from '@/lib/tracker'
 
 // ====== Nominatim 地理編碼 ======
 let lastNominatimCall = 0
@@ -356,6 +357,34 @@ export default function Map() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeFilter, searchQuery, featureSpotIds])
 
+  // ====== 行為追蹤：search ======
+  const searchTrackRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  useEffect(() => {
+    const trimmed = searchQuery.trim()
+    if (!trimmed) return
+    if (searchTrackRef.current) clearTimeout(searchTrackRef.current)
+    searchTrackRef.current = setTimeout(() => {
+      track({
+        event_type: 'search',
+        metadata: { query: trimmed, category_filter: activeFilter },
+      })
+    }, 800)
+    return () => { if (searchTrackRef.current) clearTimeout(searchTrackRef.current) }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery])
+
+  // ====== 行為追蹤：filter_change ======
+  const filterTrackCount = useRef(0)
+  useEffect(() => {
+    filterTrackCount.current++
+    if (filterTrackCount.current <= 1) return
+    track({
+      event_type: 'filter_change',
+      metadata: { selected_features: selectedFeatures, category: activeFilter },
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedFeatures, activeFilter])
+
   // ====== P1-1：地理搜尋（Nominatim geocoding） ======
   useEffect(() => {
     if (geoDebounceRef.current) {
@@ -537,6 +566,17 @@ export default function Map() {
       ]
       setMapBounds(newBounds)
       triggerFetch(newBounds, activeFilter, searchQuery, featureSpotIds)
+
+      // 行為追蹤：map_move（tracker 內部有 10 秒節流）
+      track({
+        event_type: 'map_move',
+        metadata: {
+          center_lat: evt.viewState.latitude,
+          center_lng: evt.viewState.longitude,
+          zoom: evt.viewState.zoom,
+          bounds: newBounds,
+        },
+      })
     }
   }, [triggerFetch, activeFilter, searchQuery, featureSpotIds])
 

@@ -17,6 +17,7 @@ import FavoriteButton from './FavoriteButton'
 import EditSpotModal from './EditSpotModal'
 import ClaimButton from './ClaimButton'
 import { usePermission } from './PermissionGate'
+import { track } from '@/lib/tracker'
 
 interface Props {
   spotId: string
@@ -125,6 +126,17 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
     fetchAll()
     return () => { cancelled = true }
   }, [spotId, user?.id])
+
+  // 行為追蹤：spot_view + spot_dwell
+  useEffect(() => {
+    const startTime = Date.now()
+    track({ event_type: 'spot_view', spot_id: spotId, metadata: { source: 'map' } })
+
+    return () => {
+      const dwellSeconds = Math.round((Date.now() - startTime) / 1000)
+      track({ event_type: 'spot_dwell', spot_id: spotId, metadata: { dwell_seconds: dwellSeconds } })
+    }
+  }, [spotId])
 
   const loadFeatures = useCallback(async () => {
     if (!spot) return
