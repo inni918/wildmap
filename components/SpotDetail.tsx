@@ -55,16 +55,7 @@ function getRegistrationBadge(spot: Spot): { label: string; icon: typeof faShiel
       borderColor: '#16A34A30',
     }
   }
-  // 露營場：未登記
-  if (spot.category === 'camping' && !spot.gov_certified) {
-    return {
-      label: '⚠️ 未登記場地',
-      icon: faTriangleExclamation,
-      color: '#D97706',
-      bgColor: '#D9770615',
-      borderColor: '#D9770630',
-    }
-  }
+  // 未登記的不標任何東西（有盾牌是加分項，沒有就不標）
   return null
 }
 
@@ -73,9 +64,7 @@ function getDisclaimerText(spot: Spot): string | null {
   if (spot.category === 'carcamp') {
     return '本泊點資訊由社群回報，Wildmap 未實地查核。車宿前請確認當地法規，注意停車規定及安全。本平台不保證此地點可合法進行車宿活動。'
   }
-  if (spot.category === 'camping' && !spot.gov_certified) {
-    return '本露營場尚未取得合法登記。未登記露營場可能存在安全設施不足、用地不合法等風險。前往前請自行評估風險，並注意自身安全。本平台僅提供資訊彙整，不構成推薦或保證。'
-  }
+  // 未登記露營場不顯示警告文字
   return null
 }
 
@@ -231,6 +220,8 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
                     )
                   })()}
                 </div>
+                {/* 建立者標示（在標題下方） */}
+                <CreatedByLabel spot={spot} />
               </div>
             </div>
             <div className="flex items-center gap-0.5">
@@ -470,11 +461,11 @@ function CreatedByLabel({ spot }: { spot: Spot }) {
 
   if (spot.created_by) {
     return (
-      <p className="text-xs text-text-secondary/60 mt-4 text-center">
+      <p className="text-xs text-text-secondary/50 mt-1">
         由{' '}
         <a
           href={`/profile/${spot.created_by}`}
-          className="text-primary hover:text-primary/80 underline underline-offset-2 cursor-pointer"
+          className="text-primary/70 hover:text-primary underline underline-offset-2 cursor-pointer"
           onClick={(e) => {
             e.preventDefault()
             window.open(`/profile/${spot.created_by}`, '_blank')
@@ -487,11 +478,7 @@ function CreatedByLabel({ spot }: { spot: Spot }) {
     )
   }
 
-  return (
-    <p className="text-xs text-text-secondary/60 mt-4 text-center">
-      📋 資料來源：政府公開資料
-    </p>
-  )
+  return null
 }
 
 function OverviewTab({ spotId, spot, groups }: { spotId: string; spot: Spot; groups: GroupedFeatures[] }) {
@@ -629,8 +616,6 @@ function OverviewTab({ spotId, spot, groups }: { spotId: string; spot: Spot; gro
         <PhotoGrid spotId={spotId} />
       </div>
 
-      {/* 建立者標示 */}
-      <CreatedByLabel spot={spot} />
     </div>
   )
 }
