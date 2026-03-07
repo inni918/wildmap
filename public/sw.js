@@ -1,11 +1,9 @@
 // Wildmap Service Worker
-const CACHE_NAME = 'wildmap-v1';
+const CACHE_NAME = 'wildmap-v2';
 const OFFLINE_URL = '/offline.html';
 
-// 靜態資源 — cache-first
+// 靜態資源 — 只快取真正的靜態檔案，不快取頁面（頁面走 network-first）
 const PRECACHE_URLS = [
-  '/',
-  '/map',
   '/offline.html',
   '/manifest.json',
   '/icon-192.png',
@@ -61,6 +59,18 @@ self.addEventListener('fetch', (event) => {
     url.hostname.includes('googleapis.com/maps') ||
     url.pathname.includes('/tiles/')
   ) {
+    event.respondWith(networkFirst(request));
+    return;
+  }
+
+  // ─── 網路優先：頁面導覽（HTML）───
+  if (request.mode === 'navigate') {
+    event.respondWith(networkFirst(request));
+    return;
+  }
+
+  // ─── 網路優先：Next.js 頁面 JS（hash 會變）───
+  if (url.pathname.startsWith('/_next/static/chunks/app/')) {
     event.respondWith(networkFirst(request));
     return;
   }
