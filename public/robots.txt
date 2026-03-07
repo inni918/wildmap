@@ -1,4 +1,0 @@
-# Wildmap - 尚未正式上線，暫時擋住搜尋引擎
-# 正式上線後移除此檔案或改為允許
-User-agent: *
-Disallow: /
