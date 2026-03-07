@@ -85,14 +85,35 @@ export default function PrivacyPage() {
                     <td className="px-4 py-2">用戶主動上傳</td>
                     <td className="px-4 py-2">地點照片分享</td>
                   </tr>
-                  <tr>
+                  <tr className="border-b border-border">
                     <td className="px-4 py-2">Cookie 及瀏覽紀錄</td>
                     <td className="px-4 py-2">自動蒐集</td>
                     <td className="px-4 py-2">改善使用體驗</td>
                   </tr>
+                  <tr>
+                    <td className="px-4 py-2">瀏覽行為資料</td>
+                    <td className="px-4 py-2">自動蒐集（需同意 Cookie）</td>
+                    <td className="px-4 py-2">查看地點、搜尋、篩選等互動行為</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
+
+            <h3 className="text-lg font-semibold text-text-main mt-6 mb-3">行為資料收集</h3>
+            <p className="leading-relaxed text-text-secondary mb-3">
+              為了改善推薦品質及優化使用體驗，本平台在您同意 Cookie 使用後，會收集以下瀏覽行為資料：
+            </p>
+            <ul className="list-disc pl-5 space-y-1.5 text-text-secondary">
+              <li><strong>查看地點：</strong>您瀏覽的地點詳情頁面及停留時間。</li>
+              <li><strong>搜尋行為：</strong>您輸入的搜尋關鍵字及使用的篩選條件。</li>
+              <li><strong>地圖互動：</strong>地圖瀏覽範圍及縮放層級（不記錄精確 GPS 位置）。</li>
+            </ul>
+            <p className="leading-relaxed text-text-secondary mt-3">
+              上述資料用於：分析熱門地點與趨勢、改善搜尋與推薦結果、優化平台功能與介面。所有行為資料皆以匿名或去識別化方式處理，不會用於辨識您的真實身份。
+            </p>
+            <p className="leading-relaxed text-text-secondary mt-2">
+              您可以隨時透過瀏覽器設定清除 Cookie 來停止行為資料的收集。未來我們也將在個人設定中提供關閉行為追蹤的選項。
+            </p>
           </section>
 
           {/* 3 */}
@@ -229,6 +250,20 @@ export default function PrivacyPage() {
               本隱私權政策以中華民國法律為準據法，並以台灣台北地方法院為第一審管轄法院。
             </p>
           </section>
+        </div>
+
+        {/* 政府資料顯名聲明 */}
+        <div className="mt-10 bg-surface-alt rounded-xl border border-border p-6">
+          <h2 className="text-lg font-bold text-primary-dark mb-3">政府資料開放授權聲明</h2>
+          <p className="text-sm leading-relaxed text-text-secondary mb-3">
+            本平台部分地點資料來自<strong>政府資料開放平台</strong>（
+            <a href="https://data.gov.tw" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary-dark">data.gov.tw</a>
+            ），包括但不限於交通部觀光署公開之露營場資料。
+          </p>
+          <p className="text-sm leading-relaxed text-text-secondary">
+            上述資料依據<strong>政府資料開放授權條款</strong>（Open Government Data License, OGDL）使用。
+            本平台對該等資料之後續加值應用（如社群投票、評論、特性標註等）係由本平台用戶產生，不代表原始資料提供機關之立場。
+          </p>
         </div>
 
         {/* Footer links */}
