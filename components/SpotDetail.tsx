@@ -448,6 +448,41 @@ function ContactIcons({ spot }: { spot: Spot }) {
 
 // === Overview Tab: Features + Rating + Photos ===
 
+function CreatedByLabel({ spot }: { spot: Spot }) {
+  const [username, setUsername] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!spot.created_by) return
+    let cancelled = false
+    async function fetchUser() {
+      const { data } = await supabase
+        .from('users')
+        .select('display_name')
+        .eq('id', spot.created_by!)
+        .single()
+      if (!cancelled && data) {
+        setUsername(data.display_name)
+      }
+    }
+    fetchUser()
+    return () => { cancelled = true }
+  }, [spot.created_by])
+
+  if (spot.created_by) {
+    return (
+      <p className="text-xs text-text-secondary/60 mt-4 text-center">
+        由 @{username || '使用者'} 建立
+      </p>
+    )
+  }
+
+  return (
+    <p className="text-xs text-text-secondary/60 mt-4 text-center">
+      📋 資料來源：政府公開資料
+    </p>
+  )
+}
+
 function OverviewTab({ spotId, spot, groups }: { spotId: string; spot: Spot; groups: GroupedFeatures[] }) {
   const hasAnyFeature = groups.some(g => g.features.some(f => f.status !== 'absent'))
   const disclaimerText = getDisclaimerText(spot)
@@ -582,6 +617,9 @@ function OverviewTab({ spotId, spot, groups }: { spotId: string; spot: Spot; gro
         </h3>
         <PhotoGrid spotId={spotId} />
       </div>
+
+      {/* 建立者標示 */}
+      <CreatedByLabel spot={spot} />
     </div>
   )
 }
