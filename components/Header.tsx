@@ -151,6 +151,13 @@ export default function Header({ spotCount, loading, searchQuery = '', searchExp
               type="text"
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault()
+                  // 觸發搜尋但保留文字（blur 讓鍵盤收起）
+                  searchInputRef.current?.blur()
+                }
+              }}
               placeholder="搜尋地點名稱或地區（如：苗栗、日月潭）..."
               className="w-full pl-9 pr-9 py-2 text-sm border border-border rounded-xl bg-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
             />
