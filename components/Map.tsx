@@ -172,6 +172,7 @@ export default function Map() {
   const [featureSpotIds, setFeatureSpotIds] = useState<Set<string> | null>(null)
   const [addModal, setAddModal] = useState<{ lat: number; lng: number } | null>(null)
   const [detailSpotId, setDetailSpotId] = useState<string | null>(null)
+  const [placingMode, setPlacingMode] = useState(false) // 放置模式
   const [searchQuery, setSearchQuery] = useState('')
   const [searchExpanded, setSearchExpanded] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>('map')
@@ -517,7 +518,7 @@ export default function Map() {
 
   const handleMapClick = useCallback((e: MapMouseEvent) => {
     setSelectedSpot(null)
-    setAddModal({ lat: e.lngLat.lat, lng: e.lngLat.lng })
+    // 不再直接開 AddSpotModal，改用放置模式
   }, [])
 
   // ====== Supercluster 建立（直接用 viewport spots） ======
@@ -781,7 +782,7 @@ export default function Map() {
             onClick={handleMapClick}
             style={{ width: '100%', height: '100%' }}
             mapStyle={MAP_STYLE}
-            cursor="crosshair"
+            cursor={placingMode ? 'move' : 'grab'}
             maxBounds={[
               [118.0, 21.0],  // 西南角（涵蓋金門）
               [123.0, 26.5],  // 東北角（涵蓋馬祖）
@@ -914,6 +915,71 @@ export default function Map() {
               </Popup>
             )}
           </ReactMapGL>
+
+          {/* 放置模式：十字準心 + 確認/取消 */}
+          {placingMode && (
+            <>
+              {/* 十字準心（畫面正中央） */}
+              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-20">
+                <div className="relative w-12 h-12">
+                  {/* 垂直線 */}
+                  <div className="absolute left-1/2 top-0 -translate-x-1/2 w-0.5 h-full bg-primary/80" />
+                  {/* 水平線 */}
+                  <div className="absolute top-1/2 left-0 -translate-y-1/2 h-0.5 w-full bg-primary/80" />
+                  {/* 中心點 */}
+                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-primary ring-2 ring-white shadow" />
+                </div>
+                {/* 提示文字 */}
+                <p className="text-xs text-text-main font-medium bg-surface/90 backdrop-blur-sm rounded-full px-3 py-1 mt-2 text-center shadow-sm whitespace-nowrap -translate-x-1/4">
+                  拖動地圖選擇位置
+                </p>
+              </div>
+
+              {/* 確認 / 取消按鈕 */}
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
+                <button
+                  onClick={() => setPlacingMode(false)}
+                  className="px-5 py-2.5 bg-surface text-text-secondary border border-border rounded-xl text-sm font-medium shadow-lg hover:bg-surface-hover transition-colors cursor-pointer"
+                >
+                  取消
+                </button>
+                <button
+                  onClick={() => {
+                    const map = mapRef.current?.getMap()
+                    if (map) {
+                      const center = map.getCenter()
+                      setPlacingMode(false)
+                      setAddModal({ lat: center.lat, lng: center.lng })
+                    }
+                  }}
+                  className="px-5 py-2.5 bg-primary text-text-on-primary rounded-xl text-sm font-medium shadow-lg hover:bg-primary-dark transition-colors cursor-pointer"
+                >
+                  ✓ 確認位置
+                </button>
+              </div>
+
+              {/* 半透明遮罩提示 */}
+              <div className="absolute inset-0 pointer-events-none z-10 border-4 border-primary/30 rounded-none" />
+            </>
+          )}
+
+          {/* ＋ 新增地點 FAB（非放置模式時顯示） */}
+          {!placingMode && viewMode === 'map' && (
+            <button
+              onClick={() => {
+                if (!addSpotPerm.allowed) {
+                  setAddModal({ lat: 0, lng: 0 }) // 觸發權限不足提示
+                  return
+                }
+                setPlacingMode(true)
+                setSelectedSpot(null)
+              }}
+              className="absolute bottom-6 right-4 z-20 flex items-center gap-2 px-4 py-3 bg-primary text-text-on-primary rounded-full shadow-lg hover:bg-primary-dark hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer"
+            >
+              <FontAwesomeIcon icon={NAV_ICONS.plus} className="text-sm" />
+              <span className="text-sm font-medium">新增地點</span>
+            </button>
+          )}
         </>
       )}
 
