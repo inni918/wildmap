@@ -440,45 +440,76 @@ function ContactIcons({ spot }: { spot: Spot }) {
 // === Overview Tab: Features + Rating + Photos ===
 
 function CreatedByLabel({ spot }: { spot: Spot }) {
-  const [username, setUsername] = useState<string | null>(null)
+  const [userInfo, setUserInfo] = useState<{
+    display_name: string | null
+    avatar_url: string | null
+    level: number
+    points: number
+  } | null>(null)
+  const [badgeCount, setBadgeCount] = useState(0)
 
   useEffect(() => {
     if (!spot.created_by) return
     let cancelled = false
     async function fetchUser() {
-      const { data } = await supabase
-        .from('users')
-        .select('display_name')
-        .eq('id', spot.created_by!)
-        .single()
-      if (!cancelled && data) {
-        setUsername(data.display_name)
+      const [userRes, badgeRes] = await Promise.all([
+        supabase
+          .from('users')
+          .select('display_name, avatar_url, level, points')
+          .eq('id', spot.created_by!)
+          .single(),
+        supabase
+          .from('user_achievements')
+          .select('id', { count: 'exact', head: true })
+          .eq('user_id', spot.created_by!),
+      ])
+      if (!cancelled && userRes.data) {
+        setUserInfo(userRes.data)
+        setBadgeCount(badgeRes.count || 0)
       }
     }
     fetchUser()
     return () => { cancelled = true }
   }, [spot.created_by])
 
-  if (spot.created_by) {
-    return (
-      <p className="text-xs text-text-secondary/50 mt-1">
-        由{' '}
-        <a
-          href={`/profile/${spot.created_by}`}
-          className="text-primary/70 hover:text-primary underline underline-offset-2 cursor-pointer"
-          onClick={(e) => {
-            e.preventDefault()
-            window.open(`/profile/${spot.created_by}`, '_blank')
-          }}
-        >
-          @{username || '使用者'}
-        </a>
-        {' '}建立
-      </p>
-    )
-  }
+  if (!spot.created_by || !userInfo) return null
 
-  return null
+  const levelNames: Record<number, string> = { 1: '探索者', 2: '開拓者', 3: '嚮導', 4: '守護者', 5: '先驅者' }
+  const levelIcons: Record<number, string> = { 1: '🔍', 2: '🧭', 3: '🗺️', 4: '🛡️', 5: '⭐' }
+  const initial = userInfo.display_name?.charAt(0) || '?'
+
+  return (
+    <a
+      href={`/profile/${spot.created_by}`}
+      className="flex items-center gap-2 mt-2 px-2 py-1.5 rounded-lg hover:bg-primary/5 transition-colors cursor-pointer group"
+      onClick={(e) => {
+        e.preventDefault()
+        window.open(`/profile/${spot.created_by}`, '_blank')
+      }}
+    >
+      {/* 頭像 */}
+      <div className="w-6 h-6 rounded-full bg-primary/15 flex items-center justify-center text-[10px] font-bold text-primary flex-shrink-0 overflow-hidden">
+        {userInfo.avatar_url ? (
+          <img src={userInfo.avatar_url} alt="" className="w-6 h-6 rounded-full object-cover" />
+        ) : (
+          initial
+        )}
+      </div>
+      {/* 名字 + 等級 */}
+      <span className="text-xs text-text-secondary group-hover:text-primary transition-colors">
+        {userInfo.display_name || '使用者'}
+      </span>
+      <span className="text-[10px] text-text-secondary/50">
+        {levelIcons[userInfo.level] || '🔍'} Lv{userInfo.level} {levelNames[userInfo.level] || '探索者'}
+      </span>
+      {/* 徽章數 */}
+      {badgeCount > 0 && (
+        <span className="text-[10px] text-amber-500/70">
+          🏅×{badgeCount}
+        </span>
+      )}
+    </a>
+  )
 }
 
 function OverviewTab({ spotId, spot, groups }: { spotId: string; spot: Spot; groups: GroupedFeatures[] }) {
