@@ -268,11 +268,12 @@ export default function Map() {
     }
   }, [])
 
-  // ====== Count query（帶 filter） ======
+  // ====== Count query（帶 filter + viewport bounds） ======
   const fetchTotalCount = useCallback(async (
     category: SpotCategory | 'all',
     search: string,
     featureIds: Set<string> | null,
+    bounds?: [number, number, number, number],
   ) => {
     // 若 featureIds 為空集合，count 直接為 0
     if (featureIds !== null && featureIds.size === 0) {
@@ -297,6 +298,16 @@ export default function Map() {
         query = query.in('id', Array.from(featureIds))
       }
 
+      // 搜尋時也限制 viewport bounds，讓計數與列表一致
+      if (bounds) {
+        const [west, south, east, north] = bounds
+        query = query
+          .gte('latitude', south)
+          .lte('latitude', north)
+          .gte('longitude', west)
+          .lte('longitude', east)
+      }
+
       const result = await withTimeout(query, 8000, 'Supabase count query')
 
       if (!result.error && result.count !== null) {
@@ -319,7 +330,7 @@ export default function Map() {
     }
     debounceRef.current = setTimeout(() => {
       fetchViewportSpots(bounds, category, search, featureIds)
-      fetchTotalCount(category, search, featureIds)
+      fetchTotalCount(category, search, featureIds, bounds)
     }, 300)
   }, [fetchViewportSpots, fetchTotalCount])
 
@@ -329,7 +340,7 @@ export default function Map() {
     if (!initialFetchDone.current) {
       initialFetchDone.current = true
       fetchViewportSpots(mapBounds, activeFilter, searchQuery, featureSpotIds)
-      fetchTotalCount(activeFilter, searchQuery, featureSpotIds)
+      fetchTotalCount(activeFilter, searchQuery, featureSpotIds, mapBounds)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -380,7 +391,7 @@ export default function Map() {
         // 延遲到 flyTo 動畫結束後 fetch，避免被中途 onMove 覆蓋
         setTimeout(() => {
           fetchViewportSpots(newBounds, activeFilter, trimmed, featureSpotIds)
-          fetchTotalCount(activeFilter, trimmed, featureSpotIds)
+          fetchTotalCount(activeFilter, trimmed, featureSpotIds, newBounds)
         }, 1100)
 
         // 顯示地理搜尋提示
@@ -551,14 +562,14 @@ export default function Map() {
   const handleSpotAdded = useCallback(() => {
     setAddModal(null)
     fetchViewportSpots(mapBounds, activeFilter, searchQuery, featureSpotIds)
-    fetchTotalCount(activeFilter, searchQuery, featureSpotIds)
+    fetchTotalCount(activeFilter, searchQuery, featureSpotIds, mapBounds)
   }, [mapBounds, activeFilter, searchQuery, featureSpotIds, fetchViewportSpots, fetchTotalCount])
 
   // SpotDetail 更新後重新 fetch viewport
   const handleSpotUpdated = useCallback(() => {
     setDetailSpotId(null)
     fetchViewportSpots(mapBounds, activeFilter, searchQuery, featureSpotIds)
-    fetchTotalCount(activeFilter, searchQuery, featureSpotIds)
+    fetchTotalCount(activeFilter, searchQuery, featureSpotIds, mapBounds)
   }, [mapBounds, activeFilter, searchQuery, featureSpotIds, fetchViewportSpots, fetchTotalCount])
 
   return (
@@ -665,7 +676,7 @@ export default function Map() {
                         setLoading(true)
                         setLoadError(null)
                         fetchViewportSpots(mapBounds, activeFilter, searchQuery, featureSpotIds)
-                        fetchTotalCount(activeFilter, searchQuery, featureSpotIds)
+                        fetchTotalCount(activeFilter, searchQuery, featureSpotIds, mapBounds)
                       }}
                       className="mt-2 px-6 py-2.5 bg-primary text-text-on-primary rounded-xl text-sm font-semibold hover:bg-primary-dark transition-colors cursor-pointer active:scale-95"
                     >
