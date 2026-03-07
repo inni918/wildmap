@@ -471,7 +471,18 @@ function CreatedByLabel({ spot }: { spot: Spot }) {
   if (spot.created_by) {
     return (
       <p className="text-xs text-text-secondary/60 mt-4 text-center">
-        由 @{username || '使用者'} 建立
+        由{' '}
+        <a
+          href={`/profile/${spot.created_by}`}
+          className="text-primary hover:text-primary/80 underline underline-offset-2 cursor-pointer"
+          onClick={(e) => {
+            e.preventDefault()
+            window.open(`/profile/${spot.created_by}`, '_blank')
+          }}
+        >
+          @{username || '使用者'}
+        </a>
+        {' '}建立
       </p>
     )
   }
