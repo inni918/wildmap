@@ -31,7 +31,8 @@ export async function GET(request: Request) {
 
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
-      return NextResponse.redirect(origin)
+      // 登入成功後導向地圖頁（client component，能即時顯示登入狀態）
+      return NextResponse.redirect(`${origin}/map`)
     }
   }
 
