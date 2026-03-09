@@ -11,7 +11,7 @@ type User = {
   level: number
   points: number
   credit_score: number
-  is_banned: boolean | null
+  is_banned?: boolean | null
   created_at: string
 }
 

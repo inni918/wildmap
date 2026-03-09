@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
     // 建立查詢
     let query = supabaseAdmin
       .from('users')
-      .select('id, display_name, email, avatar_url, role, level, points, credit_score, is_banned, created_at', {
+      .select('id, display_name, email, avatar_url, role, level, points, credit_score, created_at', {
         count: 'exact',
       })
 
@@ -41,11 +41,12 @@ export async function GET(request: NextRequest) {
     if (level) {
       query = query.eq('level', parseInt(level))
     }
-    if (status === 'banned') {
-      query = query.eq('is_banned', true)
-    } else if (status === 'active') {
-      query = query.or('is_banned.is.null,is_banned.eq.false')
-    }
+    // TODO: is_banned 欄位尚未建立，待 migration 043 加入後啟用
+    // if (status === 'banned') {
+    //   query = query.eq('is_banned', true)
+    // } else if (status === 'active') {
+    //   query = query.or('is_banned.is.null,is_banned.eq.false')
+    // }
 
     // 排序 + 分頁
     query = query
@@ -102,37 +103,13 @@ export async function PATCH(request: NextRequest) {
         break
       }
 
+      // TODO: ban/unban 待 migration 043 加入 is_banned + ban_reason 欄位後啟用
       case 'ban': {
-        const { error } = await supabaseAdmin
-          .from('users')
-          .update({ is_banned: true, ban_reason: reason || '違反使用條款' })
-          .eq('id', userId)
-        if (error) return errorResponse('UPDATE_ERROR', error.message, 500)
-
-        await logAdminAction({
-          adminId: auth.user.id,
-          action: 'ban_user',
-          targetType: 'user',
-          targetId: userId,
-          details: { reason },
-        })
-        break
+        return errorResponse('NOT_IMPLEMENTED', '封禁功能尚未啟用（待資料庫欄位建立）', 501)
       }
 
       case 'unban': {
-        const { error } = await supabaseAdmin
-          .from('users')
-          .update({ is_banned: false, ban_reason: null })
-          .eq('id', userId)
-        if (error) return errorResponse('UPDATE_ERROR', error.message, 500)
-
-        await logAdminAction({
-          adminId: auth.user.id,
-          action: 'unban_user',
-          targetType: 'user',
-          targetId: userId,
-        })
-        break
+        return errorResponse('NOT_IMPLEMENTED', '解封功能尚未啟用（待資料庫欄位建立）', 501)
       }
 
       default:
