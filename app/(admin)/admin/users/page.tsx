@@ -43,6 +43,7 @@ export default function AdminUsersPage() {
   const [roleFilter, setRoleFilter] = useState('')
   const [levelFilter, setLevelFilter] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
+  const [fetchError, setFetchError] = useState('')
   const [actionModal, setActionModal] = useState<{
     type: 'role' | 'ban' | 'unban'
     user: User
@@ -65,7 +66,13 @@ export default function AdminUsersPage() {
 
       const res = await fetch(`/api/admin/users?${params}`)
       const data = await res.json()
+      if (data.error) {
+        setFetchError(`${data.error.code}: ${data.error.message}`)
+        setLoading(false)
+        return
+      }
       if (data.data) {
+        setFetchError('')
         setUsers(data.data)
         setPagination(data.pagination)
       }
@@ -172,6 +179,14 @@ export default function AdminUsersPage() {
                 <tr>
                   <td colSpan={8} className="text-center py-12 text-[var(--color-text-secondary)]">
                     載入中...
+                  </td>
+                </tr>
+              ) : fetchError ? (
+                <tr>
+                  <td colSpan={8} className="text-center py-12">
+                    <div className="text-red-600 font-medium mb-2">⚠️ {fetchError}</div>
+                    <p className="text-sm text-[var(--color-text-secondary)]">請確認已登入且具有管理員權限</p>
+                    <button onClick={() => { setFetchError(''); fetchUsers(1); }} className="mt-2 text-sm text-[var(--color-primary)] hover:underline cursor-pointer">重試</button>
                   </td>
                 </tr>
               ) : users.length === 0 ? (

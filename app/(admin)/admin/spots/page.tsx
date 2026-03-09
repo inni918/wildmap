@@ -50,6 +50,7 @@ export default function AdminSpotsPage() {
   const [qualityFilter, setQualityFilter] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
   const [sourceFilter, setSourceFilter] = useState('')
+  const [fetchError, setFetchError] = useState('')
   const [actionModal, setActionModal] = useState<{
     type: 'status' | 'quality'
     spot: Spot
@@ -71,7 +72,13 @@ export default function AdminSpotsPage() {
 
       const res = await fetch(`/api/admin/spots?${params}`)
       const data = await res.json()
+      if (data.error) {
+        setFetchError(`${data.error.code}: ${data.error.message}`)
+        setLoading(false)
+        return
+      }
       if (data.data) {
+        setFetchError('')
         setSpots(data.data)
         setPagination(data.pagination)
       }
@@ -171,6 +178,14 @@ export default function AdminSpotsPage() {
                 <tr>
                   <td colSpan={8} className="text-center py-12 text-[var(--color-text-secondary)]">
                     載入中...
+                  </td>
+                </tr>
+              ) : fetchError ? (
+                <tr>
+                  <td colSpan={8} className="text-center py-12">
+                    <div className="text-red-600 font-medium mb-2">⚠️ {fetchError}</div>
+                    <p className="text-sm text-[var(--color-text-secondary)]">請確認已登入且具有管理員權限</p>
+                    <button onClick={() => { setFetchError(''); fetchSpots(1); }} className="mt-2 text-sm text-[var(--color-primary)] hover:underline cursor-pointer">重試</button>
                   </td>
                 </tr>
               ) : spots.length === 0 ? (
