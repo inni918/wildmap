@@ -6,7 +6,7 @@ import { fetchSpotFeatures, type GroupedFeatures } from '@/lib/features'
 import { useAuth } from '@/lib/auth-context'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS, getFeatureIcon } from '@/lib/icons'
-import { faCircleQuestion, faCircleCheck, faPhone, faGlobe, faEnvelope, faMapLocationDot, faShieldHalved, faTriangleExclamation, faLocationDot } from '@fortawesome/free-solid-svg-icons'
+import { faCircleQuestion, faCircleCheck, faPhone, faGlobe, faEnvelope, faMapLocationDot, faShieldHalved, faTriangleExclamation, faLocationDot, faShareNodes } from '@fortawesome/free-solid-svg-icons'
 import { faFacebookF, faInstagram, faLine } from '@fortawesome/free-brands-svg-icons'
 import FeatureIcons from './FeatureIcons'
 import FeatureVoting from './FeatureVoting'
@@ -55,7 +55,7 @@ function getRegistrationBadge(spot: Spot): { label: string; icon: typeof faShiel
       borderColor: '#16A34A30',
     }
   }
-  // 未登記的不標任何東西（有盾牌是加分項，沒有就不標）
+  // 未登記的不標任何東西
   return null
 }
 
@@ -64,7 +64,6 @@ function getDisclaimerText(spot: Spot): string | null {
   if (spot.category === 'carcamp') {
     return '本泊點資訊由社群回報，Wildmap 未實地查核。車宿前請確認當地法規，注意停車規定及安全。本平台不保證此地點可合法進行車宿活動。'
   }
-  // 未登記露營場不顯示警告文字
   return null
 }
 
@@ -78,9 +77,10 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
   const [activeTab, setActiveTab] = useState<Tab>('overview')
   const [isClosing, setIsClosing] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
+  const [commentCount, setCommentCount] = useState(0)
+  const [ratingInfo, setRatingInfo] = useState<{ avg: number; count: number }>({ avg: 0, count: 0 })
 
-  // 用 spotId 撈完整資料
-  // 撈 spot + features 一氣呵成（減少等待）
+  // 撈 spot + features + comment count + rating 一氣呵成
   useEffect(() => {
     let cancelled = false
     async function fetchAll() {
@@ -105,10 +105,28 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
         setSpotLoading(false)
       }
 
-      // spot 拿到後立刻撈 features（不等 React re-render）
-      const result = await fetchSpotFeatures(fullSpot.id, fullSpot.category, user?.id)
+      // 同時撈 features、comments count、ratings
+      const [featureResult, commentRes, ratingRes] = await Promise.all([
+        fetchSpotFeatures(fullSpot.id, fullSpot.category, user?.id),
+        supabase
+          .from('comments')
+          .select('id', { count: 'exact', head: true })
+          .eq('spot_id', fullSpot.id),
+        supabase
+          .from('ratings')
+          .select('score')
+          .eq('spot_id', fullSpot.id),
+      ])
+
       if (!cancelled) {
-        setGroups(result)
+        setGroups(featureResult)
+        setCommentCount(commentRes.count || 0)
+        if (ratingRes.data && ratingRes.data.length > 0) {
+          const total = ratingRes.data.reduce((sum, r) => sum + r.score, 0)
+          setRatingInfo({ avg: total / ratingRes.data.length, count: ratingRes.data.length })
+        } else {
+          setRatingInfo({ avg: 0, count: 0 })
+        }
         setLoading(false)
       }
     }
@@ -140,6 +158,19 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
     setTimeout(onClose, 200)
   }
 
+  const handleShare = async () => {
+    const url = `${window.location.origin}/spot/${spotId}`
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: spot?.name, url })
+      } catch {
+        // user cancelled
+      }
+    } else {
+      await navigator.clipboard.writeText(url)
+    }
+  }
+
   // 載入中的 placeholder
   if (spotLoading || !spot) {
     return (
@@ -156,6 +187,22 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
   }
 
   const qualityConfig = QUALITY_BADGE[spot.quality] || QUALITY_BADGE.new
+  const regBadge = getRegistrationBadge(spot)
+
+  // 收集要顯示的徽章 chips（最多 3 個）
+  const badgeChips: { key: string; label: string; color: string; bgColor: string; borderColor?: string }[] = []
+  if (spot.quality === 'community_verified') {
+    badgeChips.push({ key: 'quality', label: '✅ 社群驗證', color: '#22C55E', bgColor: '#22C55E15', borderColor: '#22C55E30' })
+  }
+  if (regBadge) {
+    badgeChips.push({ key: 'reg', label: regBadge.label, color: regBadge.color, bgColor: regBadge.bgColor, borderColor: regBadge.borderColor })
+  }
+  if (spot.is_claimed) {
+    badgeChips.push({ key: 'claimed', label: '✅ 認證商家', color: '#3B82F6', bgColor: '#3B82F615', borderColor: '#3B82F630' })
+  }
+
+  // 地區名稱：用 address 或 category label
+  const regionName = spot.address || CATEGORY_LABEL[spot.category]
 
   return (
     <div
@@ -173,58 +220,17 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
           <div className="w-10 h-1 rounded-full bg-border" />
         </div>
 
-        {/* Header */}
+        {/* === 1. Photo Strip (橫向捲動縮圖列) === */}
+        <PhotoStrip spotId={spot.id} />
+
+        {/* === 2. Header 四層結構 === */}
         <div className="px-5 pb-3 border-b border-border">
+          {/* 第一層：名稱 + 收藏/分享/關閉 */}
           <div className="flex items-start justify-between">
-            <div className="flex items-center gap-3 min-w-0">
-              <span className="text-3xl flex-shrink-0">
-                {CATEGORY_EMOJI[spot.category]}
-              </span>
-              <div className="min-w-0">
-                <div className="flex items-center gap-2">
-                  <h2 className="text-lg font-bold text-text-main line-clamp-2" title={spot.name}>{spot.name}</h2>
-                  {spot.is_claimed && (
-                    <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full whitespace-nowrap"
-                      style={{ backgroundColor: '#3B82F620', color: '#3B82F6' }}>
-                      ✅ 認證商家
-                    </span>
-                  )}
-                </div>
-                <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                  <span className="text-xs font-medium text-primary">
-                    {CATEGORY_LABEL[spot.category]}
-                  </span>
-                  <span
-                    className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full"
-                    style={{
-                      backgroundColor: qualityConfig.bgColor,
-                      color: qualityConfig.color,
-                    }}
-                  >
-                    {qualityConfig.label}
-                  </span>
-                  {(() => {
-                    const regBadge = getRegistrationBadge(spot)
-                    if (!regBadge) return null
-                    return (
-                      <span
-                        className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full"
-                        style={{
-                          backgroundColor: regBadge.bgColor,
-                          color: regBadge.color,
-                          border: `1px solid ${regBadge.borderColor}`,
-                        }}
-                      >
-                        {regBadge.label}
-                      </span>
-                    )
-                  })()}
-                </div>
-                {/* 建立者標示（在標題下方） */}
-                <CreatedByLabel spot={spot} />
-              </div>
-            </div>
-            <div className="flex items-center gap-0.5">
+            <h2 className="text-lg font-bold text-text-main line-clamp-2 flex-1 mr-2" title={spot.name}>
+              {CATEGORY_EMOJI[spot.category]} {spot.name}
+            </h2>
+            <div className="flex items-center gap-0.5 flex-shrink-0">
               {user && editPerm.allowed && (
                 <button
                   onClick={() => setShowEditModal(true)}
@@ -245,6 +251,13 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
               )}
               <FavoriteButton spotId={spot.id} />
               <button
+                onClick={handleShare}
+                className="text-text-secondary hover:text-primary p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center cursor-pointer active:scale-90 transition-all"
+                title="分享"
+              >
+                <FontAwesomeIcon icon={faShareNodes} className="text-sm" />
+              </button>
+              <button
                 onClick={handleClose}
                 className="text-text-secondary hover:text-text-main p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center cursor-pointer active:scale-90 transition-transform"
               >
@@ -253,45 +266,68 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
             </div>
           </div>
 
+          {/* 第二層：★評分 (N則評論) · 地區名稱 */}
+          <div className="flex items-center gap-1.5 mt-1 text-sm text-text-secondary">
+            {ratingInfo.count > 0 ? (
+              <>
+                <FontAwesomeIcon icon={NAV_ICONS.starSolid} className="text-accent text-xs" />
+                <span className="font-medium text-text-main">{ratingInfo.avg.toFixed(1)}</span>
+                <span className="text-xs">({ratingInfo.count}則評論)</span>
+              </>
+            ) : (
+              <span className="text-xs">尚無評分</span>
+            )}
+            <span className="text-text-secondary/40 mx-0.5">·</span>
+            <span className="text-xs">{regionName}</span>
+          </div>
+
+          {/* 第三層：徽章 chips */}
+          {badgeChips.length > 0 && (
+            <div className="flex items-center gap-1.5 mt-2 flex-wrap">
+              {badgeChips.slice(0, 3).map((chip) => (
+                <span
+                  key={chip.key}
+                  className="inline-flex items-center text-[11px] font-semibold px-2 py-0.5 rounded-full"
+                  style={{
+                    backgroundColor: chip.bgColor,
+                    color: chip.color,
+                    border: chip.borderColor ? `1px solid ${chip.borderColor}` : undefined,
+                  }}
+                >
+                  {chip.label}
+                </span>
+              ))}
+            </div>
+          )}
+
           {/* Description */}
           {spot.description && (
             <p className="text-sm text-text-secondary mt-2 line-clamp-3">{spot.description}</p>
           )}
 
-          {/* Coordinates + Navigation */}
-          <div className="flex items-center gap-2 mt-2">
-            <p className="text-xs text-text-secondary/60 flex items-center gap-1">
-              <FontAwesomeIcon icon={NAV_ICONS.location} className="text-primary text-[10px]" />
-              {spot.latitude.toFixed(4)}, {spot.longitude.toFixed(4)}
-            </p>
-            <a
-              href={`https://www.google.com/maps/dir/?api=1&destination=${spot.latitude},${spot.longitude}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-[44px] h-[44px] rounded-full bg-primary text-text-on-primary flex items-center justify-center hover:bg-primary-dark active:scale-90 transition-all shadow-md"
-              title="用 Google Maps 導航"
-            >
-              <FontAwesomeIcon icon={NAV_ICONS.navigate} className="text-base" />
-            </a>
-          </div>
-
-          {/* Contact icons */}
-          <ContactIcons spot={spot} />
+          {/* 第四層：建立者卡片 */}
+          <CreatedByLabel spot={spot} />
 
           {/* Claim button */}
           <div className="mt-2">
             <ClaimButton spot={spot} />
           </div>
-
-          {/* Compact feature icons */}
-          {!loading && groups.length > 0 && (
-            <div className="mt-3">
-              <FeatureIcons groups={groups} compact />
-            </div>
-          )}
         </div>
 
-        {/* Tab bar - 3 tabs */}
+        {/* === 3. 導航 CTA 按鈕 === */}
+        <div className="px-5 py-2.5 border-b border-border">
+          <a
+            href={`https://www.google.com/maps/dir/?api=1&destination=${spot.latitude},${spot.longitude}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-white font-semibold text-sm hover:opacity-90 active:scale-[0.98] transition-all shadow-md"
+            style={{ backgroundColor: '#2D6A4F' }}
+          >
+            🧭 導航到這裡
+          </a>
+        </div>
+
+        {/* === 4. Tab bar (改名) === */}
         <div className="flex border-b border-border px-5">
           <button
             onClick={() => setActiveTab('overview')}
@@ -301,7 +337,7 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
                 : 'border-transparent text-text-secondary hover:text-text-main'
             }`}
           >
-            總覽
+            📋 資訊
           </button>
           <button
             onClick={() => setActiveTab('comments')}
@@ -311,7 +347,7 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
                 : 'border-transparent text-text-secondary hover:text-text-main'
             }`}
           >
-            評論
+            💬 評論{commentCount > 0 ? ` (${commentCount})` : ''}
           </button>
           <button
             onClick={() => setActiveTab('vote')}
@@ -321,11 +357,11 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
                 : 'border-transparent text-text-secondary hover:text-text-main'
             }`}
           >
-            投票特性 {!user && <FontAwesomeIcon icon={NAV_ICONS.lock} className="ml-1 text-xs" />}
+            🗳️ 特性回報
           </button>
         </div>
 
-        {/* Content */}
+        {/* === 5. Content === */}
         <div className="flex-1 overflow-y-auto px-5 py-4">
           {activeTab === 'overview' ? (
             loading ? (
@@ -334,7 +370,7 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
                 <span className="text-sm text-text-secondary">載入中...</span>
               </div>
             ) : (
-              <OverviewTab spotId={spot.id} spot={spot} groups={groups} />
+              <InfoTab spotId={spot.id} spot={spot} groups={groups} />
             )
           ) : activeTab === 'comments' ? (
             <CommentsTab spotId={spot.id} claimedBy={spot.claimed_by} />
@@ -363,10 +399,69 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
   )
 }
 
+// === Photo Strip (橫向捲動縮圖列) ===
+
+function PhotoStrip({ spotId }: { spotId: string }) {
+  const [photos, setPhotos] = useState<{ id: string; url: string }[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    let cancelled = false
+    async function fetchPhotos() {
+      const { data, error } = await supabase
+        .from('spot_photos')
+        .select('id, url')
+        .eq('spot_id', spotId)
+        .order('created_at', { ascending: false })
+        .limit(20)
+
+      if (!cancelled) {
+        setPhotos(data && !error ? data : [])
+        setLoading(false)
+      }
+    }
+    fetchPhotos()
+    return () => { cancelled = true }
+  }, [spotId])
+
+  if (loading) {
+    return (
+      <div className="h-[160px] flex items-center justify-center" style={{ backgroundColor: '#FEFAF3' }}>
+        <FontAwesomeIcon icon={NAV_ICONS.spinner} className="text-primary animate-spin text-lg" />
+      </div>
+    )
+  }
+
+  if (photos.length === 0) {
+    return (
+      <div
+        className="h-[120px] flex flex-col items-center justify-center gap-2 mx-5 mt-1 mb-2 rounded-xl border-2 border-dashed"
+        style={{ borderColor: '#2D6A4F40', backgroundColor: '#2D6A4F08' }}
+      >
+        <FontAwesomeIcon icon={NAV_ICONS.camera} className="text-2xl" style={{ color: '#2D6A4F80' }} />
+        <span className="text-xs font-medium" style={{ color: '#2D6A4F' }}>📸 上傳第一張照片</span>
+      </div>
+    )
+  }
+
+  return (
+    <div className="overflow-x-auto flex gap-1.5 px-5 py-2 scrollbar-hide" style={{ WebkitOverflowScrolling: 'touch' }}>
+      {photos.map((photo) => (
+        <img
+          key={photo.id}
+          src={photo.url}
+          alt=""
+          className="h-[140px] w-auto rounded-lg object-cover flex-shrink-0"
+          loading="lazy"
+        />
+      ))}
+    </div>
+  )
+}
+
 // === Contact Icons ===
 
 function ContactIcons({ spot }: { spot: Spot }) {
-  // LINE 連結：@ 開頭的官方帳號用 /ti/p/，其他也用 /ti/p/
   function getLineUrl(lineId: string): string {
     return `https://line.me/R/ti/p/${lineId}`
   }
@@ -398,46 +493,44 @@ function ContactIcons({ spot }: { spot: Spot }) {
   if (contacts.length === 0) return null
 
   return (
-    <div className="mt-2.5">
-      <div className="flex items-center gap-3 flex-wrap">
-        {contacts.map((c) => {
-          const iconEl = (
-            <div
-              key={c.key}
-              className="w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer"
-              style={{
-                backgroundColor: c.key === 'line' ? '#06C75520' : '#2D6A4F15',
-                color: c.key === 'line' ? '#06C755' : '#2D6A4F',
-              }}
-              title={c.label}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = c.key === 'line' ? '#06C755' : '#2D6A4F'
-                e.currentTarget.style.color = '#FFFFFF'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = c.key === 'line' ? '#06C75520' : '#2D6A4F15'
-                e.currentTarget.style.color = c.key === 'line' ? '#06C755' : '#2D6A4F'
-              }}
-            >
-              <FontAwesomeIcon icon={c.icon} className="text-sm" />
-            </div>
-          )
+    <div className="flex items-center gap-3 flex-wrap">
+      {contacts.map((c) => {
+        const iconEl = (
+          <div
+            key={c.key}
+            className="w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer"
+            style={{
+              backgroundColor: c.key === 'line' ? '#06C75520' : '#2D6A4F15',
+              color: c.key === 'line' ? '#06C755' : '#2D6A4F',
+            }}
+            title={c.label}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = c.key === 'line' ? '#06C755' : '#2D6A4F'
+              e.currentTarget.style.color = '#FFFFFF'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = c.key === 'line' ? '#06C75520' : '#2D6A4F15'
+              e.currentTarget.style.color = c.key === 'line' ? '#06C755' : '#2D6A4F'
+            }}
+          >
+            <FontAwesomeIcon icon={c.icon} className="text-sm" />
+          </div>
+        )
 
-          if (c.href) {
-            return (
-              <a key={c.key} href={c.href} target="_blank" rel="noopener noreferrer">
-                {iconEl}
-              </a>
-            )
-          }
-          return iconEl
-        })}
-      </div>
+        if (c.href) {
+          return (
+            <a key={c.key} href={c.href} target="_blank" rel="noopener noreferrer">
+              {iconEl}
+            </a>
+          )
+        }
+        return iconEl
+      })}
     </div>
   )
 }
 
-// === Overview Tab: Features + Rating + Photos ===
+// === Created By Label ===
 
 function CreatedByLabel({ spot }: { spot: Spot }) {
   const [userInfo, setUserInfo] = useState<{
@@ -512,7 +605,9 @@ function CreatedByLabel({ spot }: { spot: Spot }) {
   )
 }
 
-function OverviewTab({ spotId, spot, groups }: { spotId: string; spot: Spot; groups: GroupedFeatures[] }) {
+// === Info Tab (原 Overview Tab，內容重組) ===
+
+function InfoTab({ spotId, spot, groups }: { spotId: string; spot: Spot; groups: GroupedFeatures[] }) {
   const hasAnyFeature = groups.some(g => g.features.some(f => f.status !== 'absent'))
   const disclaimerText = getDisclaimerText(spot)
 
@@ -549,6 +644,39 @@ function OverviewTab({ spotId, spot, groups }: { spotId: string; spot: Spot; gro
         </div>
       )}
 
+      {/* === 基本資訊區塊 === */}
+      <div>
+        <h3 className="text-sm font-semibold text-text-main mb-3 flex items-center gap-1.5">
+          <FontAwesomeIcon icon={NAV_ICONS.location} className="text-primary text-xs" />
+          基本資訊
+        </h3>
+        <div className="space-y-2.5">
+          {/* 座標 */}
+          <div className="flex items-center gap-2 text-sm">
+            <FontAwesomeIcon icon={NAV_ICONS.location} className="text-primary text-xs w-4" />
+            <span className="text-text-secondary">
+              {spot.latitude.toFixed(4)}, {spot.longitude.toFixed(4)}
+            </span>
+          </div>
+
+          {/* Google Maps 連結 */}
+          <div className="flex items-center gap-2 text-sm">
+            <FontAwesomeIcon icon={faMapLocationDot} className="text-primary text-xs w-4" />
+            <a
+              href={spot.google_maps_url || `https://www.google.com/maps/search/?api=1&query=${spot.latitude},${spot.longitude}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              在 Google Maps 上查看
+            </a>
+          </div>
+
+          {/* 聯絡方式 */}
+          <ContactIcons spot={spot} />
+        </div>
+      </div>
+
       {/* Rating Section */}
       <div>
         <h3 className="text-sm font-semibold text-text-main mb-2 flex items-center gap-1.5">
@@ -558,12 +686,12 @@ function OverviewTab({ spotId, spot, groups }: { spotId: string; spot: Spot; gro
         <StarRating spotId={spotId} />
       </div>
 
-      {/* Feature Info */}
+      {/* === 設施特性區塊 === */}
       {hasAnyFeature ? (
         <div>
           <h3 className="text-sm font-semibold text-text-main mb-3 flex items-center gap-1.5">
             <FontAwesomeIcon icon={NAV_ICONS.info} className="text-primary text-xs" />
-            特性一覽
+            設施與特性
           </h3>
           <div className="space-y-4">
             {groups.map((group) => {
@@ -634,11 +762,11 @@ function OverviewTab({ spotId, spot, groups }: { spotId: string; spot: Spot; gro
       ) : (
         <div className="text-center py-4">
           <p className="text-sm text-text-secondary">尚無特性資料</p>
-          <p className="text-xs text-text-secondary/60 mt-1">切換到「投票特性」幫忙回報吧！</p>
+          <p className="text-xs text-text-secondary/60 mt-1">切換到「🗳️ 特性回報」幫忙回報吧！</p>
         </div>
       )}
 
-      {/* Photo Grid */}
+      {/* Photo Grid (保留完整上傳功能) */}
       <div>
         <h3 className="text-sm font-semibold text-text-main mb-2 flex items-center gap-1.5">
           <FontAwesomeIcon icon={NAV_ICONS.camera} className="text-primary text-xs" />
@@ -646,7 +774,6 @@ function OverviewTab({ spotId, spot, groups }: { spotId: string; spot: Spot; gro
         </h3>
         <PhotoGrid spotId={spotId} />
       </div>
-
     </div>
   )
 }
