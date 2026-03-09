@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
     let query = supabaseAdmin
       .from('spots')
       .select(
-        'id, name, address, category, status, quality, created_by, created_at, view_count, gov_certified, users(display_name)',
+        'id, name, address, category, status, quality, created_by, created_at, view_count, gov_certified, users!spots_created_by_fkey(display_name)',
         { count: 'exact' }
       )
 
