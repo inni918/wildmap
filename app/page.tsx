@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS } from '@/lib/icons'
 import { faCampground, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import { useAuth } from '@/lib/auth-context'
 
 // 預載地圖頁的 JS chunk — 用戶看 Landing Page 時就背景下載
 if (typeof window !== 'undefined') {
@@ -77,6 +78,8 @@ const FEATURES = [
 ]
 
 export default function LandingPage() {
+  const { user, profile } = useAuth()
+
   return (
     <div className="min-h-screen bg-bg">
       {/* Navigation */}
@@ -87,12 +90,28 @@ export default function LandingPage() {
             <span className="text-xl font-bold text-primary-dark">Wildmap</span>
           </div>
           <div className="flex items-center gap-3">
-            <Link
-              href="/login"
-              className="text-sm text-text-secondary hover:text-primary transition-colors no-underline hidden sm:inline"
-            >
-              登入
-            </Link>
+            {user ? (
+              <Link
+                href="/profile"
+                className="flex items-center gap-2 text-sm text-text-secondary hover:text-primary transition-colors no-underline"
+              >
+                <div className="w-7 h-7 rounded-full bg-primary/15 flex items-center justify-center text-xs font-bold text-primary overflow-hidden">
+                  {profile?.avatar_url ? (
+                    <img src={profile.avatar_url} alt="" className="w-7 h-7 rounded-full object-cover" />
+                  ) : (
+                    (profile?.display_name?.charAt(0) || user.email?.charAt(0) || '?').toUpperCase()
+                  )}
+                </div>
+                <span className="hidden sm:inline">{profile?.display_name || '我的帳號'}</span>
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                className="text-sm text-text-secondary hover:text-primary transition-colors no-underline hidden sm:inline"
+              >
+                登入
+              </Link>
+            )}
             <Link
               href="/map"
               className="bg-primary hover:bg-primary-dark text-text-on-primary rounded-[10px] px-4 py-2 text-sm font-semibold shadow-sm transition-colors no-underline"
@@ -250,8 +269,8 @@ export default function LandingPage() {
               <Link href="/map" className="text-white/60 hover:text-white transition-colors no-underline">
                 地圖
               </Link>
-              <Link href="/login" className="text-white/60 hover:text-white transition-colors no-underline">
-                登入
+              <Link href={user ? "/profile" : "/login"} className="text-white/60 hover:text-white transition-colors no-underline">
+                {user ? '我的帳號' : '登入'}
               </Link>
               <span className="text-white/30 hidden sm:inline">|</span>
               <Link href="/privacy" className="text-white/60 hover:text-white transition-colors no-underline">
