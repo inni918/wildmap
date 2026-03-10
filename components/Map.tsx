@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useCallback, useState, useEffect, useMemo } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 import ReactMapGL, { Marker, Popup, NavigationControl, MapRef, MapMouseEvent } from 'react-map-gl/maplibre'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import Supercluster from 'supercluster'
@@ -14,6 +15,7 @@ import FeatureFilter from './FeatureFilter'
 import OnboardingOverlay from './OnboardingOverlay'
 import { usePermission } from './PermissionGate'
 import { track } from '@/lib/tracker'
+import { useAuth } from '@/lib/auth-context'
 
 // ====== Nominatim 地理編碼 ======
 let lastNominatimCall = 0
@@ -161,6 +163,9 @@ type ViewMode = 'map' | 'list'
 
 export default function Map() {
   const mapRef = useRef<MapRef>(null)
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const { user } = useAuth()
   const addSpotPerm = usePermission('add_spot')
   const [spots, setSpots] = useState<SpotSummary[]>([])
   const [selectedSpot, setSelectedSpot] = useState<SpotSummary | null>(null)
@@ -183,6 +188,10 @@ export default function Map() {
     latitude: 23.8,
     zoom: 7,
   })
+  // 收藏模式
+  const [favoritesMode, setFavoritesMode] = useState(false)
+  const [favoriteSpotIds, setFavoriteSpotIds] = useState<Set<string> | null>(null)
+  const [favoritesLoading, setFavoritesLoading] = useState(false)
 
   // 用來觸發 cluster 重新計算的 bounds 狀態
   const [mapBounds, setMapBounds] = useState<[number, number, number, number]>(
@@ -333,6 +342,61 @@ export default function Map() {
       fetchTotalCount(category, search, featureIds, bounds)
     }, 300)
   }, [fetchViewportSpots, fetchTotalCount])
+
+  // ====== URL query params 處理：search=1 / favorites=1 ======
+  useEffect(() => {
+    const searchParam = searchParams.get('search')
+    const favoritesParam = searchParams.get('favorites')
+
+    if (searchParam === '1') {
+      // 展開搜尋框
+      setSearchExpanded(true)
+      // 清除 query param（避免重整時重複觸發）
+      router.replace('/map', { scroll: false })
+    }
+
+    if (favoritesParam === '1') {
+      setFavoritesMode(true)
+      setViewMode('list')
+      router.replace('/map', { scroll: false })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams])
+
+  // ====== 收藏模式：載入用戶收藏的 spot ids ======
+  useEffect(() => {
+    if (!favoritesMode) {
+      setFavoriteSpotIds(null)
+      return
+    }
+
+    if (!user) {
+      // 未登入：不需要載入，顯示提示
+      setFavoriteSpotIds(new Set())
+      return
+    }
+
+    async function loadFavorites() {
+      setFavoritesLoading(true)
+      try {
+        const { data, error } = await supabase
+          .from('favorites')
+          .select('spot_id')
+          .eq('user_id', user!.id)
+        if (!error && data) {
+          setFavoriteSpotIds(new Set(data.map((f: { spot_id: string }) => f.spot_id)))
+        } else {
+          setFavoriteSpotIds(new Set())
+        }
+      } catch {
+        setFavoriteSpotIds(new Set())
+      } finally {
+        setFavoritesLoading(false)
+      }
+    }
+
+    loadFavorites()
+  }, [favoritesMode, user])
 
   // ====== 初次載入：直接 fetch（不經過 debounce） ======
   const initialFetchDone = useRef(false)
@@ -987,39 +1051,94 @@ export default function Map() {
           className="absolute left-0 right-0 bottom-0 overflow-y-auto bg-surface transition-all duration-200"
           style={{ top: searchExpanded ? '12rem' : '8.5rem' }}
         >
-          {loading && spots.length === 0 ? (
+          {/* 收藏模式標題列 */}
+          {favoritesMode && (
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-surface-alt">
+              <div className="flex items-center gap-2">
+                <FontAwesomeIcon icon={NAV_ICONS.heartSolid} className="text-error text-sm" />
+                <span className="text-sm font-semibold text-text-main">我的收藏</span>
+                {favoriteSpotIds && (
+                  <span className="text-xs text-text-secondary">（{favoriteSpotIds.size} 個）</span>
+                )}
+              </div>
+              <button
+                onClick={() => { setFavoritesMode(false); setFavoriteSpotIds(null) }}
+                className="text-xs text-text-secondary hover:text-primary cursor-pointer flex items-center gap-1"
+              >
+                <FontAwesomeIcon icon={NAV_ICONS.close} className="text-xs" />
+                離開收藏
+              </button>
+            </div>
+          )}
+
+          {/* 未登入時的收藏提示 */}
+          {favoritesMode && !user ? (
+            <div className="flex flex-col items-center justify-center h-60 gap-3 px-4">
+              <div className="w-20 h-20 rounded-full bg-surface-alt flex items-center justify-center mb-1">
+                <FontAwesomeIcon icon={NAV_ICONS.heartSolid} className="text-error/30 text-3xl" />
+              </div>
+              <p className="text-base font-semibold text-text-main">請先登入</p>
+              <p className="text-sm text-text-secondary text-center max-w-xs">
+                登入後即可查看你收藏的地點
+              </p>
+              <a
+                href="/login"
+                className="mt-2 px-6 py-2.5 bg-primary text-text-on-primary rounded-xl text-sm font-semibold hover:bg-primary-dark transition-colors no-underline"
+              >
+                前往登入
+              </a>
+            </div>
+          ) : favoritesLoading ? (
+            <div className="flex items-center justify-center h-40 text-text-secondary">
+              <FontAwesomeIcon icon={NAV_ICONS.spinner} className="animate-spin mr-2" />
+              載入收藏中…
+            </div>
+          ) : loading && spots.length === 0 ? (
             <div className="flex items-center justify-center h-40 text-text-secondary">
               <FontAwesomeIcon icon={NAV_ICONS.spinner} className="animate-spin mr-2" />
               載入中…
             </div>
-          ) : sortedSpots.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-60 text-text-secondary gap-3 px-4">
-              <div className="w-20 h-20 rounded-full bg-surface-alt flex items-center justify-center mb-1">
-                <span className="text-4xl">🔍</span>
+          ) : (() => {
+            // 收藏模式下過濾 spots
+            const displaySpots = favoritesMode && favoriteSpotIds
+              ? sortedSpots.filter(s => favoriteSpotIds.has(s.id))
+              : sortedSpots
+
+            return displaySpots.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-60 text-text-secondary gap-3 px-4">
+                <div className="w-20 h-20 rounded-full bg-surface-alt flex items-center justify-center mb-1">
+                  <span className="text-4xl">{favoritesMode ? '💔' : '🔍'}</span>
+                </div>
+                <p className="text-base font-semibold text-text-main">
+                  {favoritesMode ? '還沒有收藏任何地點' : '找不到符合條件的地點'}
+                </p>
+                <p className="text-sm text-text-secondary text-center max-w-xs">
+                  {favoritesMode
+                    ? '在地圖上找到喜歡的露營地，點擊愛心圖示加入收藏'
+                    : '試試調整篩選條件，或切換到地圖模式瀏覽附近地點'}
+                </p>
+                {!favoritesMode && (
+                  <button
+                    onClick={() => { setActiveFilter('all'); setSelectedFeatures([]); setSearchQuery('') }}
+                    className="mt-2 text-sm text-primary font-medium hover:text-primary-dark transition-colors flex items-center gap-1"
+                  >
+                    <FontAwesomeIcon icon={NAV_ICONS.close} className="text-xs" />
+                    清除所有篩選
+                  </button>
+                )}
               </div>
-              <p className="text-base font-semibold text-text-main">找不到符合條件的地點</p>
-              <p className="text-sm text-text-secondary text-center max-w-xs">
-                試試調整篩選條件，或切換到地圖模式瀏覽附近地點
-              </p>
-              <button
-                onClick={() => { setActiveFilter('all'); setSelectedFeatures([]); setSearchQuery('') }}
-                className="mt-2 text-sm text-primary font-medium hover:text-primary-dark transition-colors flex items-center gap-1"
-              >
-                <FontAwesomeIcon icon={NAV_ICONS.close} className="text-xs" />
-                清除所有篩選
-              </button>
-            </div>
-          ) : (
-            <div className="p-3 grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {sortedSpots.map(spot => (
-                <SpotCard
-                  key={spot.id}
-                  spot={spot}
-                  onDetail={() => setDetailSpotId(spot.id)}
-                />
-              ))}
-            </div>
-          )}
+            ) : (
+              <div className="p-3 grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {displaySpots.map(spot => (
+                  <SpotCard
+                    key={spot.id}
+                    spot={spot}
+                    onDetail={() => setDetailSpotId(spot.id)}
+                  />
+                ))}
+              </div>
+            )
+          })()}
         </div>
       )}
 
