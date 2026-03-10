@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
+import { adminFetch } from '@/lib/admin-fetch'
 
 type Spot = {
   id: string
@@ -70,7 +71,7 @@ export default function AdminSpotsPage() {
       if (statusFilter) params.set('status', statusFilter)
       if (sourceFilter) params.set('source', sourceFilter)
 
-      const res = await fetch(`/api/admin/spots?${params}`)
+      const res = await adminFetch(`/api/admin/spots?${params}`)
       const data = await res.json()
       if (data.error) {
         setFetchError(`${data.error.code}: ${data.error.message}`)
@@ -95,9 +96,8 @@ export default function AdminSpotsPage() {
     if (!actionModal) return
     setActionLoading(true)
 
-    const res = await fetch('/api/admin/spots', {
+    const res = await adminFetch('/api/admin/spots', {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         spotId: actionModal.spot.id,
         action: actionModal.type === 'status' ? 'changeStatus' : 'changeQuality',

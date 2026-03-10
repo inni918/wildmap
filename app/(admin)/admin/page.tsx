@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { adminFetch } from '@/lib/admin-fetch'
 import {
   LineChart,
   Line,
@@ -37,7 +38,7 @@ export default function AdminDashboardPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/api/admin/dashboard/stats')
+    adminFetch('/api/admin/dashboard/stats')
       .then((r) => r.json())
       .then((data) => {
         if (data.error) {

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
+import { adminFetch } from '@/lib/admin-fetch'
 
 type Report = {
   id: string
@@ -76,7 +77,7 @@ export default function AdminReportsPage() {
         tab,
       })
 
-      const res = await fetch(`/api/admin/reports?${params}`)
+      const res = await adminFetch(`/api/admin/reports?${params}`)
       const data = await res.json()
       if (data.data) {
         setReports(data.data)
@@ -95,9 +96,8 @@ export default function AdminReportsPage() {
     if (!actionModal) return
     setActionLoading(true)
 
-    const res = await fetch('/api/admin/reports', {
+    const res = await adminFetch('/api/admin/reports', {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         reportId: actionModal.id,
         action: actionType,

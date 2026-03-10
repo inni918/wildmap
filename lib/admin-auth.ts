@@ -1,4 +1,4 @@
-import { cookies } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 import { createServerClient } from '@supabase/ssr'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 
@@ -7,32 +7,48 @@ export type AdminRole = (typeof ROLE_HIERARCHY)[number]
 
 /**
  * 驗證當前請求的管理員身份
+ * 優先從 Authorization: Bearer <token> 讀取，失敗再 fallback 到 cookies
  * 在 API route 開頭呼叫，確保只有足夠權限的管理員可存取
  */
 export async function verifyAdmin(minRole: AdminRole = 'moderator') {
-  const cookieStore = await cookies()
+  let user: { id: string } | null = null
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll()
-        },
-        setAll() {
-          // API route 不需要 set cookies
-        },
-      },
+  // 1. 優先嘗試從 Authorization header 讀取 Bearer token
+  const headerStore = await headers()
+  const authHeader = headerStore.get('authorization') || headerStore.get('Authorization')
+  const bearerToken = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null
+
+  if (bearerToken) {
+    const { data, error } = await supabaseAdmin.auth.getUser(bearerToken)
+    if (!error && data.user) {
+      user = data.user
     }
-  )
+  }
 
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser()
+  // 2. Fallback：從 cookies 讀取（email/password 登入）
+  if (!user) {
+    const cookieStore = await cookies()
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll()
+          },
+          setAll() {
+            // API route 不需要 set cookies
+          },
+        },
+      }
+    )
+    const { data, error: authError } = await supabase.auth.getUser()
+    if (!authError && data.user) {
+      user = data.user
+    }
+  }
 
-  if (authError || !user) {
+  if (!user) {
     return { authorized: false as const, error: 'UNAUTHORIZED' as const, message: '請先登入' }
   }
 

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
+import { adminFetch } from '@/lib/admin-fetch'
 
 type User = {
   id: string
@@ -64,7 +65,7 @@ export default function AdminUsersPage() {
       if (levelFilter) params.set('level', levelFilter)
       if (statusFilter) params.set('status', statusFilter)
 
-      const res = await fetch(`/api/admin/users?${params}`)
+      const res = await adminFetch(`/api/admin/users?${params}`)
       const data = await res.json()
       if (data.error) {
         setFetchError(`${data.error.code}: ${data.error.message}`)
@@ -96,9 +97,8 @@ export default function AdminUsersPage() {
     if (actionModal.type === 'role') body.value = actionValue
     if (actionModal.type === 'ban') body.reason = actionReason
 
-    const res = await fetch('/api/admin/users', {
+    const res = await adminFetch('/api/admin/users', {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     })
     const data = await res.json()

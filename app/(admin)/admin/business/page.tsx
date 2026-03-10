@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
+import { adminFetch } from '@/lib/admin-fetch'
 
 type BusinessClaim = {
   id: string
@@ -51,7 +52,7 @@ export default function AdminBusinessPage() {
         tab,
       })
 
-      const res = await fetch(`/api/admin/business?${params}`)
+      const res = await adminFetch(`/api/admin/business?${params}`)
       const data = await res.json()
       if (data.data) {
         setClaims(data.data)
@@ -76,9 +77,8 @@ export default function AdminBusinessPage() {
     }
     if (actionModal.type === 'reject') body.reason = rejectReason
 
-    const res = await fetch('/api/admin/business', {
+    const res = await adminFetch('/api/admin/business', {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     })
     const data = await res.json()
