@@ -608,7 +608,8 @@ function CreatedByLabel({ spot }: { spot: Spot }) {
 // === Info Tab (原 Overview Tab，內容重組) ===
 
 function InfoTab({ spotId, spot, groups }: { spotId: string; spot: Spot; groups: GroupedFeatures[] }) {
-  const hasAnyFeature = groups.some(g => g.features.some(f => f.status !== 'absent'))
+  const hasAnyFeature = groups.some(g => g.features.some(f => f.status !== 'hidden'))
+  const [showFeatureHelp, setShowFeatureHelp] = useState(false)
   const disclaimerText = getDisclaimerText(spot)
 
   return (
@@ -689,13 +690,51 @@ function InfoTab({ spotId, spot, groups }: { spotId: string; spot: Spot; groups:
       {/* === 設施特性區塊 === */}
       {hasAnyFeature ? (
         <div>
-          <h3 className="text-sm font-semibold text-text-main mb-3 flex items-center gap-1.5">
-            <FontAwesomeIcon icon={NAV_ICONS.info} className="text-primary text-xs" />
-            設施與特性
-          </h3>
+          <div className="flex items-center gap-2 mb-3">
+            <h3 className="text-sm font-semibold text-text-main flex items-center gap-1.5">
+              <FontAwesomeIcon icon={NAV_ICONS.info} className="text-primary text-xs" />
+              設施與特性
+            </h3>
+            <button
+              onClick={() => setShowFeatureHelp(true)}
+              className="w-4 h-4 rounded-full bg-gray-200 text-gray-500 text-[10px] font-bold flex items-center justify-center hover:bg-gray-300 transition-colors"
+              title="特性投票說明"
+            >
+              ?
+            </button>
+          </div>
+
+          {/* 特性投票說明彈窗 */}
+          {showFeatureHelp && (
+            <div
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+              onClick={() => setShowFeatureHelp(false)}
+            >
+              <div
+                className="bg-white rounded-2xl p-5 mx-4 max-w-sm shadow-xl"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <h4 className="text-sm font-bold text-text-main mb-3">特性投票說明</h4>
+                <div className="space-y-2 text-xs text-text-secondary leading-relaxed">
+                  <p>✅ <strong>已確認</strong> — 社群多數認為此特性存在</p>
+                  <p>❓ <strong>存疑中</strong> — 社群意見分歧，請自行判斷</p>
+                  <p>🕐 <strong>待確認</strong> — 投票人數不足，歡迎協助確認</p>
+                </div>
+                <p className="text-[10px] text-text-secondary/60 mt-3">
+                  特性資料由社群回報，僅供參考，以實際情況為準。
+                </p>
+                <button
+                  onClick={() => setShowFeatureHelp(false)}
+                  className="mt-4 w-full py-2 rounded-xl bg-primary text-white text-xs font-semibold"
+                >
+                  了解
+                </button>
+              </div>
+            </div>
+          )}
           <div className="space-y-4">
             {groups.map((group) => {
-              const visibleFeatures = group.features.filter(f => f.status !== 'absent')
+              const visibleFeatures = group.features.filter(f => f.status !== 'hidden')
               if (visibleFeatures.length === 0) return null
 
               return (
@@ -711,44 +750,54 @@ function InfoTab({ spotId, spot, groups }: { spotId: string; spot: Spot; groups:
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {visibleFeatures.map((f) => {
-                      const isConfirmed = f.status === 'confirmed'
                       const faIcon = getFeatureIcon(f.key)
+                      const chipStyle =
+                        f.status === 'confirmed'
+                          ? {
+                              backgroundColor: group.color + '15',
+                              color: group.color,
+                              border: `1px solid ${group.color}40`,
+                            }
+                          : f.status === 'disputed'
+                          ? {
+                              backgroundColor: '#fef9c3',
+                              color: '#92400e',
+                              border: '1px solid #fde68a',
+                            }
+                          : {
+                              // pending
+                              backgroundColor: '#f9fafb',
+                              color: '#d1d5db',
+                              border: '1px solid #e5e7eb',
+                            }
+
+                      const chipTitle =
+                        f.status === 'confirmed'
+                          ? `${f.weighted_yes}票確認`
+                          : f.status === 'disputed'
+                          ? `存疑中（${f.weighted_yes}✓ ${f.weighted_no}✗）`
+                          : `待確認（加權票數 ${f.total_weight}）`
+
                       return (
                         <span
                           key={f.id}
-                          className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-                            isConfirmed ? '' : 'opacity-50'
-                          }`}
-                          style={
-                            isConfirmed
-                              ? {
-                                  backgroundColor: group.color + '15',
-                                  color: group.color,
-                                  border: `1px solid ${group.color}40`,
-                                }
-                              : {
-                                  backgroundColor: '#f3f4f6',
-                                  color: '#9ca3af',
-                                  border: '1px solid #e5e7eb',
-                                }
-                          }
-                          title={
-                            isConfirmed
-                              ? `${f.yes_count}人確認`
-                              : `待確認（${f.total}票）`
-                          }
+                          className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium"
+                          style={chipStyle}
+                          title={chipTitle}
                         >
+                          {f.status === 'disputed' && <span>❓</span>}
+                          {f.status === 'pending' && <span>🕐</span>}
                           {faIcon ? (
                             <FontAwesomeIcon icon={faIcon} className="text-[10px]" />
                           ) : (
                             <span>{f.icon}</span>
                           )}
                           {f.name_zh}
-                          {isConfirmed && (
+                          {f.status === 'confirmed' && (
                             <FontAwesomeIcon icon={faCircleCheck} className="text-[10px] opacity-70" />
                           )}
-                          {f.status === 'pending' && (
-                            <FontAwesomeIcon icon={faCircleQuestion} className="text-[10px]" />
+                          {f.status === 'disputed' && (
+                            <span className="text-[10px] ml-0.5">{f.weighted_yes}✓{f.weighted_no}✗</span>
                           )}
                         </span>
                       )

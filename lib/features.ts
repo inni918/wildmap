@@ -2,12 +2,17 @@ import { supabase, type FeatureDefinition, type FeatureGroup, type SpotCategory,
 
 // === Types ===
 
+export type FeatureStatus = 'confirmed' | 'disputed' | 'pending' | 'hidden'
+
 export type FeatureWithVotes = FeatureDefinition & {
   yes_count: number
   no_count: number
   total: number
   ratio: number
-  status: 'confirmed' | 'pending' | 'absent'
+  weighted_yes: number
+  weighted_no: number
+  total_weight: number
+  status: FeatureStatus
   user_vote?: boolean | null
 }
 
@@ -20,12 +25,13 @@ export type GroupedFeatures = {
 
 // === Feature status logic ===
 
-export function getFeatureStatus(yes: number, no: number): 'confirmed' | 'pending' | 'absent' {
-  const total = yes + no
-  if (total < 3) return 'pending'
-  const ratio = yes / total
+export function getFeatureStatus(weightedYes: number, weightedNo: number): FeatureStatus {
+  const totalWeight = weightedYes + weightedNo
+  if (totalWeight < 3) return 'pending'
+  const ratio = weightedYes / totalWeight
   if (ratio >= 0.6) return 'confirmed'
-  return 'absent'
+  if (ratio >= 0.4) return 'disputed'
+  return 'hidden'
 }
 
 // === Data fetching ===
@@ -60,12 +66,18 @@ export async function fetchSpotFeatures(
     console.error('Error fetching votes:', voteError)
   }
 
-  const voteMap = new Map<string, { yes: number; no: number; userVote?: boolean | null }>()
+  const voteMap = new Map<string, { yes: number; no: number; weightedYes: number; weightedNo: number; userVote?: boolean | null }>()
 
   for (const v of (votes || [])) {
-    const existing = voteMap.get(v.feature_id) || { yes: 0, no: 0, userVote: null }
-    if (v.vote) existing.yes++
-    else existing.no++
+    const existing = voteMap.get(v.feature_id) || { yes: 0, no: 0, weightedYes: 0, weightedNo: 0, userVote: null }
+    const w = v.weight ?? 1
+    if (v.vote) {
+      existing.yes++
+      existing.weightedYes += w
+    } else {
+      existing.no++
+      existing.weightedNo += w
+    }
     if (userId && v.user_id === userId) {
       existing.userVote = v.vote
     }
@@ -74,15 +86,19 @@ export async function fetchSpotFeatures(
 
   // Build features with vote data
   const featuresWithVotes: FeatureWithVotes[] = definitions.map((def: FeatureDefinition) => {
-    const voteData = voteMap.get(def.id) || { yes: 0, no: 0, userVote: null }
+    const voteData = voteMap.get(def.id) || { yes: 0, no: 0, weightedYes: 0, weightedNo: 0, userVote: null }
     const total = voteData.yes + voteData.no
+    const totalWeight = voteData.weightedYes + voteData.weightedNo
     return {
       ...def,
       yes_count: voteData.yes,
       no_count: voteData.no,
       total,
-      ratio: total > 0 ? voteData.yes / total : 0,
-      status: getFeatureStatus(voteData.yes, voteData.no),
+      ratio: totalWeight > 0 ? voteData.weightedYes / totalWeight : 0,
+      weighted_yes: voteData.weightedYes,
+      weighted_no: voteData.weightedNo,
+      total_weight: totalWeight,
+      status: getFeatureStatus(voteData.weightedYes, voteData.weightedNo),
       user_vote: voteData.userVote ?? null,
     }
   })
