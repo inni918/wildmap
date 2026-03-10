@@ -143,9 +143,10 @@ export default function BottomSheetCard({ spot, onClose, onOpenDetail }: Props) 
       className="fixed z-50"
       style={{
         bottom: 80,
-        left: 24,
-        right: 24,
-        transform: visible ? 'translateY(0)' : 'translateY(110%)',
+        left: '50%',
+        transform: visible ? 'translateX(-50%) translateY(0)' : 'translateX(-50%) translateY(110%)',
+        width: 'calc(100% - 48px)',
+        maxWidth: 420,
         transition: 'transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)',
       }}
     >
