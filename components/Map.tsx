@@ -170,7 +170,7 @@ type ViewMode = 'map' | 'list'
 function SpotMarker({ isSelected, isSuspended }: { isSelected: boolean; isSuspended: boolean }) {
   if (isSuspended) {
     return (
-      <svg width="40" height="52" viewBox="0 0 40 52" xmlns="http://www.w3.org/2000/svg">
+      <svg width="32" height="42" viewBox="0 0 40 52" xmlns="http://www.w3.org/2000/svg">
         <path d="M20 2C10.059 2 2 10.059 2 20C2 31.5 20 50 20 50C20 50 38 31.5 38 20C38 10.059 29.941 2 20 2Z" fill="#9ca3af" filter="url(#marker-shadow-suspended)"/>
         <circle cx="20" cy="19" r="13" fill="white" opacity="0.85"/>
         <g transform="translate(20,19)" fill="none" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -185,7 +185,7 @@ function SpotMarker({ isSelected, isSuspended }: { isSelected: boolean; isSuspen
   }
   if (isSelected) {
     return (
-      <svg width="50" height="64" viewBox="0 0 50 64" xmlns="http://www.w3.org/2000/svg">
+      <svg width="40" height="52" viewBox="0 0 50 64" xmlns="http://www.w3.org/2000/svg">
         <path d="M25 3C13.402 3 4 12.402 4 24C4 38 25 61 25 61C25 61 46 38 46 24C46 12.402 36.598 3 25 3Z" fill="#2D6A4F" filter="url(#marker-shadow-selected)"/>
         <path d="M25 3C13.402 3 4 12.402 4 24C4 38 25 61 25 61C25 61 46 38 46 24C46 12.402 36.598 3 25 3Z" fill="none" stroke="white" strokeWidth="3"/>
         <circle cx="25" cy="23" r="15" fill="white"/>
@@ -200,7 +200,7 @@ function SpotMarker({ isSelected, isSuspended }: { isSelected: boolean; isSuspen
     )
   }
   return (
-    <svg width="40" height="52" viewBox="0 0 40 52" xmlns="http://www.w3.org/2000/svg">
+    <svg width="32" height="42" viewBox="0 0 40 52" xmlns="http://www.w3.org/2000/svg">
       <path d="M20 2C10.059 2 2 10.059 2 20C2 31.5 20 50 20 50C20 50 38 31.5 38 20C38 10.059 29.941 2 20 2Z" fill="#2D6A4F" filter="url(#marker-shadow)"/>
       <circle cx="20" cy="19" r="13" fill="white"/>
       <g transform="translate(20,19)" fill="none" stroke="#2D6A4F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
