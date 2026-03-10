@@ -79,6 +79,7 @@ export type FeatureVote = {
   feature_id: string
   user_id: string
   vote: boolean
+  weight: number
   created_at: string
 }
 

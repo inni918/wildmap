@@ -66,6 +66,8 @@ export async function fetchSpotFeatures(
     console.error('Error fetching votes:', voteError)
   }
 
+  console.log('[features] votes count:', votes?.length, 'sample weight:', votes?.[0]?.weight, 'spotId:', spotId)
+
   const voteMap = new Map<string, { yes: number; no: number; weightedYes: number; weightedNo: number; userVote?: boolean | null }>()
 
   for (const v of (votes || [])) {
@@ -83,6 +85,8 @@ export async function fetchSpotFeatures(
     }
     voteMap.set(v.feature_id, existing)
   }
+
+  console.log('[features] voteMap size:', voteMap.size, 'keys:', Array.from(voteMap.keys()).slice(0,3))
 
   // Build features with vote data
   const featuresWithVotes: FeatureWithVotes[] = definitions.map((def: FeatureDefinition) => {
