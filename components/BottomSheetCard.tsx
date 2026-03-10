@@ -173,7 +173,7 @@ export default function BottomSheetCard({ spot, onClose, onOpenDetail }: Props) 
         <div
           className="relative w-full overflow-hidden"
           style={{
-            height: 150,
+            height: 120,
             filter: isSuspended ? 'grayscale(1) opacity(0.55)' : undefined,
           }}
         >

@@ -175,7 +175,7 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
   if (spotLoading || !spot) {
     return (
       <div
-        className="absolute inset-0 z-30 flex items-end justify-center bg-black/20 backdrop-blur-[2px]"
+        className="fixed inset-0 z-40 flex items-end justify-center bg-black/20 backdrop-blur-[2px]"
         onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
       >
         <div className="bg-surface rounded-t-2xl w-full max-w-lg shadow-2xl flex flex-col items-center justify-center py-16">
@@ -209,14 +209,14 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
 
   return (
     <div
-      className="absolute inset-0 z-30 flex items-end justify-center bg-black/20 backdrop-blur-[2px]"
+      className="fixed inset-0 z-40 flex items-end justify-center bg-black/20 backdrop-blur-[2px]"
       onClick={(e) => { if (e.target === e.currentTarget) handleClose() }}
     >
       <div
         className={`bg-surface rounded-t-2xl w-full max-w-lg shadow-2xl flex flex-col transition-transform duration-200 ${
           isClosing ? 'translate-y-full' : 'translate-y-0 animate-slide-up'
         }`}
-        style={{ maxHeight: '80vh' }}
+        style={{ maxHeight: '92vh' }}
       >
         {/* Handle bar */}
         <div className="flex justify-center pt-2 pb-1">
