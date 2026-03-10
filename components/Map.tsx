@@ -1083,7 +1083,7 @@ export default function Map() {
               }}
               className="absolute right-4 z-20 flex items-center gap-2 px-4 py-3 bg-primary text-text-on-primary rounded-full shadow-lg hover:bg-primary-dark hover:shadow-xl hover:-translate-y-0.5 cursor-pointer"
               style={{
-                bottom: selectedSpot !== null ? 348 : 88,
+                bottom: selectedSpot !== null ? 220 : 88,
                 transition: 'bottom 0.3s ease',
               }}
             >
