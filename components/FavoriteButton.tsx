@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth-context'
 import { useAchievements } from '@/lib/achievement-context'
@@ -14,6 +15,7 @@ interface Props {
 export default function FavoriteButton({ spotId }: Props) {
   const { user } = useAuth()
   const { triggerCheck } = useAchievements()  // 收藏不需要積分，只觸發成就檢查
+  const router = useRouter()
   const [isFavorited, setIsFavorited] = useState(false)
   const [loading, setLoading] = useState(false)
 
@@ -61,7 +63,17 @@ export default function FavoriteButton({ spotId }: Props) {
     }
   }
 
-  if (!user) return null
+  if (!user) {
+    return (
+      <button
+        onClick={() => router.push('/login')}
+        className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-text-secondary/30 cursor-pointer hover:text-text-secondary/50 transition-colors"
+        title="登入後即可收藏"
+      >
+        <FontAwesomeIcon icon={NAV_ICONS.heartRegular} className="text-xl" />
+      </button>
+    )
+  }
 
   return (
     <button
