@@ -409,7 +409,7 @@ function PhotoStrip({ spotId }: { spotId: string }) {
     let cancelled = false
     async function fetchPhotos() {
       const { data, error } = await supabase
-        .from('spot_photos')
+        .from('spot_images')
         .select('id, url')
         .eq('spot_id', spotId)
         .order('created_at', { ascending: false })
