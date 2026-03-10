@@ -2,7 +2,7 @@
 
 import { useRef, useCallback, useState, useEffect, useMemo } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
-import ReactMapGL, { Marker, Popup, NavigationControl, MapRef, MapMouseEvent } from 'react-map-gl/maplibre'
+import ReactMapGL, { Marker, NavigationControl, MapRef, MapMouseEvent } from 'react-map-gl/maplibre'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import Supercluster from 'supercluster'
 import { supabase, type SpotCategory, CATEGORY_EMOJI, CATEGORY_LABEL } from '@/lib/supabase'
@@ -13,6 +13,7 @@ import SpotDetail from './SpotDetail'
 import Header from './Header'
 import FeatureFilter from './FeatureFilter'
 import OnboardingOverlay from './OnboardingOverlay'
+import BottomSheetCard from './BottomSheetCard'
 import { usePermission } from './PermissionGate'
 import { track } from '@/lib/tracker'
 import { useAuth } from '@/lib/auth-context'
@@ -143,6 +144,7 @@ type SpotSummary = {
   gov_certified: boolean | null
   quality: string
   status: string
+  address?: string
 }
 
 // 根據 cluster 數量決定圓圈大小
@@ -280,7 +282,7 @@ export default function Map() {
 
           let query = supabase
             .from('spots')
-            .select('id, name, category, latitude, longitude, is_free, gov_certified, quality, status')
+            .select('id, name, category, latitude, longitude, is_free, gov_certified, quality, status, address')
             .gte('latitude', south)
             .lte('latitude', north)
             .gte('longitude', west)
@@ -417,6 +419,7 @@ export default function Map() {
     }
 
     if (favoritesParam === '1') {
+      console.log('[Map] favorites=1 detected, switching to list+favorites mode')
       setFavoritesMode(true)
       setViewMode('list')
       router.replace('/map', { scroll: false })
@@ -997,68 +1000,19 @@ export default function Map() {
               )
             })}
 
-            {selectedSpot && (
-              <Popup
-                longitude={selectedSpot.longitude}
-                latitude={selectedSpot.latitude}
-                anchor="bottom"
-                onClose={() => setSelectedSpot(null)}
-                closeOnClick={false}
-                maxWidth="280px"
-                className="wildmap-popup"
-              >
-                <div className="p-4">
-                  <div className="flex items-start gap-3 mb-3">
-                    <span className="text-2xl flex-shrink-0 mt-0.5">{CATEGORY_EMOJI[selectedSpot.category]}</span>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-text-main text-base leading-snug mb-1 line-clamp-2" title={selectedSpot.name}>{selectedSpot.name}</h3>
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="text-xs text-primary font-medium">
-                          {CATEGORY_LABEL[selectedSpot.category]}
-                        </span>
-                        {selectedSpot.quality && selectedSpot.quality !== 'unrated' && QUALITY_BADGE[selectedSpot.quality] && (
-                          <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium ${QUALITY_BADGE[selectedSpot.quality].color}`}>
-                            {QUALITY_BADGE[selectedSpot.quality].label}
-                          </span>
-                        )}
-                        {selectedSpot.is_free !== undefined && selectedSpot.is_free !== null && (
-                          <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium ${
-                            selectedSpot.is_free
-                              ? 'bg-primary-light/20 text-primary-dark'
-                              : 'bg-accent/20 text-secondary'
-                          }`}>
-                            {selectedSpot.is_free ? '免費' : '付費'}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mt-1 flex gap-2">
-                    <button
-                      onClick={() => {
-                        setDetailSpotId(selectedSpot.id)
-                        setSelectedSpot(null)
-                      }}
-                      className="flex-1 text-center text-sm font-semibold text-white bg-primary hover:bg-primary-dark py-2.5 rounded-xl transition-colors cursor-pointer flex items-center justify-center gap-1.5 active:scale-[0.98] min-h-[44px]"
-                    >
-                      查看詳情
-                      <FontAwesomeIcon icon={NAV_ICONS.chevronRight} className="text-xs" />
-                    </button>
-                    <a
-                      href={`https://www.google.com/maps/dir/?api=1&destination=${selectedSpot.latitude},${selectedSpot.longitude}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="w-[44px] h-[44px] flex-shrink-0 rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-white flex items-center justify-center transition-colors active:scale-95"
-                      title="導航"
-                    >
-                      <FontAwesomeIcon icon={NAV_ICONS.navigate} className="text-base" />
-                    </a>
-                  </div>
-                </div>
-              </Popup>
-            )}
           </ReactMapGL>
+
+          {/* BottomSheetCard：取代原 Popup，fixed 定位 */}
+          {selectedSpot && (
+            <BottomSheetCard
+              spot={selectedSpot}
+              onClose={() => setSelectedSpot(null)}
+              onOpenDetail={(id) => {
+                setDetailSpotId(id)
+                setSelectedSpot(null)
+              }}
+            />
+          )}
 
           {/* 放置模式：十字準心 + 確認/取消 */}
           {placingMode && (
