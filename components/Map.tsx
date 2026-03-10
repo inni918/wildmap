@@ -162,6 +162,54 @@ function getClusterColor(count: number): string {
 
 type ViewMode = 'map' | 'list'
 
+// ====== SVG 水滴圖釘 Marker ======
+function SpotMarker({ isSelected, isSuspended }: { isSelected: boolean; isSuspended: boolean }) {
+  if (isSuspended) {
+    return (
+      <svg width="40" height="52" viewBox="0 0 40 52" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 2C10.059 2 2 10.059 2 20C2 31.5 20 50 20 50C20 50 38 31.5 38 20C38 10.059 29.941 2 20 2Z" fill="#9ca3af" filter="url(#marker-shadow-suspended)"/>
+        <circle cx="20" cy="19" r="13" fill="white" opacity="0.85"/>
+        <g transform="translate(20,19)" fill="none" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="-9,7 0,-7 9,7"/>
+          <line x1="-9" y1="7" x2="9" y2="7"/>
+          <path d="M-2.5,7 Q-2.5,2 0,2 Q2.5,2 2.5,7"/>
+          <line x1="-5" y1="7" x2="-2" y2="1.5"/>
+          <line x1="5" y1="7" x2="2" y2="1.5"/>
+        </g>
+      </svg>
+    )
+  }
+  if (isSelected) {
+    return (
+      <svg width="50" height="64" viewBox="0 0 50 64" xmlns="http://www.w3.org/2000/svg">
+        <path d="M25 3C13.402 3 4 12.402 4 24C4 38 25 61 25 61C25 61 46 38 46 24C46 12.402 36.598 3 25 3Z" fill="#2D6A4F" filter="url(#marker-shadow-selected)"/>
+        <path d="M25 3C13.402 3 4 12.402 4 24C4 38 25 61 25 61C25 61 46 38 46 24C46 12.402 36.598 3 25 3Z" fill="none" stroke="white" strokeWidth="3"/>
+        <circle cx="25" cy="23" r="15" fill="white"/>
+        <g transform="translate(25,23)" fill="none" stroke="#2D6A4F" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="-10,8 0,-8 10,8"/>
+          <line x1="-10" y1="8" x2="10" y2="8"/>
+          <path d="M-3,8 Q-3,2.5 0,2.5 Q3,2.5 3,8"/>
+          <line x1="-6" y1="8" x2="-2.5" y2="1.5"/>
+          <line x1="6" y1="8" x2="2.5" y2="1.5"/>
+        </g>
+      </svg>
+    )
+  }
+  return (
+    <svg width="40" height="52" viewBox="0 0 40 52" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 2C10.059 2 2 10.059 2 20C2 31.5 20 50 20 50C20 50 38 31.5 38 20C38 10.059 29.941 2 20 2Z" fill="#2D6A4F" filter="url(#marker-shadow)"/>
+      <circle cx="20" cy="19" r="13" fill="white"/>
+      <g transform="translate(20,19)" fill="none" stroke="#2D6A4F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="-9,7 0,-7 9,7"/>
+        <line x1="-9" y1="7" x2="9" y2="7"/>
+        <path d="M-2.5,7 Q-2.5,2 0,2 Q2.5,2 2.5,7"/>
+        <line x1="-5" y1="7" x2="-2" y2="1.5"/>
+        <line x1="5" y1="7" x2="2" y2="1.5"/>
+      </g>
+    </svg>
+  )
+}
+
 export default function Map() {
   const mapRef = useRef<MapRef>(null)
   const searchParams = useSearchParams()
@@ -838,6 +886,21 @@ export default function Map() {
             <FontAwesomeIcon icon={NAV_ICONS.plus} className="text-xs" />
           </div>
 
+          {/* SVG filter defs（全域共用，避免每個 marker 重複定義 filter id 衝突） */}
+          <svg width="0" height="0" style={{ position: 'absolute' }}>
+            <defs>
+              <filter id="marker-shadow" x="-30%" y="-30%" width="160%" height="160%">
+                <feDropShadow dx="0" dy="2" stdDeviation="2.5" floodColor="#00000035"/>
+              </filter>
+              <filter id="marker-shadow-selected" x="-40%" y="-30%" width="180%" height="160%">
+                <feDropShadow dx="0" dy="3" stdDeviation="4" floodColor="#2D6A4F55"/>
+              </filter>
+              <filter id="marker-shadow-suspended" x="-30%" y="-30%" width="160%" height="160%">
+                <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#00000025"/>
+              </filter>
+            </defs>
+          </svg>
+
           <ReactMapGL
             ref={mapRef}
             {...viewState}
@@ -902,7 +965,7 @@ export default function Map() {
                   key={spot.id}
                   longitude={spot.longitude}
                   latitude={spot.latitude}
-                  anchor="center"
+                  anchor="bottom"
                   onClick={(e) => {
                     e.originalEvent.stopPropagation()
                     setSelectedSpot(spot)
@@ -910,11 +973,13 @@ export default function Map() {
                   }}
                 >
                   <button
-                    className="text-2xl hover:scale-125 transition-transform cursor-pointer drop-shadow-md"
-                    style={spot.status === 'suspended' ? { filter: 'grayscale(100%) opacity(0.5)' } : undefined}
+                    className="hover:scale-110 transition-transform cursor-pointer"
                     title={spot.status === 'suspended' ? `${spot.name}（暫停營業）` : spot.name}
                   >
-                    {CATEGORY_EMOJI[spot.category]}
+                    <SpotMarker
+                      isSelected={selectedSpot?.id === spot.id}
+                      isSuspended={spot.status === 'suspended'}
+                    />
                   </button>
                 </Marker>
               )
