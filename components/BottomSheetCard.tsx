@@ -142,7 +142,7 @@ export default function BottomSheetCard({ spot, onClose, onOpenDetail }: Props) 
     <div
       className="fixed z-50"
       style={{
-        bottom: 16,
+        bottom: 80,
         left: 24,
         right: 24,
         transform: visible ? 'translateY(0)' : 'translateY(110%)',
