@@ -156,59 +156,67 @@ function getClusterSize(count: number): number {
   return 70
 }
 
-// 根據 cluster 數量決定顏色
-function getClusterColor(count: number): string {
-  if (count < 10) return '#4CAF50'   // 綠色
-  if (count < 50) return '#FF9800'   // 橘色
-  if (count < 100) return '#F44336'  // 紅色
-  return '#9C27B0'                   // 紫色
+// 根據 cluster 數量決定半透明樣式
+function getClusterStyle(count: number): { background: string; border: string; color: string } {
+  if (count < 10) return {
+    background: 'rgba(45,106,79,0.28)',
+    border: '2px solid rgba(45,106,79,0.45)',
+    color: '#1a4731',
+  }
+  if (count < 50) return {
+    background: 'rgba(249,115,22,0.25)',
+    border: '2px solid rgba(249,115,22,0.45)',
+    color: '#9a3412',
+  }
+  if (count < 100) return {
+    background: 'rgba(234,88,12,0.25)',
+    border: '2px solid rgba(234,88,12,0.45)',
+    color: '#7c2d12',
+  }
+  return {
+    background: 'rgba(107,114,128,0.22)',
+    border: '2px solid rgba(107,114,128,0.40)',
+    color: '#374151',
+  }
 }
 
 type ViewMode = 'map' | 'list'
 
-// ====== SVG 水滴圖釘 Marker ======
+// ====== SVG 水滴圖釘 Marker（實心簡化版帳篷） ======
 function SpotMarker({ isSelected, isSuspended }: { isSelected: boolean; isSuspended: boolean }) {
   if (isSuspended) {
     return (
-      <svg width="32" height="42" viewBox="0 0 40 52" xmlns="http://www.w3.org/2000/svg">
-        <path d="M20 2C10.059 2 2 10.059 2 20C2 31.5 20 50 20 50C20 50 38 31.5 38 20C38 10.059 29.941 2 20 2Z" fill="#9ca3af" filter="url(#marker-shadow-suspended)"/>
-        <circle cx="20" cy="19" r="13" fill="white" opacity="0.85"/>
-        <g transform="translate(20,19)" fill="none" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-          <polyline points="-9,7 0,-7 9,7"/>
-          <line x1="-9" y1="7" x2="9" y2="7"/>
-          <path d="M-2.5,7 Q-2.5,2 0,2 Q2.5,2 2.5,7"/>
-          <line x1="-5" y1="7" x2="-2" y2="1.5"/>
-          <line x1="5" y1="7" x2="2" y2="1.5"/>
+      <svg width="28" height="36" viewBox="0 0 40 52" xmlns="http://www.w3.org/2000/svg">
+        {/* 底色保留分類色（目前只有露營，用 #2D6A4F） */}
+        <path d="M20 2C10.059 2 2 10.059 2 20C2 31.5 20 50 20 50C20 50 38 31.5 38 20C38 10.059 29.941 2 20 2Z" fill="#2D6A4F" filter="url(#marker-shadow-suspended)"/>
+        {/* 灰色半透明遮罩 */}
+        <path d="M20 2C10.059 2 2 10.059 2 20C2 31.5 20 50 20 50C20 50 38 31.5 38 20C38 10.059 29.941 2 20 2Z" fill="#9ca3af" fillOpacity="0.65"/>
+        {/* icon 半透明 */}
+        <g transform="translate(20,19)" opacity="0.6">
+          <polygon points="0,-8 -9,5 9,5" fill="white"/>
+          <rect x="-3" y="1" width="6" height="4" rx="1" fill="#9ca3af"/>
         </g>
       </svg>
     )
   }
   if (isSelected) {
     return (
-      <svg width="40" height="52" viewBox="0 0 50 64" xmlns="http://www.w3.org/2000/svg">
+      <svg width="36" height="46" viewBox="0 0 50 64" xmlns="http://www.w3.org/2000/svg">
         <path d="M25 3C13.402 3 4 12.402 4 24C4 38 25 61 25 61C25 61 46 38 46 24C46 12.402 36.598 3 25 3Z" fill="#2D6A4F" filter="url(#marker-shadow-selected)"/>
         <path d="M25 3C13.402 3 4 12.402 4 24C4 38 25 61 25 61C25 61 46 38 46 24C46 12.402 36.598 3 25 3Z" fill="none" stroke="white" strokeWidth="3"/>
-        <circle cx="25" cy="23" r="15" fill="white"/>
-        <g transform="translate(25,23)" fill="none" stroke="#2D6A4F" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-          <polyline points="-10,8 0,-8 10,8"/>
-          <line x1="-10" y1="8" x2="10" y2="8"/>
-          <path d="M-3,8 Q-3,2.5 0,2.5 Q3,2.5 3,8"/>
-          <line x1="-6" y1="8" x2="-2.5" y2="1.5"/>
-          <line x1="6" y1="8" x2="2.5" y2="1.5"/>
+        <g transform="translate(25,23)">
+          <polygon points="0,-9 -10,6 10,6" fill="white"/>
+          <rect x="-3.5" y="2" width="7" height="4" rx="1" fill="#2D6A4F"/>
         </g>
       </svg>
     )
   }
   return (
-    <svg width="32" height="42" viewBox="0 0 40 52" xmlns="http://www.w3.org/2000/svg">
+    <svg width="28" height="36" viewBox="0 0 40 52" xmlns="http://www.w3.org/2000/svg">
       <path d="M20 2C10.059 2 2 10.059 2 20C2 31.5 20 50 20 50C20 50 38 31.5 38 20C38 10.059 29.941 2 20 2Z" fill="#2D6A4F" filter="url(#marker-shadow)"/>
-      <circle cx="20" cy="19" r="13" fill="white"/>
-      <g transform="translate(20,19)" fill="none" stroke="#2D6A4F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <polyline points="-9,7 0,-7 9,7"/>
-        <line x1="-9" y1="7" x2="9" y2="7"/>
-        <path d="M-2.5,7 Q-2.5,2 0,2 Q2.5,2 2.5,7"/>
-        <line x1="-5" y1="7" x2="-2" y2="1.5"/>
-        <line x1="5" y1="7" x2="2" y2="1.5"/>
+      <g transform="translate(20,19)">
+        <polygon points="0,-8 -9,5 9,5" fill="white"/>
+        <rect x="-3" y="1" width="6" height="4" rx="1" fill="#2D6A4F"/>
       </g>
     </svg>
   )
@@ -942,7 +950,7 @@ export default function Map() {
 
               if (isCluster) {
                 const size = getClusterSize(point_count)
-                const color = getClusterColor(point_count)
+                const clusterStyle = getClusterStyle(point_count)
                 return (
                   <Marker
                     key={`cluster-${cluster_id}`}
@@ -955,12 +963,13 @@ export default function Map() {
                     }}
                   >
                     <div
-                      className="flex items-center justify-center rounded-full text-white font-bold shadow-lg cursor-pointer hover:scale-110 transition-transform select-none"
+                      className="flex items-center justify-center rounded-full font-bold shadow-lg cursor-pointer hover:scale-110 transition-transform select-none"
                       style={{
                         width: size,
                         height: size,
-                        backgroundColor: color,
-                        border: '3px solid white',
+                        background: clusterStyle.background,
+                        border: clusterStyle.border,
+                        color: clusterStyle.color,
                         fontSize: point_count >= 100 ? 13 : 15,
                       }}
                     >
