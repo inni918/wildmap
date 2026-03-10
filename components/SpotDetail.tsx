@@ -191,6 +191,9 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated }: Props) {
 
   // 收集要顯示的徽章 chips（最多 3 個）
   const badgeChips: { key: string; label: string; color: string; bgColor: string; borderColor?: string }[] = []
+  if (spot.status === 'suspended') {
+    badgeChips.push({ key: 'suspended', label: '⚠️ 暫停營業', color: '#6B7280', bgColor: '#F3F4F6', borderColor: '#D1D5DB' })
+  }
   if (spot.quality === 'community_verified') {
     badgeChips.push({ key: 'quality', label: '✅ 社群驗證', color: '#22C55E', bgColor: '#22C55E15', borderColor: '#22C55E30' })
   }

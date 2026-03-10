@@ -140,6 +140,7 @@ type SpotSummary = {
   is_free: boolean | null
   gov_certified: boolean | null
   quality: string
+  status: string
 }
 
 // 根據 cluster 數量決定圓圈大小
@@ -229,7 +230,7 @@ export default function Map() {
 
           let query = supabase
             .from('spots')
-            .select('id, name, category, latitude, longitude, is_free, gov_certified, quality')
+            .select('id, name, category, latitude, longitude, is_free, gov_certified, quality, status')
             .gte('latitude', south)
             .lte('latitude', north)
             .gte('longitude', west)
@@ -908,7 +909,11 @@ export default function Map() {
                     setAddModal(null)
                   }}
                 >
-                  <button className="text-2xl hover:scale-125 transition-transform cursor-pointer drop-shadow-md">
+                  <button
+                    className="text-2xl hover:scale-125 transition-transform cursor-pointer drop-shadow-md"
+                    style={spot.status === 'suspended' ? { filter: 'grayscale(100%) opacity(0.5)' } : undefined}
+                    title={spot.status === 'suspended' ? `${spot.name}（暫停營業）` : spot.name}
+                  >
                     {CATEGORY_EMOJI[spot.category]}
                   </button>
                 </Marker>
