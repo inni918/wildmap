@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { getFeatureIcon } from '@/lib/icons'
 import FavoriteButton from './FavoriteButton'
 
 // 台灣縣市鄉鎮正規表達式
@@ -33,15 +35,6 @@ function TentIcon({ size = 18, color = 'currentColor', strokeWidth = 1.5 }: { si
   )
 }
 
-// 導航箭頭 SVG
-function NavigateIcon() {
-  return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <polygon points="3,11 22,2 13,21 11,13 3,11" />
-    </svg>
-  )
-}
-
 // 盾牌 SVG icon
 function ShieldIcon() {
   return (
@@ -49,6 +42,28 @@ function ShieldIcon() {
       <path d="M12 2L4 6v6c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V6l-8-4z" />
     </svg>
   )
+}
+
+// 特性資料型別
+type FeatureItem = {
+  key: string
+  category: string
+  isConfirmed: boolean
+}
+
+// 取得分類顏色
+function getCategoryColor(category: string, confirmed: boolean): string {
+  const colors: Record<string, { confirmed: string; pending: string }> = {
+    camp_traits:  { confirmed: '#d97706',  pending: 'rgba(217,119,6,0.35)' },
+    facilities:   { confirmed: '#2D6A4F',  pending: 'rgba(45,106,79,0.35)' },
+    environment:  { confirmed: '#388e3c',  pending: 'rgba(56,142,60,0.35)' },
+    activities:   { confirmed: '#1565c0',  pending: 'rgba(21,101,192,0.35)' },
+    restrictions: { confirmed: '#7b1fa2',  pending: 'rgba(123,31,162,0.35)' },
+    warnings:     { confirmed: '#c62828',  pending: 'rgba(198,40,40,0.35)' },
+  }
+  const c = colors[category]
+  if (!c) return confirmed ? '#6b7280' : 'rgba(107,114,128,0.35)'
+  return confirmed ? c.confirmed : c.pending
 }
 
 type SpotSummary = {
@@ -74,6 +89,7 @@ export default function BottomSheetCard({ spot, onClose, onOpenDetail }: Props) 
   const [photoUrl, setPhotoUrl] = useState<string | null>(null)
   const [photoLoading, setPhotoLoading] = useState(true)
   const [ratingInfo, setRatingInfo] = useState<{ avg: number; count: number } | null>(null)
+  const [features, setFeatures] = useState<FeatureItem[]>([])
   const [visible, setVisible] = useState(false)
 
   // Animate in on mount
@@ -122,20 +138,89 @@ export default function BottomSheetCard({ spot, onClose, onOpenDetail }: Props) 
     return () => { cancelled = true }
   }, [spot.id])
 
+  // Fetch features（特性投票資料）
+  useEffect(() => {
+    let cancelled = false
+    async function fetchFeatures() {
+      // 並行撈 definitions + votes
+      const [fdResult, fvResult] = await Promise.all([
+        supabase
+          .from('feature_definitions')
+          .select('id, key, category, sort_order')
+          .order('sort_order'),
+        supabase
+          .from('feature_votes')
+          .select('feature_id, vote, weight')
+          .eq('spot_id', spot.id),
+      ])
+
+      if (cancelled) return
+
+      const fdData = fdResult.data
+      const fvData = fvResult.data
+
+      if (!fdData) {
+        setFeatures([])
+        return
+      }
+
+      // 若沒有投票資料，直接清空
+      if (!fvData || fvData.length === 0) {
+        setFeatures([])
+        return
+      }
+
+      // 彙整投票（用 feature_id 做 key）
+      const voteMap: Record<string, { yes: number; no: number }> = {}
+      for (const fv of fvData) {
+        if (!voteMap[fv.feature_id]) voteMap[fv.feature_id] = { yes: 0, no: 0 }
+        const weight = fv.weight ?? 1
+        if (fv.vote) voteMap[fv.feature_id].yes += weight
+        else voteMap[fv.feature_id].no += weight
+      }
+
+      // 類別排序
+      const CATEGORY_ORDER: Record<string, number> = {
+        camp_traits: 1,
+        facilities: 2,
+        environment: 3,
+        activities: 4,
+        restrictions: 5,
+        warnings: 6,
+      }
+
+      const result: FeatureItem[] = fdData
+        .filter(fd => {
+          const v = voteMap[fd.id]
+          return v && (v.yes + v.no) > 0
+        })
+        .map(fd => {
+          const v = voteMap[fd.id]
+          const yesVotes = v?.yes ?? 0
+          const noVotes = v?.no ?? 0
+          const total = yesVotes + noVotes
+          const isConfirmed = total >= 3 && (yesVotes / total) >= 0.6
+          return { key: fd.key, category: fd.category, isConfirmed }
+        })
+        .sort((a, b) => {
+          const catA = CATEGORY_ORDER[a.category] ?? 99
+          const catB = CATEGORY_ORDER[b.category] ?? 99
+          return catA - catB
+        })
+
+      if (!cancelled) setFeatures(result)
+    }
+
+    fetchFeatures()
+    return () => { cancelled = true }
+  }, [spot.id])
+
   const isSuspended = spot.status === 'suspended'
   const isFree = spot.is_free === true
   const region = extractRegion(spot.address)
 
   const handleCardClick = () => {
     onOpenDetail(spot.id)
-  }
-
-  const handleNavigate = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    window.open(
-      `https://www.google.com/maps/dir/?api=1&destination=${spot.latitude},${spot.longitude}`,
-      '_blank'
-    )
   }
 
   return (
@@ -219,24 +304,6 @@ export default function BottomSheetCard({ spot, onClose, onOpenDetail }: Props) 
             </div>
           </div>
 
-          {/* 右下角導航按鈕 */}
-          <button
-            onClick={handleNavigate}
-            className="absolute bottom-[10px] right-[10px] z-10 flex items-center justify-center"
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: '50%',
-              background: 'rgba(0,0,0,0.32)',
-              backdropFilter: 'blur(4px)',
-              border: 'none',
-              cursor: 'pointer',
-            }}
-            title="導航"
-          >
-            <NavigateIcon />
-          </button>
-
           {/* 左下角分類標籤 */}
           {!isSuspended && (
             <div
@@ -316,6 +383,48 @@ export default function BottomSheetCard({ spot, onClose, onOpenDetail }: Props) 
             )}
           </div>
         </div>
+
+        {/* 特性橫向捲動列 */}
+        {features.length > 0 && (
+          <div
+            style={{
+              borderTop: '1px solid #f3f4f6',
+              padding: '8px 14px 12px',
+              overflowX: 'auto',
+              display: 'flex',
+              gap: 10,
+              alignItems: 'center',
+              WebkitOverflowScrolling: 'touch',
+              scrollbarWidth: 'none',
+            }}
+            onTouchStart={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {features.map(f => {
+              const icon = getFeatureIcon(f.key)
+              if (!icon) return null
+              const color = getCategoryColor(f.category, f.isConfirmed)
+              return (
+                <div
+                  key={f.key}
+                  style={{
+                    flexShrink: 0,
+                    width: 20,
+                    height: 20,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={icon}
+                    style={{ color, fontSize: 18 }}
+                  />
+                </div>
+              )
+            })}
+          </div>
+        )}
       </div>
     </div>
   )

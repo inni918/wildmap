@@ -1081,7 +1081,11 @@ export default function Map() {
                 setPlacingMode(true)
                 setSelectedSpot(null)
               }}
-              className="absolute bottom-6 right-4 z-20 flex items-center gap-2 px-4 py-3 bg-primary text-text-on-primary rounded-full shadow-lg hover:bg-primary-dark hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer"
+              className="absolute right-4 z-20 flex items-center gap-2 px-4 py-3 bg-primary text-text-on-primary rounded-full shadow-lg hover:bg-primary-dark hover:shadow-xl hover:-translate-y-0.5 cursor-pointer"
+              style={{
+                bottom: selectedSpot !== null ? 348 : 88,
+                transition: 'bottom 0.3s ease',
+              }}
             >
               <FontAwesomeIcon icon={NAV_ICONS.plus} className="text-sm" />
               <span className="text-sm font-medium">新增地點</span>
