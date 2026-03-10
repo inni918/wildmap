@@ -731,7 +731,7 @@ export default function Map() {
         {/* 地圖 / 列表 切換按鈕 */}
         <div className="flex-shrink-0 ml-auto flex items-center gap-1 bg-surface-alt rounded-lg p-0.5 border border-border">
           <button
-            onClick={() => setViewMode('map')}
+            onClick={() => { setViewMode('map'); setFavoritesMode(false) }}
             title="地圖模式"
             className={`p-1.5 rounded-md transition-colors cursor-pointer ${
               viewMode === 'map'
