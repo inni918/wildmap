@@ -14,6 +14,7 @@ interface Props {
   groups: GroupedFeatures[]
   userId: string | null
   onVoted: () => void
+  onLoginRequired?: () => void
 }
 
 function FeatureRow({
@@ -22,12 +23,14 @@ function FeatureRow({
   userId,
   groupColor,
   onVoted,
+  onLoginRequired,
 }: {
   feature: FeatureWithVotes
   spotId: string
   userId: string | null
   groupColor: string
   onVoted: () => void
+  onLoginRequired?: () => void
 }) {
   const [voting, setVoting] = useState(false)
   const { earnAction } = useAchievements()
@@ -108,14 +111,19 @@ function FeatureRow({
             </button>
           </>
         ) : (
-          <span className="text-xs text-text-secondary/60">登入投票</span>
+          <button
+            onClick={() => onLoginRequired?.()}
+            className="px-2 py-1 rounded text-xs font-medium text-text-secondary/60 bg-surface-alt hover:bg-surface-alt/80 transition-colors cursor-pointer"
+          >
+            投票
+          </button>
         )}
       </div>
     </div>
   )
 }
 
-export default function FeatureVoting({ spotId, groups, userId, onVoted }: Props) {
+export default function FeatureVoting({ spotId, groups, userId, onVoted, onLoginRequired }: Props) {
   const [expandedGroup, setExpandedGroup] = useState<string | null>(null)
 
   return (
@@ -185,6 +193,7 @@ export default function FeatureVoting({ spotId, groups, userId, onVoted }: Props
                     userId={userId}
                     groupColor={group.color}
                     onVoted={onVoted}
+                    onLoginRequired={onLoginRequired}
                   />
                 ))}
               </div>

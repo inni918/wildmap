@@ -843,24 +843,35 @@ function VoteTab({
   userId: string | null
   onVoted: () => void
 }) {
-  if (!userId) {
-    return (
-      <div className="text-center py-8">
-        <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-primary-light/20 flex items-center justify-center">
-          <FontAwesomeIcon icon={NAV_ICONS.lock} className="text-primary text-xl" />
-        </div>
-        <p className="text-sm text-text-secondary">登入後即可投票</p>
-        <p className="text-xs text-text-secondary/60 mt-1">你的回報能幫助其他用戶！</p>
-      </div>
-    )
+  const [showLoginHint, setShowLoginHint] = useState(false)
+
+  const handleLoginPrompt = () => {
+    setShowLoginHint(true)
+    setTimeout(() => setShowLoginHint(false), 3000)
   }
 
   return (
-    <FeatureVoting
-      spotId={spotId}
-      groups={groups}
-      userId={userId}
-      onVoted={onVoted}
-    />
+    <div className="relative">
+      {/* 未登入提示 toast */}
+      {showLoginHint && (
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-gray-800/90 text-white text-sm px-4 py-2 rounded-full shadow-lg animate-fade-in">
+          請先登入才能投票
+        </div>
+      )}
+      {/* 未登入時顯示提示橫幅 */}
+      {!userId && (
+        <div className="flex items-center gap-2 mb-3 px-3 py-2 rounded-lg bg-primary/8 text-primary-dark text-xs">
+          <FontAwesomeIcon icon={NAV_ICONS.info} className="text-primary flex-shrink-0" />
+          <span>以下特性資料由社群回報，<button className="underline font-semibold cursor-pointer" onClick={handleLoginPrompt}>登入</button>後可參與投票</span>
+        </div>
+      )}
+      <FeatureVoting
+        spotId={spotId}
+        groups={groups}
+        userId={userId}
+        onVoted={onVoted}
+        onLoginRequired={handleLoginPrompt}
+      />
+    </div>
   )
 }
