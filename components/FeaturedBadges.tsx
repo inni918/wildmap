@@ -15,7 +15,7 @@ import AchievementBadge from './AchievementBadge'
  * Profile 精選徽章：用戶可自選 3 個成就展示
  */
 export default function FeaturedBadges() {
-  const { user } = useAuth()
+  const { user, loading: authLoading } = useAuth()
   const [featured, setFeatured] = useState<(Achievement | null)[]>([null, null, null])
   const [showPicker, setShowPicker] = useState<number | null>(null) // 正在選擇的 slot
   const [unlockedAchievements, setUnlockedAchievements] = useState<Achievement[]>([])
@@ -49,8 +49,13 @@ export default function FeaturedBadges() {
   }, [user])
 
   useEffect(() => {
+    if (authLoading) return
+    if (!user) {
+      setLoading(false)
+      return
+    }
     fetchData()
-  }, [fetchData])
+  }, [fetchData, authLoading, user])
 
   const handleSelectSlot = (slot: number) => {
     setShowPicker(slot)

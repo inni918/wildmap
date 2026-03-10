@@ -24,7 +24,7 @@ interface Props {
 const CATEGORIES: AchievementCategory[] = ['exploration', 'contribution', 'community', 'special']
 
 export default function AchievementGrid({ summary }: Props) {
-  const { user } = useAuth()
+  const { user, loading: authLoading } = useAuth()
   const [achievements, setAchievements] = useState<Achievement[]>([])
   const [unlockedIds, setUnlockedIds] = useState<Set<string>>(new Set())
   const [totalPoints, setTotalPoints] = useState(0)
@@ -52,8 +52,13 @@ export default function AchievementGrid({ summary }: Props) {
   }, [user])
 
   useEffect(() => {
+    if (authLoading) return
+    if (!user) {
+      setLoading(false)
+      return
+    }
     fetchData()
-  }, [fetchData])
+  }, [fetchData, authLoading, user])
 
   if (loading) {
     return (

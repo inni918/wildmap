@@ -34,7 +34,7 @@ const STATUS_CONFIG = {
 }
 
 export default function ClaimStatus() {
-  const { user } = useAuth()
+  const { user, loading: authLoading } = useAuth()
   const [claims, setClaims] = useState<ClaimWithSpot[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -74,8 +74,13 @@ export default function ClaimStatus() {
   }, [user])
 
   useEffect(() => {
+    if (authLoading) return
+    if (!user) {
+      setLoading(false)
+      return
+    }
     fetchClaims()
-  }, [fetchClaims])
+  }, [fetchClaims, authLoading, user])
 
   if (!user) return null
 
