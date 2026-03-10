@@ -13,7 +13,7 @@ interface TabItem {
 }
 
 const TABS: TabItem[] = [
-  { href: '/map', icon: NAV_ICONS.map, label: '地圖' },
+  { href: '/map?view=map', icon: NAV_ICONS.map, label: '地圖' },
   { href: '/map?search=1', icon: NAV_ICONS.search, label: '搜尋' },
   { href: '/map?favorites=1', icon: NAV_ICONS.heartSolid, label: '收藏' },
   { href: '/profile', icon: NAV_ICONS.user, label: '我的' },
@@ -26,8 +26,9 @@ export default function MobileTabBar() {
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-surface/95 backdrop-blur-sm border-t border-border md:hidden safe-area-bottom">
       <div className="flex items-stretch">
         {TABS.map(tab => {
-          const isActive = pathname === tab.href || 
-            (tab.href === '/map' && pathname === '/map' && !tab.href.includes('?'))
+          const isActive = tab.href === '/map?view=map'
+            ? pathname === '/map'
+            : pathname === tab.href.split('?')[0] && tab.href.includes('?')
           
           return (
             <Link

@@ -392,10 +392,20 @@ export default function Map() {
     }, 300)
   }, [fetchViewportSpots, fetchTotalCount])
 
-  // ====== URL query params 處理：search=1 / favorites=1 ======
+  // ====== URL query params 處理：search=1 / favorites=1 / view=map ======
   useEffect(() => {
     const searchParam = searchParams.get('search')
     const favoritesParam = searchParams.get('favorites')
+    const viewParam = searchParams.get('view')
+
+    if (viewParam === 'map') {
+      // 地圖 tab 按下：強制回到地圖模式，清除所有覆蓋狀態
+      setViewMode('map')
+      setFavoritesMode(false)
+      setSearchExpanded(false)
+      router.replace('/map', { scroll: false })
+      return
+    }
 
     if (searchParam === '1') {
       // 展開搜尋框
