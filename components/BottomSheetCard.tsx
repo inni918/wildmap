@@ -88,7 +88,7 @@ interface Props {
 export default function BottomSheetCard({ spot, onClose, onOpenDetail }: Props) {
   const [photoUrl, setPhotoUrl] = useState<string | null>(null)
   const [photoLoading, setPhotoLoading] = useState(true)
-  const [ratingInfo, setRatingInfo] = useState<{ avg: number; count: number } | null>(null)
+  const [ratingInfo, setRatingInfo] = useState<{ avg: number; count: number }>({ avg: 0, count: 0 })
   const [features, setFeatures] = useState<FeatureItem[]>([])
   const [visible, setVisible] = useState(false)
 
@@ -353,9 +353,6 @@ export default function BottomSheetCard({ spot, onClose, onOpenDetail }: Props) 
           <div className="flex items-center gap-1.5 flex-wrap" style={{ fontSize: 12 }}>
             {isSuspended ? (
               <span style={{ color: '#ef4444', fontWeight: 600, fontSize: 12 }}>⚠️ 暫停營業</span>
-            ) : ratingInfo === null ? (
-              // loading
-              <span style={{ color: '#9ca3af' }}>載入中…</span>
             ) : ratingInfo.count > 0 ? (
               <div className="flex items-center gap-1">
                 <span style={{ fontSize: 15, fontWeight: 800, color: '#111' }}>{ratingInfo.avg.toFixed(1)}</span>
