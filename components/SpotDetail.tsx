@@ -5,9 +5,8 @@ import { supabase, type Spot, CATEGORY_EMOJI, CATEGORY_LABEL } from '@/lib/supab
 import { fetchSpotFeatures, type GroupedFeatures } from '@/lib/features'
 import { useAuth } from '@/lib/auth-context'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { NAV_ICONS, getFeatureIcon } from '@/lib/icons'
+import { NAV_ICONS } from '@/lib/icons'
 import {
-  faCircleCheck,
   faPhone,
   faGlobe,
   faEnvelope,
@@ -1192,107 +1191,19 @@ function FeaturesSection({
   userId: string | null
   onVoted: () => void
 }) {
-  const [showSheet, setShowSheet] = useState(false)
-
-  const confirmedFeatures: { feature: GroupedFeatures['features'][0]; group: GroupedFeatures }[] = []
-  for (const group of groups) {
-    for (const f of group.features) {
-      if (f.status === 'confirmed' && confirmedFeatures.length < 8) {
-        confirmedFeatures.push({ feature: f, group })
-      }
-    }
-  }
-
   return (
-    <>
-      <div>
-        <h3 className="text-sm font-semibold text-text-main mb-3 flex items-center gap-1.5">
-          <span>🏕️</span>
-          地標特性
-        </h3>
-        {confirmedFeatures.length > 0 ? (
-          <>
-            <div className="flex flex-wrap gap-1.5">
-              {confirmedFeatures.map(({ feature: f, group }) => {
-                const faIcon = getFeatureIcon(f.key)
-                return (
-                  <span
-                    key={f.id}
-                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-medium"
-                    style={{
-                      backgroundColor: group.color + '15',
-                      color: group.color,
-                      border: `1px solid ${group.color}40`,
-                    }}
-                  >
-                    {faIcon ? (
-                      <FontAwesomeIcon icon={faIcon} className="text-[10px]" />
-                    ) : (
-                      <span>{f.icon}</span>
-                    )}
-                    {f.name_zh}
-                    <FontAwesomeIcon icon={faCircleCheck} className="text-[10px] opacity-60" />
-                  </span>
-                )
-              })}
-            </div>
-            <button
-              onClick={() => setShowSheet(true)}
-              className="mt-3 text-xs text-primary hover:underline cursor-pointer flex items-center gap-1"
-            >
-              查看全部特性
-              <FontAwesomeIcon icon={NAV_ICONS.chevronRight} className="text-[9px]" />
-            </button>
-          </>
-        ) : (
-          <div className="flex flex-col items-start gap-1">
-            <p className="text-xs text-text-secondary/60">尚無確認特性</p>
-            <button
-              onClick={() => setShowSheet(true)}
-              className="text-xs text-primary hover:underline cursor-pointer flex items-center gap-1"
-            >
-              協助回報特性
-              <FontAwesomeIcon icon={NAV_ICONS.chevronRight} className="text-[9px]" />
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Bottom sheet - 全部特性投票 */}
-      {showSheet && (
-        <div
-          className="fixed inset-0 z-50 flex items-end justify-center bg-black/30 backdrop-blur-[1px]"
-          onClick={() => setShowSheet(false)}
-        >
-          <div
-            className="bg-surface rounded-t-2xl w-full max-w-lg shadow-2xl flex flex-col animate-slide-up"
-            style={{ maxHeight: '80vh' }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex justify-center pt-2 pb-1">
-              <div className="w-10 h-1 rounded-full bg-border" />
-            </div>
-            <div className="flex items-center justify-between px-5 py-3 border-b border-border">
-              <h3 className="text-base font-bold text-text-main">特性投票</h3>
-              <button
-                onClick={() => setShowSheet(false)}
-                className="text-text-secondary hover:text-text-main p-2 cursor-pointer"
-              >
-                <FontAwesomeIcon icon={NAV_ICONS.close} />
-              </button>
-            </div>
-            <div className="flex-1 overflow-y-auto px-5 py-4">
-              <FeatureVoting
-                spotId={spotId}
-                groups={groups}
-                userId={userId}
-                onVoted={onVoted}
-              />
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+    <div>
+      <h3 className="text-sm font-semibold text-text-main mb-3 flex items-center gap-1.5">
+        <span>🏕️</span>
+        地標特性
+      </h3>
+      <FeatureVoting
+        spotId={spotId}
+        groups={groups}
+        userId={userId}
+        onVoted={onVoted}
+      />
+    </div>
   )
 }
 
