@@ -25,14 +25,22 @@ const SPOT_TYPE_OPTIONS: { value: SpotTypeFilter; label: string; emoji: string }
 ]
 
 const FEATURE_OPTIONS: { key: string; label: string }[] = [
-  { key: 'wifi', label: 'WiFi' },
-  { key: 'car_ok', label: '停車場' },
-  { key: 'flush_toilet', label: '沖水廁所' },
-  { key: 'shower', label: '淋浴間' },
-  { key: 'power_outlet', label: '電源插座' },
-  { key: 'pet_friendly', label: '寵物友善' },
-  { key: 'hot_water', label: '熱水' },
-  { key: 'campfire_allowed', label: '營火' },
+  { key: 'mountain_view', label: '山景' },
+  { key: 'forest', label: '森林' },
+  { key: 'river_stream', label: '溪流' },
+  { key: 'sea_of_clouds', label: '雲海' },
+  { key: 'stargazing', label: '觀星' },
+  { key: 'fireflies', label: '螢火蟲' },
+  { key: 'hot_spring', label: '溫泉' },
+  { key: 'child_friendly', label: '親子友善' },
+  { key: 'grassland', label: '大片草皮' },
+  { key: 'ocean_view', label: '海景' },
+  { key: 'accommodation', label: '提供住宿' },
+  { key: 'glamping', label: '豪華露營' },
+  { key: 'hiking_trails', label: '健行步道' },
+  { key: 'seasonal_flowers', label: '季節賞花' },
+  { key: 'playground', label: '遊樂設施' },
+  { key: 'high_mountain', label: '高山百岳' },
 ]
 
 import { useState } from 'react'
