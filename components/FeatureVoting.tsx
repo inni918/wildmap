@@ -109,13 +109,13 @@ function FeatureIconItem({
   const faIcon = getFeatureIcon(feature.key)
   const confirmed = isConfirmed(feature)
   const iconColor = confirmed ? color : hexToRgba(color, 0.3)
-  const label = feature.name_zh.slice(0, 4)
 
   return (
     <button
       onClick={onClick}
-      className="flex flex-col items-center gap-1 p-2 rounded-xl transition-colors active:scale-95 cursor-pointer"
-      style={{ minWidth: 52 }}
+      title={feature.name_zh}
+      className="flex items-center justify-center p-2 rounded-xl transition-colors active:scale-95 cursor-pointer"
+      style={{ minWidth: 40 }}
     >
       <span style={{ color: iconColor, fontSize: 30, lineHeight: 1 }}>
         {faIcon ? (
@@ -123,12 +123,6 @@ function FeatureIconItem({
         ) : (
           <span style={{ fontSize: 24 }}>{feature.icon}</span>
         )}
-      </span>
-      <span
-        className="text-center leading-tight"
-        style={{ fontSize: 10, color: '#9CA3AF', maxWidth: 52 }}
-      >
-        {label}
       </span>
     </button>
   )
