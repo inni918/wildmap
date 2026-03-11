@@ -21,6 +21,15 @@ const GROUP_NAMES: Record<string, string> = {
   warnings: '注意事項',
 }
 
+const GROUP_COLORS: Record<string, string> = {
+  camp_traits: '#d97706',
+  facilities: '#2D6A4F',
+  environment: '#388e3c',
+  activities: '#1565c0',
+  restrictions: '#7b1fa2',
+  warnings: '#c62828',
+}
+
 const GROUP_ORDER = ['camp_traits', 'facilities', 'environment', 'activities', 'restrictions', 'warnings']
 
 interface FeatureDef {
@@ -162,31 +171,35 @@ export default function FilterBottomSheet({
           {/* ── 六大分類展開式 ── */}
           {grouped.map(group => {
             const isExpanded = !!expandedGroups[group.group_key]
+            const color = GROUP_COLORS[group.group_key] ?? '#2D6A4F'
             const selectedInGroup = group.features.filter(f => localFilter.featureKeys.includes(f.key)).length
             return (
-              <div key={group.group_key} className="border border-border rounded-xl overflow-hidden">
+              <div key={group.group_key} className="border rounded-xl overflow-hidden" style={{ borderColor: color + '40' }}>
                 {/* 分類 Header */}
                 <button
                   onClick={() => toggleGroup(group.group_key)}
-                  className="w-full flex items-center justify-between px-4 py-3 bg-surface hover:bg-surface-alt transition-colors cursor-pointer"
+                  className="w-full flex items-center justify-between px-4 py-3 transition-colors cursor-pointer"
+                  style={{ background: color + '10' }}
                 >
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-text-main">{group.group_name}</span>
+                    <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: color }} />
+                    <span className="text-sm font-semibold" style={{ color }}>{group.group_name}</span>
                     {selectedInGroup > 0 && (
-                      <span className="bg-primary text-white text-[10px] rounded-full px-1.5 py-0.5 font-medium">
+                      <span className="text-white text-[10px] rounded-full px-1.5 py-0.5 font-medium" style={{ background: color }}>
                         {selectedInGroup}
                       </span>
                     )}
                   </div>
                   <FontAwesomeIcon
                     icon={isExpanded ? faChevronUp : faChevronDown}
-                    className="text-text-secondary text-xs"
+                    style={{ color }}
+                    className="text-xs"
                   />
                 </button>
 
                 {/* 特性列表 */}
                 {isExpanded && (
-                  <div className="grid grid-cols-2 gap-2 px-3 pb-3 pt-2 border-t border-border bg-surface-alt/30">
+                  <div className="grid grid-cols-2 gap-2 px-3 pb-3 pt-2 border-t bg-surface-alt/30" style={{ borderColor: color + '30' }}>
                     {group.features.map(f => {
                       const icon = FEATURE_ICON_MAP[f.key] ?? NAV_ICONS.filter
                       const selected = localFilter.featureKeys.includes(f.key)
@@ -194,13 +207,18 @@ export default function FilterBottomSheet({
                         <button
                           key={f.key}
                           onClick={() => toggleFeature(f.key)}
-                          className={`flex items-center gap-2 px-3 py-2.5 min-h-[44px] rounded-xl text-xs font-medium border transition-colors cursor-pointer active:scale-95 ${
-                            selected
-                              ? 'bg-[#D1FAE5] text-[#065F46] border-[#2D6A4F]'
-                              : 'bg-surface text-text-secondary border-border hover:border-primary/50 hover:text-primary'
-                          }`}
+                          className="flex items-center gap-2 px-3 py-2.5 min-h-[44px] rounded-xl text-xs font-medium border transition-colors cursor-pointer active:scale-95"
+                          style={selected ? {
+                            background: color + '18',
+                            color: color,
+                            borderColor: color,
+                          } : {
+                            background: 'white',
+                            color: '#6b7280',
+                            borderColor: '#e5e7eb',
+                          }}
                         >
-                          <FontAwesomeIcon icon={icon} className="text-xs flex-shrink-0" />
+                          <FontAwesomeIcon icon={icon} className="text-xs flex-shrink-0" style={{ color: selected ? color : '#9ca3af' }} />
                           <span className="truncate">{f.name_zh}</span>
                         </button>
                       )
