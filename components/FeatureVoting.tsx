@@ -114,15 +114,21 @@ function FeatureIconItem({
     <button
       onClick={onClick}
       title={feature.name_zh}
-      className="flex items-center justify-center p-2 rounded-xl transition-colors active:scale-95 cursor-pointer"
-      style={{ minWidth: 40 }}
+      className="flex flex-col items-center gap-1 p-2 rounded-xl transition-colors active:scale-95 cursor-pointer"
+      style={{ minWidth: 52 }}
     >
-      <span style={{ color: iconColor, fontSize: 30, lineHeight: 1 }}>
+      <span style={{ color: iconColor, fontSize: 28, lineHeight: 1 }}>
         {faIcon ? (
-          <FontAwesomeIcon icon={faIcon} style={{ fontSize: 30 }} />
+          <FontAwesomeIcon icon={faIcon} style={{ fontSize: 28 }} />
         ) : (
-          <span style={{ fontSize: 24 }}>{feature.icon}</span>
+          <span style={{ fontSize: 22 }}>{feature.icon}</span>
         )}
+      </span>
+      <span
+        className="text-center leading-tight"
+        style={{ fontSize: 10, color: iconColor, maxWidth: 52, opacity: confirmed ? 1 : 0.5 }}
+      >
+        {feature.name_zh.slice(0, 5)}
       </span>
     </button>
   )
