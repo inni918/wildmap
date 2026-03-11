@@ -18,62 +18,7 @@ import { usePermission } from './PermissionGate'
 import { track } from '@/lib/tracker'
 import { useAuth } from '@/lib/auth-context'
 import SearchBar from './SearchBar'
-import FilterChips, { type FreeFilter } from './FilterChips'
 
-// ====== Nominatim 地理編碼 ======
-let lastNominatimCall = 0
-
-async function geocodeWithNominatim(query: string): Promise<{
-  lat: number
-  lon: number
-  displayName: string
-  zoom: number
-} | null> {
-  // 每秒最多 1 次請求
-  const now = Date.now()
-  const elapsed = now - lastNominatimCall
-  if (elapsed < 1000) {
-    await new Promise(resolve => setTimeout(resolve, 1000 - elapsed))
-  }
-  lastNominatimCall = Date.now()
-
-  try {
-    const res = await fetch(
-      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&countrycodes=tw&format=json&limit=1`,
-      {
-        headers: { 'User-Agent': 'Wildmap/1.0' },
-      }
-    )
-    if (!res.ok) return null
-    const data = await res.json()
-    if (!data || data.length === 0) return null
-
-    const result = data[0]
-    const lat = parseFloat(result.lat)
-    const lon = parseFloat(result.lon)
-    const displayName = result.display_name?.split(',')[0] || query
-
-    // 根據 boundingbox 計算適當的 zoom level
-    let zoom = 12
-    if (result.boundingbox) {
-      const [south, north, west, east] = result.boundingbox.map(Number)
-      const latDiff = Math.abs(north - south)
-      const lonDiff = Math.abs(east - west)
-      const maxDiff = Math.max(latDiff, lonDiff)
-      if (maxDiff > 2) zoom = 8
-      else if (maxDiff > 1) zoom = 9
-      else if (maxDiff > 0.5) zoom = 10
-      else if (maxDiff > 0.2) zoom = 11
-      else if (maxDiff > 0.1) zoom = 12
-      else if (maxDiff > 0.05) zoom = 13
-      else zoom = 14
-    }
-
-    return { lat, lon, displayName, zoom }
-  } catch {
-    return null
-  }
-}
 
 // ====== Timeout helper ======
 function withTimeout<T>(promise: PromiseLike<T>, ms: number, label = 'operation'): Promise<T> {
@@ -230,21 +175,24 @@ export interface MapFilterProps {
   onNameFilterChange?: (v: string) => void
   /** 付費/免費篩選：true=免費, false=付費, null/undefined=全部 */
   isFreeFilter?: boolean | null
-  /** 付費/免費篩選變更 callback */
-  onFreeFilterChange?: (v: FreeFilter) => void
   /** 設施 key 陣列（由外部 FilterChips 提供） */
   facilityKeys?: string[]
   /** 設施篩選變更 callback */
   onFacilitiesChange?: (keys: string[]) => void
+  /** 篩選按鈕點擊 callback（由外部提供） */
+  onFilterClick?: () => void
+  /** 目前套用的篩選數量（用來顯示徽章） */
+  activeFilterCount?: number
 }
 
 export default function Map({
   nameFilter,
   onNameFilterChange,
   isFreeFilter,
-  onFreeFilterChange,
   facilityKeys,
   onFacilitiesChange,
+  onFilterClick,
+  activeFilterCount = 0,
 }: MapFilterProps = {}) {
   // 是否使用外部 UI（SearchBar + FilterChips）
   const hasExternalUI = nameFilter !== undefined
@@ -270,7 +218,6 @@ export default function Map({
   const [searchExpanded, setSearchExpanded] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>('map')
   const [totalCount, setTotalCount] = useState(0)
-  const [geoHint, setGeoHint] = useState<string | null>(null) // 地理搜尋提示
   const [loadError, setLoadError] = useState<string | null>(null) // 載入失敗訊息
   const [retrying, setRetrying] = useState(false) // 重試中
   const [viewState, setViewState] = useState({
@@ -290,10 +237,6 @@ export default function Map({
 
   // Debounce timer ref
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  // Geocoding debounce timer ref
-  const geoDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  // Geo hint timer ref
-  const geoHintTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // ====== Viewport-based fetch（含 retry + timeout 機制） ======
   const fetchViewportSpots = useCallback(async (
@@ -541,6 +484,8 @@ export default function Map({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+
+
   // ====== filter/search 改變時重新 fetch（debounced） ======
   const filterChangeCount = useRef(0)
   useEffect(() => {
@@ -580,64 +525,7 @@ export default function Map({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedFeatures, activeFilter])
 
-  // ====== P1-1：地理搜尋（Nominatim geocoding） ======
-  useEffect(() => {
-    if (geoDebounceRef.current) {
-      clearTimeout(geoDebounceRef.current)
-    }
 
-    const trimmed = effectiveSearchQuery.trim()
-    if (!trimmed || trimmed.length < 2) {
-      return
-    }
-
-    geoDebounceRef.current = setTimeout(async () => {
-      const result = await geocodeWithNominatim(trimmed)
-      if (result) {
-        // flyTo 到搜尋結果位置
-        mapRef.current?.flyTo({
-          center: [result.lon, result.lat],
-          zoom: result.zoom,
-          duration: 1000,
-        })
-
-        // flyTo 完成後，手動用新位置觸發一次 fetch
-        // 確保搜尋結果在新 viewport 內正確顯示
-        const newZoom = result.zoom
-        const latSpan = 180 / Math.pow(2, newZoom)
-        const lonSpan = 360 / Math.pow(2, newZoom)
-        const newBounds: [number, number, number, number] = [
-          result.lon - lonSpan / 2,
-          result.lat - latSpan / 2,
-          result.lon + lonSpan / 2,
-          result.lat + latSpan / 2,
-        ]
-        // 延遲到 flyTo 動畫結束後 fetch，避免被中途 onMove 覆蓋
-        setTimeout(() => {
-          fetchViewportSpots(newBounds, activeFilter, trimmed, combinedFeatureIds, isFreeFilter)
-          fetchTotalCount(activeFilter, trimmed, combinedFeatureIds, newBounds, isFreeFilter)
-        }, 1100)
-
-        // 顯示地理搜尋提示
-        setGeoHint(`📍 已移動到${result.displayName}區域`)
-
-        // 3 秒後自動隱藏提示
-        if (geoHintTimerRef.current) {
-          clearTimeout(geoHintTimerRef.current)
-        }
-        geoHintTimerRef.current = setTimeout(() => {
-          setGeoHint(null)
-        }, 3000)
-      }
-    }, 500) // 500ms debounce
-
-    return () => {
-      if (geoDebounceRef.current) {
-        clearTimeout(geoDebounceRef.current)
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [effectiveSearchQuery])
 
   // 當選擇特性篩選時，查詢符合條件的 spot ids
   useEffect(() => {
@@ -735,11 +623,11 @@ export default function Map({
         const defs = defsResult.data as { id: string; key: string }[]
         const featureIds = defs.map((d) => d.id)
 
-        // 2. 查 feature_votes（用 feature_id）
+        // 2. 查 feature_votes（用 feature_id），含 weight
         const votesResult = await withTimeout(
           supabase
             .from('feature_votes')
-            .select('spot_id, feature_id, vote')
+            .select('spot_id, feature_id, vote, weight')
             .in('feature_id', featureIds),
           8000,
           'facility feature_votes query'
@@ -748,29 +636,30 @@ export default function Map({
           setFacilitySpotIds(new Set())
           return
         }
-        const votes = votesResult.data as { spot_id: string; feature_id: string; vote: boolean }[]
+        const votes = votesResult.data as { spot_id: string; feature_id: string; vote: boolean; weight: number | null }[]
 
         if (votes.length === 0) {
           setFacilitySpotIds(new Set())
           return
         }
 
-        // 3. 按 spot+feature 聚合投票
-        const voteMap = new globalThis.Map<string, { yes: number; no: number }>()
+        // 3. 按 spot+feature 聚合加權投票
+        const voteMap = new globalThis.Map<string, { weightedYes: number; weightedNo: number }>()
         for (const v of votes) {
           const k = `${v.spot_id}::${v.feature_id}`
-          if (!voteMap.has(k)) voteMap.set(k, { yes: 0, no: 0 })
+          if (!voteMap.has(k)) voteMap.set(k, { weightedYes: 0, weightedNo: 0 })
           const entry = voteMap.get(k)!
-          if (v.vote) entry.yes++; else entry.no++
+          const w = v.weight ?? 1
+          if (v.vote) entry.weightedYes += w; else entry.weightedNo += w
         }
 
-        // 4. 按 feature 分組，yes >= no 的 spot 視為確認
+        // 4. 按 feature 分組，weighted_yes >= 3 的 spot 視為確認
         const perFeature = new globalThis.Map<string, Set<string>>()
         for (const fId of featureIds) perFeature.set(fId, new Set())
 
         for (const [k, counts] of voteMap.entries()) {
           const [spotId, featureId] = k.split('::')
-          if (counts.yes >= counts.no) {
+          if (counts.weightedYes >= 3) {
             perFeature.get(featureId)?.add(spotId)
           }
         }
@@ -906,47 +795,50 @@ export default function Map({
         onSearchExpandedChange={nameFilter !== undefined ? undefined : setSearchExpanded}
       />
 
-      {/* ── 外部 SearchBar（當 hasExternalUI 時渲染） ── */}
+      {/* ── 外部 SearchBar + 篩選按鈕（當 hasExternalUI 時渲染） ── */}
       {hasExternalUI && (
-        <div className="absolute left-0 right-0 z-20 px-3 py-2 bg-surface/95 backdrop-blur-sm border-b border-border" style={{ top: '3.5rem' }}>
+        <div className="absolute left-0 right-0 z-20 px-3 py-2 bg-surface/95 backdrop-blur-sm border-b border-border flex items-center gap-2" style={{ top: '3.5rem' }}>
           <SearchBar
             value={nameFilter ?? ''}
             onChange={(v) => onNameFilterChange?.(v)}
-            placeholder="搜尋營地名稱或地區..."
+            placeholder="搜尋營地名稱..."
+            onSelectSpot={(spot) => {
+              mapRef.current?.flyTo({
+                center: [spot.longitude, spot.latitude],
+                zoom: 14,
+                duration: 800,
+              })
+              setDetailSpotId(spot.id)
+            }}
           />
+          {onFilterClick && (
+            <button
+              onClick={onFilterClick}
+              className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-2.5 min-h-[42px] rounded-xl text-sm font-medium border transition-colors cursor-pointer active:scale-95 ${
+                activeFilterCount > 0
+                  ? 'bg-primary text-white border-primary'
+                  : 'bg-surface text-text-secondary border-border hover:border-primary hover:text-primary'
+              }`}
+              aria-label="篩選"
+            >
+              <FontAwesomeIcon icon={NAV_ICONS.filter} className="text-sm" />
+              <span className="text-xs hidden sm:inline">篩選</span>
+              {activeFilterCount > 0 && (
+                <span className="text-[10px] bg-white text-primary rounded-full w-4 h-4 flex items-center justify-center font-bold leading-none flex-shrink-0">
+                  {activeFilterCount}
+                </span>
+              )}
+            </button>
+          )}
         </div>
       )}
 
-      {/* ── 外部 FilterChips（當 hasExternalUI 時渲染） ── */}
-      {hasExternalUI && (
-        <div className="absolute left-0 right-0 z-20" style={{ top: '7rem' }}>
-          <FilterChips
-            freeFilter={
-              isFreeFilter === true ? 'free' : isFreeFilter === false ? 'paid' : 'all'
-            }
-            onFreeFilterChange={(v) => onFreeFilterChange?.(v)}
-            selectedFacilities={facilityKeys ?? []}
-            onFacilitiesChange={(keys) => onFacilitiesChange?.(keys)}
-          />
-        </div>
-      )}
 
-      {/* 地理搜尋提示 */}
-      {geoHint && (
-        <div
-          className="absolute left-0 right-0 z-30 flex justify-center transition-all duration-300"
-          style={{ top: hasExternalUI ? '12.5rem' : searchExpanded ? '6rem' : '3.2rem' }}
-        >
-          <div className="bg-primary/90 text-text-on-primary text-sm px-4 py-1.5 rounded-full shadow-md backdrop-blur-sm animate-fade-in">
-            {geoHint}
-          </div>
-        </div>
-      )}
 
       {/* Category Filter Bar + 地圖/列表切換 */}
       <div
         className="absolute left-0 right-0 z-10 px-3 py-2 flex gap-2 items-center overflow-x-auto bg-surface/80 backdrop-blur-sm transition-all duration-200"
-        style={{ top: hasExternalUI ? '12rem' : searchExpanded ? '6.5rem' : '3.5rem' }}
+        style={{ top: hasExternalUI ? '7rem' : searchExpanded ? '6.5rem' : '3.5rem' }}
       >
         <button
           onClick={() => setActiveFilter('all')}
@@ -1267,7 +1159,7 @@ export default function Map({
       {viewMode === 'list' && (
         <div
           className="absolute left-0 right-0 bottom-0 overflow-y-auto bg-surface transition-all duration-200"
-          style={{ top: hasExternalUI ? '16rem' : searchExpanded ? '12rem' : '8.5rem' }}
+          style={{ top: hasExternalUI ? '11rem' : searchExpanded ? '12rem' : '8.5rem' }}
         >
           {/* 收藏模式標題列 */}
           {favoritesMode && (

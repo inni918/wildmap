@@ -299,6 +299,7 @@ export const NAV_ICONS = {
   edit:        faPenToSquare,
   navigate:    faDiamondTurnRight,
   reply:       faReply,
+  calendar:    faCalendarDays,
 } as const
 
 // Helper to get an icon for a feature key, with fallback

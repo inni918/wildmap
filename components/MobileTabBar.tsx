@@ -15,7 +15,7 @@ interface TabItem {
 
 const TABS: TabItem[] = [
   { key: 'map', href: '/map?view=map', icon: NAV_ICONS.map, label: '地圖' },
-  { key: 'search', href: '/map?search=1', icon: NAV_ICONS.search, label: '搜尋' },
+  { key: 'trips', href: '/trips', icon: NAV_ICONS.calendar, label: '行程' },
   { key: 'favorites', href: '/map?favorites=1', icon: NAV_ICONS.heartSolid, label: '收藏' },
   { key: 'profile', href: '/profile', icon: NAV_ICONS.user, label: '我的' },
 ]
@@ -28,7 +28,7 @@ function MobileTabBarInner() {
 
   const getIsActive = (tab: TabItem) => {
     if (tab.key === 'map') return pathname === '/map' && !searchParams.get('favorites') && !searchParams.get('search')
-    if (tab.key === 'search') return pathname === '/map' && searchParams.get('search') === '1'
+    if (tab.key === 'trips') return pathname === '/trips' || pathname.startsWith('/trips/')
     if (tab.key === 'favorites') return pathname === '/map' && searchParams.get('favorites') === '1'
     if (tab.key === 'profile') return pathname.startsWith('/profile')
     return false
@@ -68,6 +68,7 @@ function MobileTabBarFallback() {
 
   const getIsActive = (tab: TabItem) => {
     if (tab.key === 'map') return pathname === '/map'
+    if (tab.key === 'trips') return pathname === '/trips' || pathname.startsWith('/trips/')
     if (tab.key === 'profile') return pathname.startsWith('/profile')
     return false
   }

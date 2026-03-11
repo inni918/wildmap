@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic'
 import { useState, useCallback, useRef } from 'react'
-import type { FreeFilter } from '@/components/FilterChips'
+import FilterBottomSheet, { type FilterState } from '@/components/FilterBottomSheet'
 
 const Map = dynamic(() => import('@/components/Map'), {
   ssr: false,
@@ -20,12 +20,11 @@ const Map = dynamic(() => import('@/components/Map'), {
 
 export default function MapPage() {
   const [nameFilter, setNameFilter] = useState('')
-  const [freeFilter, setFreeFilter] = useState<FreeFilter>('all')
-  const [selectedFacilities, setSelectedFacilities] = useState<string[]>([])
-
-  // isFreeFilter：null=全部, true=免費, false=付費
-  const isFreeFilter: boolean | null =
-    freeFilter === 'free' ? true : freeFilter === 'paid' ? false : null
+  const [filterSheetOpen, setFilterSheetOpen] = useState(false)
+  const [appliedFilter, setAppliedFilter] = useState<FilterState>({
+    spotType: 'all',
+    features: [],
+  })
 
   // Debounced name filter（避免每次按鍵都 refetch）
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -39,13 +38,19 @@ export default function MapPage() {
     }, 300)
   }, [])
 
-  const handleFreeFilterChange = useCallback((v: FreeFilter) => {
-    setFreeFilter(v)
+  const handleFilterApply = useCallback((filter: FilterState) => {
+    setAppliedFilter(filter)
   }, [])
 
-  const handleFacilitiesChange = useCallback((keys: string[]) => {
-    setSelectedFacilities(keys)
-  }, [])
+  // 轉換 spotType → isFreeFilter（配合現有 Map props）
+  // wild_camping → 免費 (is_free=true), campsite → 付費 (is_free=false)
+  const isFreeFilter: boolean | null =
+    appliedFilter.spotType === 'wild_camping' ? true
+    : appliedFilter.spotType === 'campsite' ? false
+    : null
+
+  const activeFilterCount =
+    (appliedFilter.spotType !== 'all' ? 1 : 0) + appliedFilter.features.length
 
   return (
     <main className="w-full h-screen">
@@ -53,9 +58,17 @@ export default function MapPage() {
         nameFilter={debouncedName}
         onNameFilterChange={handleNameChange}
         isFreeFilter={isFreeFilter}
-        onFreeFilterChange={handleFreeFilterChange}
-        facilityKeys={selectedFacilities}
-        onFacilitiesChange={handleFacilitiesChange}
+        facilityKeys={appliedFilter.features}
+        onFilterClick={() => setFilterSheetOpen(true)}
+        activeFilterCount={activeFilterCount}
+      />
+
+      {/* ── 篩選 Bottom Sheet ── */}
+      <FilterBottomSheet
+        open={filterSheetOpen}
+        onClose={() => setFilterSheetOpen(false)}
+        filter={appliedFilter}
+        onApply={handleFilterApply}
       />
     </main>
   )
