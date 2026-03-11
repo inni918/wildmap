@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import ReactMapGL, { Marker, NavigationControl, MapRef, MapMouseEvent } from 'react-map-gl/maplibre'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import Supercluster from 'supercluster'
-import { supabase, getQueryClient, type SpotCategory, CATEGORY_EMOJI, CATEGORY_LABEL } from '@/lib/supabase'
+import { supabase, type SpotCategory, CATEGORY_EMOJI, CATEGORY_LABEL, SUPABASE_URL, SUPABASE_ANON_KEY } from '@/lib/supabase'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS } from '@/lib/icons'
 import AddSpotModal from './AddSpotModal'
@@ -194,7 +194,6 @@ export default function Map({
   onFilterClick,
   activeFilterCount = 0,
 }: MapFilterProps = {}) {
-  const queryClient = getQueryClient()
   // 是否使用外部 UI（SearchBar + FilterChips）
   const hasExternalUI = nameFilter !== undefined
   const mapRef = useRef<MapRef>(null)
@@ -263,43 +262,47 @@ export default function Map({
         async () => {
           const [west, south, east, north] = bounds
 
-          let query = queryClient
-            .from('spots')
-            .select('id, name, category, latitude, longitude, is_free, gov_certified, quality, status, address')
-            .gte('latitude', south)
-            .lte('latitude', north)
-            .gte('longitude', west)
-            .lte('longitude', east)
+          // 用 native fetch 直接呼叫 Supabase REST API，繞開 auth lock
+          const andConditions: string[] = [
+            `latitude.gte.${south}`,
+            `latitude.lte.${north}`,
+            `longitude.gte.${west}`,
+            `longitude.lte.${east}`,
+          ]
+          if (category !== 'all') andConditions.push(`category.eq.${category}`)
+          if (isFree === true) andConditions.push(`is_free.eq.true`)
+          if (isFree === false) andConditions.push(`is_free.eq.false`)
 
-          if (category !== 'all') {
-            query = query.eq('category', category)
-          }
-
-          if (search.trim()) {
-            query = query.ilike('name', `%${search.trim()}%`)
-          }
-
+          const searchParams = new URLSearchParams()
+          searchParams.set('select', 'id,name,category,latitude,longitude,is_free,gov_certified,quality,status,address')
+          searchParams.set('and', `(${andConditions.join(',')})`)
+          if (search.trim()) searchParams.set('name', `ilike.*${search.trim()}*`)
           if (featureIds !== null) {
-            query = query.in('id', Array.from(featureIds))
+            searchParams.set('id', `in.(${Array.from(featureIds).join(',')})`)
+          }
+          searchParams.set('limit', '500')
+
+          const url = `${SUPABASE_URL}/rest/v1/spots?${searchParams.toString()}`
+          const controller = new AbortController()
+          const timeoutId = setTimeout(() => controller.abort(), 8000)
+
+          let res: Response
+          try {
+            res = await fetch(url, {
+              headers: {
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                'Accept': 'application/json',
+              },
+              signal: controller.signal,
+            })
+          } finally {
+            clearTimeout(timeoutId)
           }
 
-          // 外部 isFree 篩選（來自 FilterChips）
-          if (isFree === true) {
-            query = query.eq('is_free', true)
-          } else if (isFree === false) {
-            query = query.eq('is_free', false)
-          }
-
-          query = query.limit(500)
-
-          // 加入 8 秒 timeout 防止查詢無限等待
-          const result = await withTimeout(query, 8000, 'Supabase spots query')
-
-          if (result.error) {
-            throw result.error
-          }
-
-          return (result.data || []) as SpotSummary[]
+          if (!res.ok) throw new Error(`Spots fetch failed: ${res.status}`)
+          const json = await res.json()
+          return json as SpotSummary[]
         },
         2, // 最多重試 2 次（共 3 次嘗試）
         (attempt) => {
@@ -318,7 +321,7 @@ export default function Map({
       setLoading(false)
       setLoadError('載入失敗，請重新整理頁面')
     }
-  }, [queryClient])
+  }, [])
 
   // ====== Count query（帶 filter + viewport bounds） ======
   const fetchTotalCount = useCallback(async (
@@ -335,48 +338,59 @@ export default function Map({
     }
 
     try {
-      let query = queryClient
-        .from('spots')
-        .select('id', { count: 'exact', head: true })
-
-      if (category !== 'all') {
-        query = query.eq('category', category)
-      }
-
-      if (search.trim()) {
-        query = query.ilike('name', `%${search.trim()}%`)
-      }
-
-      if (featureIds !== null) {
-        query = query.in('id', Array.from(featureIds))
-      }
-
-      // 外部 isFree 篩選
-      if (isFree === true) {
-        query = query.eq('is_free', true)
-      } else if (isFree === false) {
-        query = query.eq('is_free', false)
-      }
-
-      // 搜尋時也限制 viewport bounds，讓計數與列表一致
+      // 用 native fetch 直接呼叫 Supabase REST API，繞開 auth lock
+      const andConditions: string[] = []
+      if (category !== 'all') andConditions.push(`category.eq.${category}`)
+      if (isFree === true) andConditions.push(`is_free.eq.true`)
+      if (isFree === false) andConditions.push(`is_free.eq.false`)
       if (bounds) {
         const [west, south, east, north] = bounds
-        query = query
-          .gte('latitude', south)
-          .lte('latitude', north)
-          .gte('longitude', west)
-          .lte('longitude', east)
+        andConditions.push(
+          `latitude.gte.${south}`,
+          `latitude.lte.${north}`,
+          `longitude.gte.${west}`,
+          `longitude.lte.${east}`,
+        )
       }
 
-      const result = await withTimeout(query, 8000, 'Supabase count query')
+      const searchParams = new URLSearchParams()
+      searchParams.set('select', 'id')
+      if (andConditions.length > 0) searchParams.set('and', `(${andConditions.join(',')})`)
+      if (search.trim()) searchParams.set('name', `ilike.*${search.trim()}*`)
+      if (featureIds !== null) {
+        searchParams.set('id', `in.(${Array.from(featureIds).join(',')})`)
+      }
 
-      if (!result.error && result.count !== null) {
-        setTotalCount(result.count)
+      const url = `${SUPABASE_URL}/rest/v1/spots?${searchParams.toString()}`
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 8000)
+
+      let res: Response
+      try {
+        res = await fetch(url, {
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+            'Prefer': 'count=exact',
+            'Accept': 'application/json',
+          },
+          signal: controller.signal,
+        })
+      } finally {
+        clearTimeout(timeoutId)
+      }
+
+      if (!res.ok) throw new Error(`Count fetch failed: ${res.status}`)
+      const countHeader = res.headers.get('content-range')
+      // content-range 格式: "0-24/1911" 或 "*/1911"
+      if (countHeader) {
+        const total = parseInt(countHeader.split('/')[1])
+        if (!isNaN(total)) setTotalCount(total)
       }
     } catch (err) {
       console.error('fetchTotalCount failed:', err)
     }
-  }, [queryClient])
+  }, [])
 
   // ====== Trigger viewport fetch with debounce ======
   const triggerFetch = useCallback((

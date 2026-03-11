@@ -149,3 +149,7 @@ export const CATEGORY_LABEL: Record<SpotCategory, string> = {
   hiking: '登山',
   carcamp: '車宿',
 }
+
+// ====== REST API helper（繞開 Auth Lock，供地圖公開查詢用）======
+export const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
+export const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
