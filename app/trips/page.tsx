@@ -2,12 +2,13 @@
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS } from '@/lib/icons'
+import MobileTabBar from '@/components/MobileTabBar'
 
 export default function TripsPage() {
   return (
     <div
       className="min-h-screen flex flex-col"
-      style={{ background: '#f9fafb' }}
+      style={{ background: '#f9fafb', paddingBottom: '80px' }}
     >
       {/* Header */}
       <header className="bg-white border-b border-gray-200 px-4 py-4 safe-area-top">
@@ -39,6 +40,8 @@ export default function TripsPage() {
           查看我的收藏
         </a>
       </main>
+
+      <MobileTabBar />
     </div>
   )
 }
