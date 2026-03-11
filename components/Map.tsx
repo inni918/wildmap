@@ -116,9 +116,9 @@ const MAP_STYLE = {
     osm: {
       type: 'raster' as const,
       tiles: [
-        'https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
+        'https://tile.openstreetmap.tw/tiles/default/{z}/{x}/{y}.png',
       ],
-      tileSize: 512,
+      tileSize: 256,
       attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
     },
   },
