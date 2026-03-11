@@ -15,6 +15,23 @@ function getSupabaseBrowserClient(): SupabaseClient {
 
 export const supabase = getSupabaseBrowserClient()
 
+// 純查詢用 client（不走 auth，避免 navigator.locks 競爭問題）
+// 用於地圖 spots、feature_votes 等公開資料查詢
+let _queryClient: SupabaseClient | null = null
+
+export function getQueryClient(): SupabaseClient {
+  if (!_queryClient) {
+    _queryClient = createBrowserClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false,
+      }
+    })
+  }
+  return _queryClient
+}
+
 // === Types ===
 
 export type SpotCategory = 'camping' | 'fishing' | 'diving' | 'surfing' | 'hiking' | 'carcamp'

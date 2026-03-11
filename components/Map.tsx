@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import ReactMapGL, { Marker, NavigationControl, MapRef, MapMouseEvent } from 'react-map-gl/maplibre'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import Supercluster from 'supercluster'
-import { supabase, type SpotCategory, CATEGORY_EMOJI, CATEGORY_LABEL } from '@/lib/supabase'
+import { supabase, getQueryClient, type SpotCategory, CATEGORY_EMOJI, CATEGORY_LABEL } from '@/lib/supabase'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS } from '@/lib/icons'
 import AddSpotModal from './AddSpotModal'
@@ -194,6 +194,7 @@ export default function Map({
   onFilterClick,
   activeFilterCount = 0,
 }: MapFilterProps = {}) {
+  const queryClient = getQueryClient()
   // 是否使用外部 UI（SearchBar + FilterChips）
   const hasExternalUI = nameFilter !== undefined
   const mapRef = useRef<MapRef>(null)
@@ -262,7 +263,7 @@ export default function Map({
         async () => {
           const [west, south, east, north] = bounds
 
-          let query = supabase
+          let query = queryClient
             .from('spots')
             .select('id, name, category, latitude, longitude, is_free, gov_certified, quality, status, address')
             .gte('latitude', south)
@@ -317,7 +318,7 @@ export default function Map({
       setLoading(false)
       setLoadError('載入失敗，請重新整理頁面')
     }
-  }, [])
+  }, [queryClient])
 
   // ====== Count query（帶 filter + viewport bounds） ======
   const fetchTotalCount = useCallback(async (
@@ -334,7 +335,7 @@ export default function Map({
     }
 
     try {
-      let query = supabase
+      let query = queryClient
         .from('spots')
         .select('id', { count: 'exact', head: true })
 
@@ -375,7 +376,7 @@ export default function Map({
     } catch (err) {
       console.error('fetchTotalCount failed:', err)
     }
-  }, [])
+  }, [queryClient])
 
   // ====== Trigger viewport fetch with debounce ======
   const triggerFetch = useCallback((
