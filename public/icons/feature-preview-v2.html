@@ -3,787 +3,890 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wildmap Solid Icon 預覽 v2 — 設施22個</title>
+<title>Wildmap 設施與服務 Icons v2 — Outline 風格</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f9fafb; padding: 40px 32px; color: #111827; }
-
-  .page-header { margin-bottom: 40px; }
-  .page-header h1 { font-size: 22px; font-weight: 700; color: #2D6A4F; margin-bottom: 6px; }
-  .page-header p { font-size: 13px; color: #6b7280; }
-  .badge { display: inline-block; background: #D1FAE5; color: #065F46; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 99px; margin-left: 8px; vertical-align: middle; }
-
-  /* ──────────────────────────────────── */
-  /*  Section                            */
-  /* ──────────────────────────────────── */
-  .section { margin-bottom: 48px; }
-  .section-title { font-size: 14px; font-weight: 600; color: #374151; border-bottom: 1.5px solid #e5e7eb; padding-bottom: 10px; margin-bottom: 20px; letter-spacing: 0.02em; text-transform: uppercase; }
-
-  /* ──────────────────────────────────── */
-  /*  Main Icon Grid                     */
-  /* ──────────────────────────────────── */
-  .icon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; }
-  .icon-card {
-    background: white;
-    border-radius: 14px;
-    padding: 24px 14px 16px;
-    display: flex; flex-direction: column; align-items: center; gap: 12px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-    border: 1.5px solid #e5e7eb;
-    transition: border-color 0.15s, box-shadow 0.15s;
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #F7F9F7;
+    padding: 40px 24px;
+    color: #1a1a1a;
   }
-  .icon-card:hover { border-color: #2D6A4F; box-shadow: 0 4px 14px rgba(45,106,79,0.13); }
-  .icon-preview { color: #2D6A4F; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
-  .icon-preview svg { width: 40px; height: 40px; }
-  .icon-label { font-size: 12px; font-weight: 600; color: #111827; text-align: center; }
-  .icon-key { font-size: 10px; color: #9ca3af; font-family: 'SF Mono', 'Fira Code', monospace; }
-
-  /* ──────────────────────────────────── */
-  /*  Size Comparison Row                */
-  /* ──────────────────────────────────── */
-  .size-row { display: flex; align-items: flex-end; gap: 32px; flex-wrap: wrap; }
-  .size-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-  .size-label { font-size: 11px; color: #9ca3af; }
-  .size-name { font-size: 11px; font-weight: 500; color: #6b7280; margin-top: 4px; }
-
-  /* ──────────────────────────────────── */
-  /*  Color Comparison                   */
-  /* ──────────────────────────────────── */
-  .color-row { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
-  .color-swatch { display: flex; flex-direction: column; align-items: center; gap: 10px; background: white; border-radius: 12px; padding: 20px 28px; border: 1.5px solid #e5e7eb; }
-  .color-label { font-size: 11px; color: #6b7280; font-weight: 500; }
-  .color-swatch.dark-bg { background: #1a2e22; border-color: #1a2e22; }
-  .color-swatch.dark-bg .color-label { color: #a7f3d0; }
-
-  /* ──────────────────────────────────── */
-  /*  Details / SVG Source               */
-  /* ──────────────────────────────────── */
-  .source-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
-  .source-card { background: white; border-radius: 10px; border: 1.5px solid #e5e7eb; overflow: hidden; }
-  .source-card summary {
-    padding: 12px 16px;
-    font-size: 12px; font-weight: 600; color: #374151;
-    cursor: pointer;
-    display: flex; align-items: center; gap: 8px;
-    user-select: none;
-    list-style: none;
+  h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #2D6A4F;
+    margin-bottom: 6px;
   }
-  .source-card summary::-webkit-details-marker { display: none; }
-  .source-card summary::before { content: '▶'; font-size: 9px; color: #9ca3af; transition: transform 0.15s; }
-  .source-card[open] summary::before { transform: rotate(90deg); }
-  .source-card summary .mini-icon { color: #2D6A4F; width: 20px; height: 20px; }
-  .source-card summary .mini-icon svg { width: 20px; height: 20px; }
-  .source-code {
-    background: #f8fafc;
-    border-top: 1px solid #e5e7eb;
-    padding: 14px 16px;
-    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
-    font-size: 10.5px;
-    line-height: 1.6;
+  .subtitle {
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 36px;
+  }
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #9ca3af;
+    margin-bottom: 16px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    padding: 20px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+  .card-icons {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  .icon-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
+  .icon-wrap svg {
+    width: 40px;
+    height: 40px;
+  }
+  .state-label {
+    font-size: 10px;
+    color: #9ca3af;
+    font-weight: 500;
+  }
+  .icon-confirmed { color: #2D6A4F; }
+  .icon-pending { color: rgba(45,106,79,0.30); }
+  .card-name {
+    font-size: 12px;
+    font-weight: 600;
     color: #374151;
-    white-space: pre;
-    overflow-x: auto;
+    text-align: center;
   }
-
-  /* ──────────────────────────────────── */
-  /*  All-icons weight check row         */
-  /* ──────────────────────────────────── */
-  .weight-row { display: flex; gap: 20px; flex-wrap: wrap; align-items: center; background: white; border-radius: 12px; padding: 20px 24px; border: 1.5px solid #e5e7eb; }
-  .weight-item { display: flex; flex-direction: column; align-items: center; gap: 6px; }
-  .weight-item svg { width: 24px; height: 24px; color: #2D6A4F; }
-  .weight-key { font-size: 9px; color: #9ca3af; font-family: monospace; }
+  .card-key {
+    font-size: 10px;
+    color: #9ca3af;
+    text-align: center;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+  .divider {
+    width: 1px;
+    height: 40px;
+    background: #f3f4f6;
+  }
+  .legend {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 28px;
+    align-items: center;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #6b7280;
+  }
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
 </style>
 </head>
 <body>
 
-<div class="page-header">
-  <h1>Wildmap Solid Icons <span class="badge">v2 · 設施22個</span></h1>
-  <p>自製 Solid Fill 風格 SVG · viewBox 0 0 24 24 · fill-rule evenodd · 2026-03-11</p>
-</div>
+<h1>🏕 Wildmap — 設施與服務 Icons v2</h1>
+<p class="subtitle">Outline 風格 · WikiCamps 設計語言 · stroke-width: 2 · viewBox 0 0 24 24 · 共 22 個</p>
 
-<!-- ════════════════════════════════════ -->
-<!--  SECTION 1: Main Icon Grid          -->
-<!-- ════════════════════════════════════ -->
-<div class="section">
-  <div class="section-title">① Icon Grid（40px 預覽）</div>
-  <div class="icon-grid">
-
-    <!-- 1. wifi -->
-    <div class="icon-card">
-      <div class="icon-preview">
-        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M12 3.5C8.47 3.5 5.28 4.93 2.96 7.26a.875.875 0 0 0 1.24 1.23A10.13 10.13 0 0 1 12 5.25c2.8 0 5.34 1.13 7.2 2.97a.875.875 0 1 0 1.23-1.24A11.87 11.87 0 0 0 12 3.5ZM12 7.5c-2.37 0-4.51.96-6.07 2.51a.875.875 0 1 0 1.24 1.23A7.11 7.11 0 0 1 12 9.25c1.97 0 3.75.8 5.04 2.09a.875.875 0 1 0 1.24-1.23A8.85 8.85 0 0 0 12 7.5ZM12 11.5c-1.3 0-2.47.53-3.33 1.38a.875.875 0 1 0 1.24 1.23A3.36 3.36 0 0 1 12 13.25c.93 0 1.77.38 2.38.98a.875.875 0 1 0 1.24-1.23A5.1 5.1 0 0 0 12 11.5ZM12 15.5a1.75 1.75 0 1 0 0 3.5 1.75 1.75 0 0 0 0-3.5Z"/>
-        </svg>
-      </div>
-      <div class="icon-label">WiFi 訊號</div>
-      <div class="icon-key">wifi</div>
-    </div>
-
-    <!-- 2. power_outlet -->
-    <div class="icon-card">
-      <div class="icon-preview">
-        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2Zm0 1.75a8.25 8.25 0 1 1 0 16.5A8.25 8.25 0 0 1 12 3.75ZM9.25 7a.875.875 0 0 0-.875.875v3.5a.875.875 0 0 0 1.75 0v-3.5A.875.875 0 0 0 9.25 7Zm5.5 0a.875.875 0 0 0-.875.875v3.5a.875.875 0 0 0 1.75 0v-3.5A.875.875 0 0 0 14.75 7ZM9.5 13.25a.875.875 0 0 0-.875.875v.25a3.375 3.375 0 0 0 6.75 0v-.25a.875.875 0 0 0-1.75 0v.25a1.625 1.625 0 0 1-3.25 0v-.25A.875.875 0 0 0 9.5 13.25Z"/>
-        </svg>
-      </div>
-      <div class="icon-label">電源插座</div>
-      <div class="icon-key">power_outlet</div>
-    </div>
-
-    <!-- 3. parking -->
-    <div class="icon-card">
-      <div class="icon-preview">
-        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M4 3.75A1.75 1.75 0 0 0 2.25 5.5v13a1.75 1.75 0 0 0 1.75 1.75h16A1.75 1.75 0 0 0 21.75 18.5v-13A1.75 1.75 0 0 0 20 3.75H4ZM8 7.5a.875.875 0 0 0-.875.875v8.25a.875.875 0 0 0 1.75 0v-2.75h2.875a3.625 3.625 0 0 0 0-7.25H8Zm2.875 4.625H8.875V9.25h2A1.875 1.875 0 0 1 10.875 13V13a.01.01 0 0 1 0 .125Z"/>
-        </svg>
-      </div>
-      <div class="icon-label">停車場</div>
-      <div class="icon-key">parking</div>
-    </div>
-
-    <!-- 4. flush_toilet -->
-    <div class="icon-card">
-      <div class="icon-preview">
-        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M7.5 2.25A.875.875 0 0 0 6.625 3.125v3.5C6.625 9.2 8.8 11.375 11.375 11.375h.25c2.575 0 4.75-2.175 4.75-4.75v-3.5A.875.875 0 0 0 15.5 2.25h-8Zm.875 1.75h6.25v2.625a3 3 0 0 1-3 3h-.25a3 3 0 0 1-3-3V4ZM9 12.5a.875.875 0 0 0-.875.875v1.25H7.5a3.125 3.125 0 0 0-3.125 3.125v.5A3.125 3.125 0 0 0 7.5 21.375h9A3.125 3.125 0 0 0 19.625 18.25v-.5A3.125 3.125 0 0 0 16.5 14.625h-.625v-1.25a.875.875 0 0 0-1.75 0v1.25h-4.25v-1.25A.875.875 0 0 0 9 12.5Zm-2.875 3.875a1.375 1.375 0 0 1 1.375-1.375h9a1.375 1.375 0 0 1 1.375 1.375v.5a1.375 1.375 0 0 1-1.375 1.375h-9a1.375 1.375 0 0 1-1.375-1.375v-.5Z"/>
-        </svg>
-      </div>
-      <div class="icon-label">沖水廁所</div>
-      <div class="icon-key">flush_toilet</div>
-    </div>
-
-    <!-- 5. shower -->
-    <div class="icon-card">
-      <div class="icon-preview">
-        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M5.5 2.25A.875.875 0 0 0 4.625 3.125v6.75a5.25 5.25 0 0 0 4.375 5.173v1.327H8.125a.875.875 0 0 0 0 1.75h.875v2.5a.875.875 0 0 0 1.75 0v-2.5h.875a.875.875 0 0 0 0-1.75H10.75v-1.327A5.25 5.25 0 0 0 15.125 9.875V3.125A.875.875 0 0 0 14.25 2.25h-8.75Zm.875 1.75h7v5.875a3.5 3.5 0 0 1-7 0V4ZM3.25 14.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm3 1.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm3 1.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm3-1.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm3 0a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm-1.5 2a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm-3 0a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm-3 0a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Z"/>
-        </svg>
-      </div>
-      <div class="icon-label">淋浴間</div>
-      <div class="icon-key">shower</div>
-    </div>
-
-    <!-- 6. hot_water -->
-    <div class="icon-card">
-      <div class="icon-preview">
-        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M8.5 2.25a.875.875 0 0 0-.714 1.386c.38.527.464.91.35 1.254-.126.373-.52.735-1.09 1.178C6.07 6.8 5.25 7.68 5.25 9a.875.875 0 0 0 1.75 0c0-.68.43-1.2 1.246-1.832.683-.524 1.358-1.145 1.654-2.032.29-.86.064-1.77-.514-2.572A.875.875 0 0 0 8.5 2.25ZM12.5 2.25a.875.875 0 0 0-.714 1.386c.38.527.464.91.35 1.254-.126.373-.52.735-1.09 1.178C10.07 6.8 9.25 7.68 9.25 9a.875.875 0 0 0 1.75 0c0-.68.43-1.2 1.246-1.832.683-.524 1.358-1.145 1.654-2.032.29-.86.064-1.77-.514-2.572A.875.875 0 0 0 12.5 2.25ZM16.5 2.25a.875.875 0 0 0-.714 1.386c.38.527.464.91.35 1.254-.126.373-.52.735-1.09 1.178C14.07 6.8 13.25 7.68 13.25 9a.875.875 0 0 0 1.75 0c0-.68.43-1.2 1.246-1.832.683-.524 1.358-1.145 1.654-2.032.29-.86.064-1.77-.514-2.572A.875.875 0 0 0 16.5 2.25ZM4 11.25A1.75 1.75 0 0 0 2.25 13v5A1.75 1.75 0 0 0 4 19.75h2v1.375a.875.875 0 0 0 1.75 0V19.75h8.5v1.375a.875.875 0 0 0 1.75 0V19.75H20A1.75 1.75 0 0 0 21.75 18v-5A1.75 1.75 0 0 0 20 11.25H4ZM4 13h16v5H4v-5Z"/>
-        </svg>
-      </div>
-      <div class="icon-label">熱水</div>
-      <div class="icon-key">hot_water</div>
-    </div>
-
-    <!-- 7. trash_disposal -->
-    <div class="icon-card">
-      <div class="icon-preview">
-        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M9.5 2.25a.875.875 0 0 0-.875.875v.625H4.875a.875.875 0 0 0 0 1.75H5.5l.924 13.877A2.625 2.625 0 0 0 9.047 21.75h5.906a2.625 2.625 0 0 0 2.623-2.373L18.5 5.5h.625a.875.875 0 0 0 0-1.75h-3.75V3.125A.875.875 0 0 0 14.5 2.25h-5ZM10.375 4V3.875h3.25V4h-3.25Zm-3.108 1.5h9.466l-.898 13.502a.875.875 0 0 1-.882.748H9.047a.875.875 0 0 1-.874-.8L7.267 5.5ZM10.25 8.375a.875.875 0 0 0-1.75 0v7.25a.875.875 0 0 0 1.75 0V8.375Zm4.25 0a.875.875 0 0 0-1.75 0v7.25a.875.875 0 0 0 1.75 0V8.375Z"/>
-        </svg>
-      </div>
-      <div class="icon-label">垃圾桶</div>
-      <div class="icon-key">trash_disposal</div>
-    </div>
-
-    <!-- 8. laundry -->
-    <div class="icon-card">
-      <div class="icon-preview">
-        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M5 2.25A2.75 2.75 0 0 0 2.25 5v14A2.75 2.75 0 0 0 5 21.75h14A2.75 2.75 0 0 0 21.75 19V5A2.75 2.75 0 0 0 19 2.25H5ZM4 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2.5H4V5Zm0 4.25h16V19a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9.25ZM7.625 4a.875.875 0 1 0 0 1.75A.875.875 0 0 0 7.625 4ZM10.5 4a.875.875 0 1 0 0 1.75A.875.875 0 0 0 10.5 4Zm1.5 6.75a4.25 4.25 0 1 0 0 8.5 4.25 4.25 0 0 0 0-8.5Zm-2.5 4.25a2.5 2.5 0 1 1 5 0 2.5 2.5 0 0 1-5 0Zm1.5-1.5a.875.875 0 0 0 0 1.75h2a.875.875 0 0 0 0-1.75h-2Z"/>
-        </svg>
-      </div>
-      <div class="icon-label">洗衣機</div>
-      <div class="icon-key">laundry</div>
-    </div>
-
-    <!-- 9. convenience_store -->
-    <div class="icon-card">
-      <div class="icon-preview">
-        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M3.75 2.25a.875.875 0 0 0 0 1.75h.375L5.5 9.25H4.5a2.25 2.25 0 0 0 0 4.5h.25V20.5H4a.875.875 0 0 0 0 1.75h16a.875.875 0 0 0 0-1.75h-.75v-6.75H19.5a2.25 2.25 0 0 0 0-4.5h-1L19.875 4h.375a.875.875 0 0 0 0-1.75H3.75ZM17.5 9.25H6.5l-.847-5.25h12.694L17.5 9.25ZM4.5 11h15a.5.5 0 0 1 0 1H4.5a.5.5 0 0 1 0-1Zm2 2.75v6.75h3.25v-4a.875.875 0 0 1 .875-.875h2.75a.875.875 0 0 1 .875.875v4h3.25v-6.75H6.5Zm4.5 6.75v-3.125h2V20.5h-2Z"/>
-        </svg>
-      </div>
-      <div class="icon-label">便利商店</div>
-      <div class="icon-key">convenience_store</div>
-    </div>
-
-    <!-- 10. restaurant -->
-    <div class="icon-card">
-      <div class="icon-preview">
-        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M8.5 2.25A.875.875 0 0 0 7.625 3.125v5.5a2.375 2.375 0 0 0 1.5 2.2V20.875a.875.875 0 0 0 1.75 0V10.825a2.375 2.375 0 0 0 1.5-2.2v-5.5A.875.875 0 0 0 11.5 2.25H8.5Zm.875 1.75H10.5v4.625a.625.625 0 0 1-1.125 0V4ZM15 2.25a.875.875 0 0 0-.875.875v8.125a2.375 2.375 0 0 0 1.5 2.2v7.425a.875.875 0 0 0 1.75 0v-7.425a2.375 2.375 0 0 0 1.5-2.2V7.75a5.5 5.5 0 0 0-3.875-5.5ZM15 9.375V4.26A3.75 3.75 0 0 1 17.125 7.75v3.5a.625.625 0 0 1-1.25 0v-1.5a.875.875 0 0 0-1.75 0v-.375H15Z"/>
-        </svg>
-      </div>
-      <div class="icon-label">餐廳</div>
-      <div class="icon-key">restaurant</div>
-    </div>
-
-    <!-- 11. tap_water -->
-    <div class="icon-card">
-      <div class="icon-preview">
-        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M6.5 2.25A.875.875 0 0 0 5.625 3.125V5.5H5a2.75 2.75 0 0 0-2.75 2.75v1a.875.875 0 0 0 .875.875H8.5v.375a1.875 1.875 0 0 0 1.875 1.875H11v1.5H9.5a.875.875 0 0 0-.875.875v.625a3.875 3.875 0 0 0 3.875 3.875h.5v1.375a.875.875 0 0 0 1.75 0v-1.375h.5a3.875 3.875 0 0 0 3.875-3.875v-.625A.875.875 0 0 0 18.25 13H16.5v-1.375H17a2.625 2.625 0 0 0 2.625-2.625V8a.875.875 0 0 0-.875-.875h-1.625V5.5a1.75 1.75 0 0 0-1.75-1.75h-4.5A.875.875 0 0 0 9.875 5.5v2.625H8.5V3.125A.875.875 0 0 0 7.625 2.25h-1.125ZM4 7.25h4.5v1.25H3.25v-.5A1 1 0 0 1 4 7.25Zm7.625 0h4.625v1.375h-5.5V7.25h.875Zm0 2.5V11.5h-.25a.125.125 0 0 1-.125-.125V9.875h.375Zm2 2.375V11.5H14.75v1.125h-1.125Zm-3 2.375H16.5V16.5H10.625a2.125 2.125 0 0 1-2.125-2.125v-.375h1.125Zm5.875 1.5v.625H13v-.625h3.5Zm0-2.125v.5h-3.5v-.5h3.5Zm1.875-3.875v1.25a.875.875 0 0 1-.875.875H16.5V10.5h2.125a.875.875 0 0 1 .875-.875v.375ZM6.5 4V7.25H6.375v-3H6.5Z"/>
-        </svg>
-      </div>
-      <div class="icon-label">自來水</div>
-      <div class="icon-key">tap_water</div>
-    </div>
-
-    <!-- 12. water_dispenser -->
-    <div class="icon-card">
-      <div class="icon-preview">
-        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M8 2.25A1.75 1.75 0 0 0 6.25 4v16A1.75 1.75 0 0 0 8 21.75h8A1.75 1.75 0 0 0 17.75 20V4A1.75 1.75 0 0 0 16 2.25H8ZM8 4h8v2.5H8V4Zm0 4.25h8v8H8v-8ZM8 18h8v2H8v-2Zm2-7.75a.875.875 0 0 0 0 1.75h4a.875.875 0 0 0 0-1.75h-4Zm0 3a.875.875 0 0 0 0 1.75h2a.875.875 0 0 0 0-1.75h-2Zm-4.75 3a.875.875 0 0 0-.875.875v.25A2.625 2.625 0 0 0 7 19.75a.875.875 0 0 0 0-1.75 .875.875 0 0 1-.875-.875v-.25A.875.875 0 0 0 5.25 16.25ZM15 3.5a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"/>
-        </svg>
-      </div>
-      <div class="icon-label">飲水機</div>
-      <div class="icon-key">water_dispenser</div>
-    </div>
-
-    <!-- 13. squat_toilet -->
-    <div class="icon-card">
-      <div class="icon-preview">
-        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M6 2.25A.875.875 0 0 0 5.125 3.125v1.5A.875.875 0 0 0 6 5.5h.25v.75a2.625 2.625 0 0 0 2.375 2.613V10H7.5a.875.875 0 0 0 0 1.75h.5v1.875C8 15.49 9.51 17 11.375 17h1.25C14.49 17 16 15.49 16 13.625V11.75h.5a.875.875 0 0 0 0-1.75H15V8.863A2.625 2.625 0 0 0 17.375 6.25V5.5H17.75A.875.875 0 0 0 18.625 4.625v-1.5A.875.875 0 0 0 17.75 2.25H6Zm1.875 3.25V5.5h8.25v.75a.875.875 0 0 1-.875.875H8.75a.875.875 0 0 1-.875-.875ZM9.75 8.75V10h4.5V8.75H9.75Zm0 3v1.875a2.875 2.875 0 0 0 2.875 2.875 2.875 2.875 0 0 0-2.875-2.875H9.75Zm0 0h4.5v1.875A1.625 1.625 0 0 1 12.625 15.25h-1.25A1.625 1.625 0 0 1 9.75 13.625V11.75Zm.375 7a.875.875 0 0 0-.875.875v1.5a.875.875 0 0 0 1.75 0v-1.5a.875.875 0 0 0-.875-.875Zm3.75 0a.875.875 0 0 0-.875.875v1.5a.875.875 0 0 0 1.75 0v-1.5a.875.875 0 0 0-.875-.875Z"/>
-        </svg>
-      </div>
-      <div class="icon-label">蹲式廁所</div>
-      <div class="icon-key">squat_toilet</div>
-    </div>
-
-    <!-- 14. private_bathroom -->
-    <div class="icon-card">
-      <div class="icon-preview">
-        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M3.25 5A2.75 2.75 0 0 1 6 2.25h12A2.75 2.75 0 0 1 20.75 5v14A2.75 2.75 0 0 1 18 21.75H6A2.75 2.75 0 0 1 3.25 19V5ZM6 4a1 1 0 0 0-1 1v3.25h14V5a1 1 0 0 0-1-1H6Zm-1 5v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9H5Zm5.875 1.875a3.125 3.125 0 1 0 0 6.25 3.125 3.125 0 0 0 0-6.25Zm-1.375 3.125a1.375 1.375 0 1 1 2.75 0 1.375 1.375 0 0 1-2.75 0ZM15.5 5.75a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm-2.5.875a.875.875 0 1 1 1.75 0 .875.875 0 0 1-1.75 0Z"/>
-        </svg>
-      </div>
-      <div class="icon-label">包區獨立衛浴</div>
-      <div class="icon-key">private_bathroom</div>
-    </div>
-
-    <!-- 15. hot_spring -->
-    <div class="icon-card">
-      <div class="icon-preview">
-        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M8 2.25a.875.875 0 0 0-.714 1.386c.52.722.52 1.32 0 2.228a.875.875 0 1 0 1.518.872C9.53 5.38 9.625 4.4 9 3.386A.875.875 0 0 0 8 2.25ZM12 2.25a.875.875 0 0 0-.714 1.386c.52.722.52 1.32 0 2.228a.875.875 0 1 0 1.518.872C13.53 5.38 13.625 4.4 13 3.386A.875.875 0 0 0 12 2.25ZM16 2.25a.875.875 0 0 0-.714 1.386c.52.722.52 1.32 0 2.228a.875.875 0 1 0 1.518.872C17.53 5.38 17.625 4.4 17 3.386A.875.875 0 0 0 16 2.25ZM4.25 9A.875.875 0 0 1 5.125 8.125h13.75A.875.875 0 0 1 19.75 9v5.5a5.75 5.75 0 0 1-5.75 5.75H10a5.75 5.75 0 0 1-5.75-5.75V9Zm1.75.875V14.5A4 4 0 0 0 10 18.5h4a4 4 0 0 0 4-4V9.875H6ZM2.25 21a.875.875 0 0 1 .875-.875h17.75a.875.875 0 0 1 0 1.75H3.125A.875.875 0 0 1 2.25 21Z"/>
-        </svg>
-      </div>
-      <div class="icon-label">溫泉</div>
-      <div class="icon-key">hot_spring</div>
-    </div>
-
-    <!-- 16. hair_dryer -->
-    <div class="icon-card">
-      <div class="icon-preview">
-        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M3.5 4.25A.875.875 0 0 0 2.625 5.125v8.75A.875.875 0 0 0 3.5 14.75H5v2.375A2.875 2.875 0 0 0 7.875 20h.5A2.875 2.875 0 0 0 11.25 17.125V14.75h.375a5.875 5.875 0 0 0 0-11.75H3.5Zm7.125 8.75H4.375V6H11.625a4.125 4.125 0 0 1 0 8.25H11.25v-.375A.875.875 0 0 0 10.625 13Zm-4 1.75H9.5v2.375a1.125 1.125 0 0 1-1.125 1.125h-.5A1.125 1.125 0 0 1 6.75 17.125V14.75h.875ZM14.25 7a.875.875 0 0 0 0 1.75 1.875 1.875 0 0 1 0 3.75.875.875 0 0 0 0 1.75A3.625 3.625 0 0 0 14.25 7Zm2.5-1.5a.875.875 0 0 0 0 1.75 4 4 0 0 1 0 8 .875.875 0 0 0 0 1.75 5.75 5.75 0 0 0 0-11.5ZM7.5 8.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Z"/>
-        </svg>
-      </div>
-      <div class="icon-label">吹風機</div>
-      <div class="icon-key">hair_dryer</div>
-    </div>
-
-    <!-- 17. spin_dryer -->
-    <div class="icon-card">
-      <div class="icon-preview">
-        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M5 2.25A2.75 2.75 0 0 0 2.25 5v14A2.75 2.75 0 0 0 5 21.75h14A2.75 2.75 0 0 0 21.75 19V5A2.75 2.75 0 0 0 19 2.25H5ZM4 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2.5H4V5Zm0 4.25h16V19a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9.25ZM7.625 4a.875.875 0 1 0 0 1.75A.875.875 0 0 0 7.625 4ZM10.5 4a.875.875 0 1 0 0 1.75A.875.875 0 0 0 10.5 4Zm1.5 6.625a3.375 3.375 0 1 0 0 6.75 3.375 3.375 0 0 0 0-6.75Zm-1.625 3.375a1.625 1.625 0 1 1 3.25 0 1.625 1.625 0 0 1-3.25 0Zm.375-1.25a.875.875 0 0 1 .875-.875h.75a.875.875 0 0 1 0 1.75h-.75a.875.875 0 0 1-.875-.875Z"/>
-        </svg>
-      </div>
-      <div class="icon-label">脫水機</div>
-      <div class="icon-key">spin_dryer</div>
-    </div>
-
-    <!-- 18. sink -->
-    <div class="icon-card">
-      <div class="icon-preview">
-        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M9.5 2.25a.875.875 0 0 0 0 1.75h.875v1.125H5.5A2.25 2.25 0 0 0 3.25 7.375V8.5a.875.875 0 0 0 .875.875H7.5v.75A6.375 6.375 0 0 0 13.125 16.5H13.5v2H12a.875.875 0 0 0 0 1.75h5a.875.875 0 0 0 0-1.75H15.5v-2h.375A6.375 6.375 0 0 0 22.25 10.125V9.375A.875.875 0 0 0 21.375 8.5H19.75V7.375A2.25 2.25 0 0 0 17.5 5.125H12.125V4H13a.875.875 0 0 0 0-1.75H9.5ZM5 7.375A.5.5 0 0 1 5.5 6.875h12a.5.5 0 0 1 .5.5V8.5H5V7.375ZM9.25 10.25V9.375H9.75V10.25a.875.875 0 0 0 1.75 0V9.375h5.5v.875a4.625 4.625 0 0 1-4.625 4.625h-.75A4.625 4.625 0 0 1 7 10.125V9.375h1.5v.875a.875.875 0 0 0 1.75 0Z"/>
-        </svg>
-      </div>
-      <div class="icon-label">洗滌槽</div>
-      <div class="icon-key">sink</div>
-    </div>
-
-    <!-- 19. refrigerator -->
-    <div class="icon-card">
-      <div class="icon-preview">
-        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M6 2.25A2.75 2.75 0 0 0 3.25 5v14A2.75 2.75 0 0 0 6 21.75h12A2.75 2.75 0 0 0 20.75 19V5A2.75 2.75 0 0 0 18 2.25H6ZM5 5a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v4.25H5V5Zm0 6h14V19a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8Zm3 .875a.875.875 0 0 0 0 1.75h.875v2.25H8a.875.875 0 0 0 0 1.75h1.75a.875.875 0 0 0 .875-.875v-4A.875.875 0 0 0 9.75 11.875H8ZM8 5.875a.875.875 0 0 0 0 1.75h.875v.875a.875.875 0 0 0 1.75 0V5.875a.875.875 0 0 0-1.75 0H8Z"/>
-        </svg>
-      </div>
-      <div class="icon-label">冰箱</div>
-      <div class="icon-key">refrigerator</div>
-    </div>
-
-    <!-- 20. shared_kitchen -->
-    <div class="icon-card">
-      <div class="icon-preview">
-        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M3.25 6A2.75 2.75 0 0 1 6 3.25h12A2.75 2.75 0 0 1 20.75 6v12A2.75 2.75 0 0 1 18 20.75H6A2.75 2.75 0 0 1 3.25 18V6ZM6 5a1 1 0 0 0-1 1v3h14V6a1 1 0 0 0-1-1H6Zm-1 5.75V18a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7.25H5ZM8.5 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm3.5 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm3.5 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2ZM9 12.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm-1.75 3.5a1.75 1.75 0 1 1 3.5 0 1.75 1.75 0 0 1-3.5 0Zm7.25-.875a.875.875 0 0 0 0 1.75h2a.875.875 0 0 0 0-1.75h-2Zm0 2.5a.875.875 0 0 0 0 1.75h2a.875.875 0 0 0 0-1.75h-2Z"/>
-        </svg>
-      </div>
-      <div class="icon-label">公用廚房</div>
-      <div class="icon-key">shared_kitchen</div>
-    </div>
-
-    <!-- 21. outdoor_seating -->
-    <div class="icon-card">
-      <div class="icon-preview">
-        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M2.25 8A.875.875 0 0 1 3.125 7.125h17.75A.875.875 0 0 1 21.75 8v1.5A.875.875 0 0 1 20.875 10.375H20.5v3.25h.375A.875.875 0 0 1 21.75 14.5v1A.875.875 0 0 1 20.875 16.375H18.5v3.75a.875.875 0 0 1-1.75 0v-3.75H7.25v3.75a.875.875 0 0 1-1.75 0v-3.75H3.125A.875.875 0 0 1 2.25 15.5v-1A.875.875 0 0 1 3.125 13.625H3.5V10.375H3.125A.875.875 0 0 1 2.25 9.5V8ZM5.25 10.375v3.25h13.5v-3.25H5.25ZM4 8.875V8.875h16v.75H4v-.75Zm.875 6.5H19.125v.25H4.875v-.25ZM8 3.25a.875.875 0 0 0 0 1.75h1.25V6.25a.875.875 0 0 0 1.75 0V5h2V6.25a.875.875 0 0 0 1.75 0V5H16a.875.875 0 0 0 0-1.75H8Z"/>
-        </svg>
-      </div>
-      <div class="icon-label">戶外桌椅</div>
-      <div class="icon-key">outdoor_seating</div>
-    </div>
-
-    <!-- 22. playground -->
-    <div class="icon-card">
-      <div class="icon-preview">
-        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M15.5 3a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3ZM12.625 7.5a.875.875 0 0 0-.875.875v3.25H9.25V9.875a.875.875 0 0 0-1.75 0v1.75H5.375a.875.875 0 0 0-.875.875v6a.875.875 0 0 0 1.75 0V16H8.375v.875a.875.875 0 0 0 1.75 0v-4.5h2.25v1.75a.875.875 0 0 0 1.75 0V13h1.625v4.5a.875.875 0 0 0 1.75 0V13h.5a.875.875 0 0 0 0-1.75h-.5v-.5l1.804-2.706a.875.875 0 1 0-1.458-.972L15.875 9.5v-1.125A.875.875 0 0 0 15 7.5h-2.375ZM6.25 14.25v-1.5H8.375v1.5H6.25Z"/>
-        </svg>
-      </div>
-      <div class="icon-label">遊樂設施</div>
-      <div class="icon-key">playground</div>
-    </div>
-
-  </div><!-- /icon-grid -->
-</div>
-
-<!-- ════════════════════════════════════ -->
-<!--  SECTION 2: Visual Weight Check    -->
-<!-- ════════════════════════════════════ -->
-<div class="section">
-  <div class="section-title">② 視覺重量一致性（24px 並排）</div>
-  <div class="weight-row">
-
-    <div class="weight-item">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 3.5C8.47 3.5 5.28 4.93 2.96 7.26a.875.875 0 0 0 1.24 1.23A10.13 10.13 0 0 1 12 5.25c2.8 0 5.34 1.13 7.2 2.97a.875.875 0 1 0 1.23-1.24A11.87 11.87 0 0 0 12 3.5ZM12 7.5c-2.37 0-4.51.96-6.07 2.51a.875.875 0 1 0 1.24 1.23A7.11 7.11 0 0 1 12 9.25c1.97 0 3.75.8 5.04 2.09a.875.875 0 1 0 1.24-1.23A8.85 8.85 0 0 0 12 7.5ZM12 11.5c-1.3 0-2.47.53-3.33 1.38a.875.875 0 1 0 1.24 1.23A3.36 3.36 0 0 1 12 13.25c.93 0 1.77.38 2.38.98a.875.875 0 1 0 1.24-1.23A5.1 5.1 0 0 0 12 11.5ZM12 15.5a1.75 1.75 0 1 0 0 3.5 1.75 1.75 0 0 0 0-3.5Z"/></svg>
-      <div class="weight-key">wifi</div>
-    </div>
-
-    <div class="weight-item">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2Zm0 1.75a8.25 8.25 0 1 1 0 16.5A8.25 8.25 0 0 1 12 3.75ZM9.25 7a.875.875 0 0 0-.875.875v3.5a.875.875 0 0 0 1.75 0v-3.5A.875.875 0 0 0 9.25 7Zm5.5 0a.875.875 0 0 0-.875.875v3.5a.875.875 0 0 0 1.75 0v-3.5A.875.875 0 0 0 14.75 7ZM9.5 13.25a.875.875 0 0 0-.875.875v.25a3.375 3.375 0 0 0 6.75 0v-.25a.875.875 0 0 0-1.75 0v.25a1.625 1.625 0 0 1-3.25 0v-.25A.875.875 0 0 0 9.5 13.25Z"/></svg>
-      <div class="weight-key">power_outlet</div>
-    </div>
-
-    <div class="weight-item">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 3.75A1.75 1.75 0 0 0 2.25 5.5v13a1.75 1.75 0 0 0 1.75 1.75h16A1.75 1.75 0 0 0 21.75 18.5v-13A1.75 1.75 0 0 0 20 3.75H4ZM8 7.5a.875.875 0 0 0-.875.875v8.25a.875.875 0 0 0 1.75 0v-2.75h2.875a3.625 3.625 0 0 0 0-7.25H8Zm2.875 4.625H8.875V9.25h2A1.875 1.875 0 0 1 10.875 13V13a.01.01 0 0 1 0 .125Z"/></svg>
-      <div class="weight-key">parking</div>
-    </div>
-
-    <div class="weight-item">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.5 2.25A.875.875 0 0 0 6.625 3.125v3.5C6.625 9.2 8.8 11.375 11.375 11.375h.25c2.575 0 4.75-2.175 4.75-4.75v-3.5A.875.875 0 0 0 15.5 2.25h-8Zm.875 1.75h6.25v2.625a3 3 0 0 1-3 3h-.25a3 3 0 0 1-3-3V4ZM9 12.5a.875.875 0 0 0-.875.875v1.25H7.5a3.125 3.125 0 0 0-3.125 3.125v.5A3.125 3.125 0 0 0 7.5 21.375h9A3.125 3.125 0 0 0 19.625 18.25v-.5A3.125 3.125 0 0 0 16.5 14.625h-.625v-1.25a.875.875 0 0 0-1.75 0v1.25h-4.25v-1.25A.875.875 0 0 0 9 12.5Zm-2.875 3.875a1.375 1.375 0 0 1 1.375-1.375h9a1.375 1.375 0 0 1 1.375 1.375v.5a1.375 1.375 0 0 1-1.375 1.375h-9a1.375 1.375 0 0 1-1.375-1.375v-.5Z"/></svg>
-      <div class="weight-key">flush_toilet</div>
-    </div>
-
-    <div class="weight-item">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.5 2.25A.875.875 0 0 0 4.625 3.125v6.75a5.25 5.25 0 0 0 4.375 5.173v1.327H8.125a.875.875 0 0 0 0 1.75h.875v2.5a.875.875 0 0 0 1.75 0v-2.5h.875a.875.875 0 0 0 0-1.75H10.75v-1.327A5.25 5.25 0 0 0 15.125 9.875V3.125A.875.875 0 0 0 14.25 2.25h-8.75Zm.875 1.75h7v5.875a3.5 3.5 0 0 1-7 0V4ZM3.25 14.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm3 1.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm3 1.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm3-1.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm3 0a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm-1.5 2a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm-3 0a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm-3 0a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Z"/></svg>
-      <div class="weight-key">shower</div>
-    </div>
-
-    <div class="weight-item">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.5 2.25a.875.875 0 0 0-.714 1.386c.38.527.464.91.35 1.254-.126.373-.52.735-1.09 1.178C6.07 6.8 5.25 7.68 5.25 9a.875.875 0 0 0 1.75 0c0-.68.43-1.2 1.246-1.832.683-.524 1.358-1.145 1.654-2.032.29-.86.064-1.77-.514-2.572A.875.875 0 0 0 8.5 2.25ZM12.5 2.25a.875.875 0 0 0-.714 1.386c.38.527.464.91.35 1.254-.126.373-.52.735-1.09 1.178C10.07 6.8 9.25 7.68 9.25 9a.875.875 0 0 0 1.75 0c0-.68.43-1.2 1.246-1.832.683-.524 1.358-1.145 1.654-2.032.29-.86.064-1.77-.514-2.572A.875.875 0 0 0 12.5 2.25ZM16.5 2.25a.875.875 0 0 0-.714 1.386c.38.527.464.91.35 1.254-.126.373-.52.735-1.09 1.178C14.07 6.8 13.25 7.68 13.25 9a.875.875 0 0 0 1.75 0c0-.68.43-1.2 1.246-1.832.683-.524 1.358-1.145 1.654-2.032.29-.86.064-1.77-.514-2.572A.875.875 0 0 0 16.5 2.25ZM4 11.25A1.75 1.75 0 0 0 2.25 13v5A1.75 1.75 0 0 0 4 19.75h2v1.375a.875.875 0 0 0 1.75 0V19.75h8.5v1.375a.875.875 0 0 0 1.75 0V19.75H20A1.75 1.75 0 0 0 21.75 18v-5A1.75 1.75 0 0 0 20 11.25H4ZM4 13h16v5H4v-5Z"/></svg>
-      <div class="weight-key">hot_water</div>
-    </div>
-
-    <div class="weight-item">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.5 2.25a.875.875 0 0 0-.875.875v.625H4.875a.875.875 0 0 0 0 1.75H5.5l.924 13.877A2.625 2.625 0 0 0 9.047 21.75h5.906a2.625 2.625 0 0 0 2.623-2.373L18.5 5.5h.625a.875.875 0 0 0 0-1.75h-3.75V3.125A.875.875 0 0 0 14.5 2.25h-5ZM10.375 4V3.875h3.25V4h-3.25Zm-3.108 1.5h9.466l-.898 13.502a.875.875 0 0 1-.882.748H9.047a.875.875 0 0 1-.874-.8L7.267 5.5ZM10.25 8.375a.875.875 0 0 0-1.75 0v7.25a.875.875 0 0 0 1.75 0V8.375Zm4.25 0a.875.875 0 0 0-1.75 0v7.25a.875.875 0 0 0 1.75 0V8.375Z"/></svg>
-      <div class="weight-key">trash_disposal</div>
-    </div>
-
-    <div class="weight-item">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M5 2.25A2.75 2.75 0 0 0 2.25 5v14A2.75 2.75 0 0 0 5 21.75h14A2.75 2.75 0 0 0 21.75 19V5A2.75 2.75 0 0 0 19 2.25H5ZM4 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2.5H4V5Zm0 4.25h16V19a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9.25ZM7.625 4a.875.875 0 1 0 0 1.75A.875.875 0 0 0 7.625 4ZM10.5 4a.875.875 0 1 0 0 1.75A.875.875 0 0 0 10.5 4Zm1.5 6.75a4.25 4.25 0 1 0 0 8.5 4.25 4.25 0 0 0 0-8.5Zm-2.5 4.25a2.5 2.5 0 1 1 5 0 2.5 2.5 0 0 1-5 0Zm1.5-1.5a.875.875 0 0 0 0 1.75h2a.875.875 0 0 0 0-1.75h-2Z"/></svg>
-      <div class="weight-key">laundry</div>
-    </div>
-
-    <div class="weight-item">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M3.75 2.25a.875.875 0 0 0 0 1.75h.375L5.5 9.25H4.5a2.25 2.25 0 0 0 0 4.5h.25V20.5H4a.875.875 0 0 0 0 1.75h16a.875.875 0 0 0 0-1.75h-.75v-6.75H19.5a2.25 2.25 0 0 0 0-4.5h-1L19.875 4h.375a.875.875 0 0 0 0-1.75H3.75ZM17.5 9.25H6.5l-.847-5.25h12.694L17.5 9.25ZM4.5 11h15a.5.5 0 0 1 0 1H4.5a.5.5 0 0 1 0-1Zm2 2.75v6.75h3.25v-4a.875.875 0 0 1 .875-.875h2.75a.875.875 0 0 1 .875.875v4h3.25v-6.75H6.5Zm4.5 6.75v-3.125h2V20.5h-2Z"/></svg>
-      <div class="weight-key">convenience_store</div>
-    </div>
-
-    <div class="weight-item">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.5 2.25A.875.875 0 0 0 7.625 3.125v5.5a2.375 2.375 0 0 0 1.5 2.2V20.875a.875.875 0 0 0 1.75 0V10.825a2.375 2.375 0 0 0 1.5-2.2v-5.5A.875.875 0 0 0 11.5 2.25H8.5Zm.875 1.75H10.5v4.625a.625.625 0 0 1-1.125 0V4ZM15 2.25a.875.875 0 0 0-.875.875v8.125a2.375 2.375 0 0 0 1.5 2.2v7.425a.875.875 0 0 0 1.75 0v-7.425a2.375 2.375 0 0 0 1.5-2.2V7.75a5.5 5.5 0 0 0-3.875-5.5ZM15 9.375V4.26A3.75 3.75 0 0 1 17.125 7.75v3.5a.625.625 0 0 1-1.25 0v-1.5a.875.875 0 0 0-1.75 0v-.375H15Z"/></svg>
-      <div class="weight-key">restaurant</div>
-    </div>
-
-    <div class="weight-item">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.5 2.25A.875.875 0 0 0 5.625 3.125V5.5H5a2.75 2.75 0 0 0-2.75 2.75v1a.875.875 0 0 0 .875.875H8.5v.375a1.875 1.875 0 0 0 1.875 1.875H11v1.5H9.5a.875.875 0 0 0-.875.875v.625a3.875 3.875 0 0 0 3.875 3.875h.5v1.375a.875.875 0 0 0 1.75 0v-1.375h.5a3.875 3.875 0 0 0 3.875-3.875v-.625A.875.875 0 0 0 18.25 13H16.5v-1.375H17a2.625 2.625 0 0 0 2.625-2.625V8a.875.875 0 0 0-.875-.875h-1.625V5.5a1.75 1.75 0 0 0-1.75-1.75h-4.5A.875.875 0 0 0 9.875 5.5v2.625H8.5V3.125A.875.875 0 0 0 7.625 2.25h-1.125ZM4 7.25h4.5v1.25H3.25v-.5A1 1 0 0 1 4 7.25Zm7.625 0h4.625v1.375h-5.5V7.25h.875Zm0 2.5V11.5h-.25a.125.125 0 0 1-.125-.125V9.875h.375Zm2 2.375V11.5H14.75v1.125h-1.125Zm-3 2.375H16.5V16.5H10.625a2.125 2.125 0 0 1-2.125-2.125v-.375h1.125Zm5.875 1.5v.625H13v-.625h3.5Zm0-2.125v.5h-3.5v-.5h3.5Zm1.875-3.875v1.25a.875.875 0 0 1-.875.875H16.5V10.5h2.125a.875.875 0 0 1 .875-.875v.375ZM6.5 4V7.25H6.375v-3H6.5Z"/></svg>
-      <div class="weight-key">tap_water</div>
-    </div>
-
-    <div class="weight-item">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 2.25A1.75 1.75 0 0 0 6.25 4v16A1.75 1.75 0 0 0 8 21.75h8A1.75 1.75 0 0 0 17.75 20V4A1.75 1.75 0 0 0 16 2.25H8ZM8 4h8v2.5H8V4Zm0 4.25h8v8H8v-8ZM8 18h8v2H8v-2Zm2-7.75a.875.875 0 0 0 0 1.75h4a.875.875 0 0 0 0-1.75h-4Zm0 3a.875.875 0 0 0 0 1.75h2a.875.875 0 0 0 0-1.75h-2Zm-4.75 3a.875.875 0 0 0-.875.875v.25A2.625 2.625 0 0 0 7 19.75a.875.875 0 0 0 0-1.75 .875.875 0 0 1-.875-.875v-.25A.875.875 0 0 0 5.25 16.25ZM15 3.5a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"/></svg>
-      <div class="weight-key">water_dispenser</div>
-    </div>
-
-    <div class="weight-item">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 2.25a.875.875 0 0 0-.714 1.386c.52.722.52 1.32 0 2.228a.875.875 0 1 0 1.518.872C9.53 5.38 9.625 4.4 9 3.386A.875.875 0 0 0 8 2.25ZM12 2.25a.875.875 0 0 0-.714 1.386c.52.722.52 1.32 0 2.228a.875.875 0 1 0 1.518.872C13.53 5.38 13.625 4.4 13 3.386A.875.875 0 0 0 12 2.25ZM16 2.25a.875.875 0 0 0-.714 1.386c.52.722.52 1.32 0 2.228a.875.875 0 1 0 1.518.872C17.53 5.38 17.625 4.4 17 3.386A.875.875 0 0 0 16 2.25ZM4.25 9A.875.875 0 0 1 5.125 8.125h13.75A.875.875 0 0 1 19.75 9v5.5a5.75 5.75 0 0 1-5.75 5.75H10a5.75 5.75 0 0 1-5.75-5.75V9Zm1.75.875V14.5A4 4 0 0 0 10 18.5h4a4 4 0 0 0 4-4V9.875H6ZM2.25 21a.875.875 0 0 1 .875-.875h17.75a.875.875 0 0 1 0 1.75H3.125A.875.875 0 0 1 2.25 21Z"/></svg>
-      <div class="weight-key">hot_spring</div>
-    </div>
-
-    <div class="weight-item">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M6 2.25A2.75 2.75 0 0 0 3.25 5v14A2.75 2.75 0 0 0 6 21.75h12A2.75 2.75 0 0 0 20.75 19V5A2.75 2.75 0 0 0 18 2.25H6ZM5 5a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v4.25H5V5Zm0 6h14V19a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8Zm3 .875a.875.875 0 0 0 0 1.75h.875v2.25H8a.875.875 0 0 0 0 1.75h1.75a.875.875 0 0 0 .875-.875v-4A.875.875 0 0 0 9.75 11.875H8ZM8 5.875a.875.875 0 0 0 0 1.75h.875v.875a.875.875 0 0 0 1.75 0V5.875a.875.875 0 0 0-1.75 0H8Z"/></svg>
-      <div class="weight-key">refrigerator</div>
-    </div>
-
-    <div class="weight-item">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M3.25 6A2.75 2.75 0 0 1 6 3.25h12A2.75 2.75 0 0 1 20.75 6v12A2.75 2.75 0 0 1 18 20.75H6A2.75 2.75 0 0 1 3.25 18V6ZM6 5a1 1 0 0 0-1 1v3h14V6a1 1 0 0 0-1-1H6Zm-1 5.75V18a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7.25H5ZM8.5 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm3.5 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm3.5 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2ZM9 12.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm-1.75 3.5a1.75 1.75 0 1 1 3.5 0 1.75 1.75 0 0 1-3.5 0Zm7.25-.875a.875.875 0 0 0 0 1.75h2a.875.875 0 0 0 0-1.75h-2Zm0 2.5a.875.875 0 0 0 0 1.75h2a.875.875 0 0 0 0-1.75h-2Z"/></svg>
-      <div class="weight-key">shared_kitchen</div>
-    </div>
-
-    <div class="weight-item">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M15.5 3a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3ZM12.625 7.5a.875.875 0 0 0-.875.875v3.25H9.25V9.875a.875.875 0 0 0-1.75 0v1.75H5.375a.875.875 0 0 0-.875.875v6a.875.875 0 0 0 1.75 0V16H8.375v.875a.875.875 0 0 0 1.75 0v-4.5h2.25v1.75a.875.875 0 0 0 1.75 0V13h1.625v4.5a.875.875 0 0 0 1.75 0V13h.5a.875.875 0 0 0 0-1.75h-.5v-.5l1.804-2.706a.875.875 0 1 0-1.458-.972L15.875 9.5v-1.125A.875.875 0 0 0 15 7.5h-2.375ZM6.25 14.25v-1.5H8.375v1.5H6.25Z"/></svg>
-      <div class="weight-key">playground</div>
-    </div>
-
+<div class="legend">
+  <div class="legend-item">
+    <div class="legend-dot" style="background:#2D6A4F;"></div>
+    確認（飽和色）
+  </div>
+  <div class="legend-item">
+    <div class="legend-dot" style="background:rgba(45,106,79,0.30);"></div>
+    待確認（30% opacity）
   </div>
 </div>
 
-<!-- ════════════════════════════════════ -->
-<!--  SECTION 3: Size Comparison        -->
-<!-- ════════════════════════════════════ -->
-<div class="section">
-  <div class="section-title">③ 尺寸對照（以 shower 為例）</div>
-  <div class="size-row">
-    <div class="size-item">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="#2D6A4F"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.5 2.25A.875.875 0 0 0 4.625 3.125v6.75a5.25 5.25 0 0 0 4.375 5.173v1.327H8.125a.875.875 0 0 0 0 1.75h.875v2.5a.875.875 0 0 0 1.75 0v-2.5h.875a.875.875 0 0 0 0-1.75H10.75v-1.327A5.25 5.25 0 0 0 15.125 9.875V3.125A.875.875 0 0 0 14.25 2.25h-8.75Zm.875 1.75h7v5.875a3.5 3.5 0 0 1-7 0V4ZM3.25 14.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm3 1.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm3 1.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm3-1.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm3 0a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm-1.5 2a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm-3 0a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm-3 0a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Z"/></svg>
-      <div class="size-label">16px</div>
+<p class="section-label">設施與服務 · Facilities &amp; Services</p>
+
+<div class="grid">
+
+  <!-- 1. tap_water 自來水 -->
+  <div class="card">
+    <div class="card-icons">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-confirmed">
+          <!-- L-shaped pipe -->
+          <path d="M6 8 L6 14 L12 14"/>
+          <!-- faucet spout -->
+          <path d="M12 12 L12 16"/>
+          <!-- handle -->
+          <line x1="4" y1="8" x2="9" y2="8"/>
+          <!-- water drop -->
+          <path d="M12 17 Q11 19 12 20 Q13 19 12 17Z"/>
+        </svg>
+        <span class="state-label">確認</span>
+      </div>
+      <div class="divider"></div>
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-pending">
+          <path d="M6 8 L6 14 L12 14"/>
+          <path d="M12 12 L12 16"/>
+          <line x1="4" y1="8" x2="9" y2="8"/>
+          <path d="M12 17 Q11 19 12 20 Q13 19 12 17Z"/>
+        </svg>
+        <span class="state-label">待確認</span>
+      </div>
     </div>
-    <div class="size-item">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="#2D6A4F"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.5 2.25A.875.875 0 0 0 4.625 3.125v6.75a5.25 5.25 0 0 0 4.375 5.173v1.327H8.125a.875.875 0 0 0 0 1.75h.875v2.5a.875.875 0 0 0 1.75 0v-2.5h.875a.875.875 0 0 0 0-1.75H10.75v-1.327A5.25 5.25 0 0 0 15.125 9.875V3.125A.875.875 0 0 0 14.25 2.25h-8.75Zm.875 1.75h7v5.875a3.5 3.5 0 0 1-7 0V4ZM3.25 14.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm3 1.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm3 1.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm3-1.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm3 0a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm-1.5 2a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm-3 0a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm-3 0a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Z"/></svg>
-      <div class="size-label">24px</div>
-    </div>
-    <div class="size-item">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="#2D6A4F"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.5 2.25A.875.875 0 0 0 4.625 3.125v6.75a5.25 5.25 0 0 0 4.375 5.173v1.327H8.125a.875.875 0 0 0 0 1.75h.875v2.5a.875.875 0 0 0 1.75 0v-2.5h.875a.875.875 0 0 0 0-1.75H10.75v-1.327A5.25 5.25 0 0 0 15.125 9.875V3.125A.875.875 0 0 0 14.25 2.25h-8.75Zm.875 1.75h7v5.875a3.5 3.5 0 0 1-7 0V4ZM3.25 14.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm3 1.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm3 1.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm3-1.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm3 0a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm-1.5 2a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm-3 0a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm-3 0a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Z"/></svg>
-      <div class="size-label">32px</div>
-    </div>
-    <div class="size-item">
-      <svg width="40" height="40" viewBox="0 0 24 24" fill="#2D6A4F"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.5 2.25A.875.875 0 0 0 4.625 3.125v6.75a5.25 5.25 0 0 0 4.375 5.173v1.327H8.125a.875.875 0 0 0 0 1.75h.875v2.5a.875.875 0 0 0 1.75 0v-2.5h.875a.875.875 0 0 0 0-1.75H10.75v-1.327A5.25 5.25 0 0 0 15.125 9.875V3.125A.875.875 0 0 0 14.25 2.25h-8.75Zm.875 1.75h7v5.875a3.5 3.5 0 0 1-7 0V4ZM3.25 14.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm3 1.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm3 1.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm3-1.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm3 0a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm-1.5 2a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm-3 0a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm-3 0a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Z"/></svg>
-      <div class="size-label">40px</div>
-    </div>
+    <div class="card-name">自來水</div>
+    <div class="card-key">tap_water</div>
   </div>
-</div>
 
-<!-- ════════════════════════════════════ -->
-<!--  SECTION 4: Color Comparison       -->
-<!-- ════════════════════════════════════ -->
-<div class="section">
-  <div class="section-title">④ 顏色對照（以 wifi 為例）</div>
-  <div class="color-row">
-
-    <div class="color-swatch">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="#2D6A4F"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 3.5C8.47 3.5 5.28 4.93 2.96 7.26a.875.875 0 0 0 1.24 1.23A10.13 10.13 0 0 1 12 5.25c2.8 0 5.34 1.13 7.2 2.97a.875.875 0 1 0 1.23-1.24A11.87 11.87 0 0 0 12 3.5ZM12 7.5c-2.37 0-4.51.96-6.07 2.51a.875.875 0 1 0 1.24 1.23A7.11 7.11 0 0 1 12 9.25c1.97 0 3.75.8 5.04 2.09a.875.875 0 1 0 1.24-1.23A8.85 8.85 0 0 0 12 7.5ZM12 11.5c-1.3 0-2.47.53-3.33 1.38a.875.875 0 1 0 1.24 1.23A3.36 3.36 0 0 1 12 13.25c.93 0 1.77.38 2.38.98a.875.875 0 1 0 1.24-1.23A5.1 5.1 0 0 0 12 11.5ZM12 15.5a1.75 1.75 0 1 0 0 3.5 1.75 1.75 0 0 0 0-3.5Z"/></svg>
-      <div class="color-label">#2D6A4F 飽和色</div>
+  <!-- 2. water_dispenser 飲水機 -->
+  <div class="card">
+    <div class="card-icons">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-confirmed">
+          <!-- water bottle on top -->
+          <ellipse cx="12" cy="6" rx="4" ry="2.5"/>
+          <!-- bottle neck / connector -->
+          <line x1="12" y1="8.5" x2="12" y2="10"/>
+          <!-- machine body -->
+          <rect x="7" y="10" width="10" height="11" rx="1"/>
+          <!-- spout -->
+          <path d="M10 17 L8 17 L8 19"/>
+          <!-- indicator dot -->
+          <circle cx="15" cy="13" r="1"/>
+        </svg>
+        <span class="state-label">確認</span>
+      </div>
+      <div class="divider"></div>
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-pending">
+          <ellipse cx="12" cy="6" rx="4" ry="2.5"/>
+          <line x1="12" y1="8.5" x2="12" y2="10"/>
+          <rect x="7" y="10" width="10" height="11" rx="1"/>
+          <path d="M10 17 L8 17 L8 19"/>
+          <circle cx="15" cy="13" r="1"/>
+        </svg>
+        <span class="state-label">待確認</span>
+      </div>
     </div>
-
-    <div class="color-swatch">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="#2D6A4F" opacity="0.3"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 3.5C8.47 3.5 5.28 4.93 2.96 7.26a.875.875 0 0 0 1.24 1.23A10.13 10.13 0 0 1 12 5.25c2.8 0 5.34 1.13 7.2 2.97a.875.875 0 1 0 1.23-1.24A11.87 11.87 0 0 0 12 3.5ZM12 7.5c-2.37 0-4.51.96-6.07 2.51a.875.875 0 1 0 1.24 1.23A7.11 7.11 0 0 1 12 9.25c1.97 0 3.75.8 5.04 2.09a.875.875 0 1 0 1.24-1.23A8.85 8.85 0 0 0 12 7.5ZM12 11.5c-1.3 0-2.47.53-3.33 1.38a.875.875 0 1 0 1.24 1.23A3.36 3.36 0 0 1 12 13.25c.93 0 1.77.38 2.38.98a.875.875 0 1 0 1.24-1.23A5.1 5.1 0 0 0 12 11.5ZM12 15.5a1.75 1.75 0 1 0 0 3.5 1.75 1.75 0 0 0 0-3.5Z"/></svg>
-      <div class="color-label">#2D6A4F 30% opacity</div>
-    </div>
-
-    <div class="color-swatch dark-bg">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="white"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 3.5C8.47 3.5 5.28 4.93 2.96 7.26a.875.875 0 0 0 1.24 1.23A10.13 10.13 0 0 1 12 5.25c2.8 0 5.34 1.13 7.2 2.97a.875.875 0 1 0 1.23-1.24A11.87 11.87 0 0 0 12 3.5ZM12 7.5c-2.37 0-4.51.96-6.07 2.51a.875.875 0 1 0 1.24 1.23A7.11 7.11 0 0 1 12 9.25c1.97 0 3.75.8 5.04 2.09a.875.875 0 1 0 1.24-1.23A8.85 8.85 0 0 0 12 7.5ZM12 11.5c-1.3 0-2.47.53-3.33 1.38a.875.875 0 1 0 1.24 1.23A3.36 3.36 0 0 1 12 13.25c.93 0 1.77.38 2.38.98a.875.875 0 1 0 1.24-1.23A5.1 5.1 0 0 0 12 11.5ZM12 15.5a1.75 1.75 0 1 0 0 3.5 1.75 1.75 0 0 0 0-3.5Z"/></svg>
-      <div class="color-label">深底白色</div>
-    </div>
-
-    <div class="color-swatch">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="#111827"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 3.5C8.47 3.5 5.28 4.93 2.96 7.26a.875.875 0 0 0 1.24 1.23A10.13 10.13 0 0 1 12 5.25c2.8 0 5.34 1.13 7.2 2.97a.875.875 0 1 0 1.23-1.24A11.87 11.87 0 0 0 12 3.5ZM12 7.5c-2.37 0-4.51.96-6.07 2.51a.875.875 0 1 0 1.24 1.23A7.11 7.11 0 0 1 12 9.25c1.97 0 3.75.8 5.04 2.09a.875.875 0 1 0 1.24-1.23A8.85 8.85 0 0 0 12 7.5ZM12 11.5c-1.3 0-2.47.53-3.33 1.38a.875.875 0 1 0 1.24 1.23A3.36 3.36 0 0 1 12 13.25c.93 0 1.77.38 2.38.98a.875.875 0 1 0 1.24-1.23A5.1 5.1 0 0 0 12 11.5ZM12 15.5a1.75 1.75 0 1 0 0 3.5 1.75 1.75 0 0 0 0-3.5Z"/></svg>
-      <div class="color-label">currentColor 深</div>
-    </div>
-
+    <div class="card-name">飲水機</div>
+    <div class="card-key">water_dispenser</div>
   </div>
+
+  <!-- 3. hot_water 熱水 -->
+  <div class="card">
+    <div class="card-icons">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-confirmed">
+          <!-- L-shaped pipe -->
+          <path d="M4 9 L4 14 L10 14"/>
+          <!-- spout -->
+          <path d="M10 12 L10 16"/>
+          <!-- handle -->
+          <line x1="2" y1="9" x2="7" y2="9"/>
+          <!-- steam waves (3 wavy lines) -->
+          <path d="M13 16 Q14 14.5 15 16 Q16 17.5 17 16"/>
+          <path d="M13 13 Q14 11.5 15 13 Q16 14.5 17 13"/>
+          <path d="M13 10 Q14 8.5 15 10 Q16 11.5 17 10"/>
+        </svg>
+        <span class="state-label">確認</span>
+      </div>
+      <div class="divider"></div>
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-pending">
+          <path d="M4 9 L4 14 L10 14"/>
+          <path d="M10 12 L10 16"/>
+          <line x1="2" y1="9" x2="7" y2="9"/>
+          <path d="M13 16 Q14 14.5 15 16 Q16 17.5 17 16"/>
+          <path d="M13 13 Q14 11.5 15 13 Q16 14.5 17 13"/>
+          <path d="M13 10 Q14 8.5 15 10 Q16 11.5 17 10"/>
+        </svg>
+        <span class="state-label">待確認</span>
+      </div>
+    </div>
+    <div class="card-name">熱水</div>
+    <div class="card-key">hot_water</div>
+  </div>
+
+  <!-- 4. flush_toilet 沖水馬桶 -->
+  <div class="card">
+    <div class="card-icons">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-confirmed">
+          <!-- tank -->
+          <rect x="7" y="3" width="10" height="6" rx="1"/>
+          <!-- bowl top / seat -->
+          <path d="M6 9 Q6 14 12 15 Q18 14 18 9 Z"/>
+          <!-- base -->
+          <path d="M9 15 Q9 19 12 19 Q15 19 15 15"/>
+          <!-- base foot -->
+          <line x1="9" y1="19" x2="15" y2="19"/>
+        </svg>
+        <span class="state-label">確認</span>
+      </div>
+      <div class="divider"></div>
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-pending">
+          <rect x="7" y="3" width="10" height="6" rx="1"/>
+          <path d="M6 9 Q6 14 12 15 Q18 14 18 9 Z"/>
+          <path d="M9 15 Q9 19 12 19 Q15 19 15 15"/>
+          <line x1="9" y1="19" x2="15" y2="19"/>
+        </svg>
+        <span class="state-label">待確認</span>
+      </div>
+    </div>
+    <div class="card-name">沖水馬桶</div>
+    <div class="card-key">flush_toilet</div>
+  </div>
+
+  <!-- 5. squat_toilet 蹲式廁所 -->
+  <div class="card">
+    <div class="card-icons">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-confirmed">
+          <!-- main oval / bowl (top-down view) -->
+          <ellipse cx="12" cy="13" rx="6" ry="4"/>
+          <!-- inner drain hole -->
+          <ellipse cx="12" cy="13" rx="2" ry="1.5"/>
+          <!-- left footrest -->
+          <rect x="3" y="11" width="3" height="4" rx="1"/>
+          <!-- right footrest -->
+          <rect x="18" y="11" width="3" height="4" rx="1"/>
+          <!-- top edge line -->
+          <line x1="6" y1="9" x2="18" y2="9"/>
+        </svg>
+        <span class="state-label">確認</span>
+      </div>
+      <div class="divider"></div>
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-pending">
+          <ellipse cx="12" cy="13" rx="6" ry="4"/>
+          <ellipse cx="12" cy="13" rx="2" ry="1.5"/>
+          <rect x="3" y="11" width="3" height="4" rx="1"/>
+          <rect x="18" y="11" width="3" height="4" rx="1"/>
+          <line x1="6" y1="9" x2="18" y2="9"/>
+        </svg>
+        <span class="state-label">待確認</span>
+      </div>
+    </div>
+    <div class="card-name">蹲式廁所</div>
+    <div class="card-key">squat_toilet</div>
+  </div>
+
+  <!-- 6. shower 淋浴間 -->
+  <div class="card">
+    <div class="card-icons">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-confirmed">
+          <!-- shower arm pipe -->
+          <path d="M8 4 Q8 8 12 8"/>
+          <!-- shower head circle -->
+          <circle cx="14" cy="8" r="2.5"/>
+          <!-- water droplets -->
+          <line x1="10" y1="13" x2="10" y2="15"/>
+          <line x1="13" y1="12" x2="13" y2="14"/>
+          <line x1="16" y1="13" x2="16" y2="15"/>
+          <line x1="11.5" y1="15" x2="11.5" y2="17"/>
+          <line x1="14.5" y1="15" x2="14.5" y2="17"/>
+        </svg>
+        <span class="state-label">確認</span>
+      </div>
+      <div class="divider"></div>
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-pending">
+          <path d="M8 4 Q8 8 12 8"/>
+          <circle cx="14" cy="8" r="2.5"/>
+          <line x1="10" y1="13" x2="10" y2="15"/>
+          <line x1="13" y1="12" x2="13" y2="14"/>
+          <line x1="16" y1="13" x2="16" y2="15"/>
+          <line x1="11.5" y1="15" x2="11.5" y2="17"/>
+          <line x1="14.5" y1="15" x2="14.5" y2="17"/>
+        </svg>
+        <span class="state-label">待確認</span>
+      </div>
+    </div>
+    <div class="card-name">淋浴間</div>
+    <div class="card-key">shower</div>
+  </div>
+
+  <!-- 7. private_bathroom 包區獨立衛浴 -->
+  <div class="card">
+    <div class="card-icons">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-confirmed">
+          <!-- bathtub side view -->
+          <path d="M3 16 L3 13 Q3 11 5 11 L19 11 Q21 11 21 13 L21 16 Z"/>
+          <!-- tub feet -->
+          <line x1="6" y1="16" x2="6" y2="18"/>
+          <line x1="18" y1="16" x2="18" y2="18"/>
+          <!-- faucet -->
+          <path d="M9 11 L9 9 L11 9"/>
+          <!-- lock icon top-right -->
+          <rect x="17" y="3" width="5" height="4" rx="1"/>
+          <path d="M18 3 Q18 1 19.5 1 Q21 1 21 3"/>
+        </svg>
+        <span class="state-label">確認</span>
+      </div>
+      <div class="divider"></div>
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-pending">
+          <path d="M3 16 L3 13 Q3 11 5 11 L19 11 Q21 11 21 13 L21 16 Z"/>
+          <line x1="6" y1="16" x2="6" y2="18"/>
+          <line x1="18" y1="16" x2="18" y2="18"/>
+          <path d="M9 11 L9 9 L11 9"/>
+          <rect x="17" y="3" width="5" height="4" rx="1"/>
+          <path d="M18 3 Q18 1 19.5 1 Q21 1 21 3"/>
+        </svg>
+        <span class="state-label">待確認</span>
+      </div>
+    </div>
+    <div class="card-name">獨立衛浴</div>
+    <div class="card-key">private_bathroom</div>
+  </div>
+
+  <!-- 8. hot_spring 溫泉 -->
+  <div class="card">
+    <div class="card-icons">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-confirmed">
+          <!-- pool oval -->
+          <path d="M4 18 Q4 20 12 20 Q20 20 20 18 L20 15 Q20 13 12 13 Q4 13 4 15 Z"/>
+          <!-- steam wave 1 -->
+          <path d="M8 11 Q9 9 10 11 Q11 13 12 11"/>
+          <!-- steam wave 2 -->
+          <path d="M12 11 Q13 9 14 11 Q15 13 16 11"/>
+          <!-- steam wave 3 -->
+          <path d="M8 8 Q9 6 10 8 Q11 10 12 8"/>
+          <path d="M12 8 Q13 6 14 8 Q15 10 16 8"/>
+        </svg>
+        <span class="state-label">確認</span>
+      </div>
+      <div class="divider"></div>
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-pending">
+          <path d="M4 18 Q4 20 12 20 Q20 20 20 18 L20 15 Q20 13 12 13 Q4 13 4 15 Z"/>
+          <path d="M8 11 Q9 9 10 11 Q11 13 12 11"/>
+          <path d="M12 11 Q13 9 14 11 Q15 13 16 11"/>
+          <path d="M8 8 Q9 6 10 8 Q11 10 12 8"/>
+          <path d="M12 8 Q13 6 14 8 Q15 10 16 8"/>
+        </svg>
+        <span class="state-label">待確認</span>
+      </div>
+    </div>
+    <div class="card-name">溫泉</div>
+    <div class="card-key">hot_spring</div>
+  </div>
+
+  <!-- 9. hair_dryer 吹風機 -->
+  <div class="card">
+    <div class="card-icons">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-confirmed">
+          <!-- body of dryer (rounded rect) -->
+          <path d="M4 8 Q4 6 6 6 L14 6 Q16 6 16 8 L16 14 Q16 16 14 16 L6 16 Q4 16 4 14 Z"/>
+          <!-- nozzle / barrel end -->
+          <path d="M16 10 L20 9 L20 15 L16 14"/>
+          <!-- handle going down -->
+          <path d="M8 16 L8 21"/>
+          <!-- air flow lines -->
+          <line x1="18" y1="7" x2="21" y2="5"/>
+          <line x1="22" y1="11" x2="22" y2="11"/>
+          <line x1="18" y1="16" x2="21" y2="18"/>
+        </svg>
+        <span class="state-label">確認</span>
+      </div>
+      <div class="divider"></div>
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-pending">
+          <path d="M4 8 Q4 6 6 6 L14 6 Q16 6 16 8 L16 14 Q16 16 14 16 L6 16 Q4 16 4 14 Z"/>
+          <path d="M16 10 L20 9 L20 15 L16 14"/>
+          <path d="M8 16 L8 21"/>
+          <line x1="18" y1="7" x2="21" y2="5"/>
+          <line x1="22" y1="11" x2="22" y2="11"/>
+          <line x1="18" y1="16" x2="21" y2="18"/>
+        </svg>
+        <span class="state-label">待確認</span>
+      </div>
+    </div>
+    <div class="card-name">吹風機</div>
+    <div class="card-key">hair_dryer</div>
+  </div>
+
+  <!-- 10. washing_machine 洗衣機 -->
+  <div class="card">
+    <div class="card-icons">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-confirmed">
+          <!-- machine body -->
+          <rect x="3" y="3" width="18" height="20" rx="2"/>
+          <!-- top control panel line -->
+          <line x1="3" y1="7" x2="21" y2="7"/>
+          <!-- control knob -->
+          <circle cx="7" cy="5" r="1"/>
+          <!-- front observation window -->
+          <circle cx="12" cy="14" r="5"/>
+          <!-- inner drum circle -->
+          <circle cx="12" cy="14" r="2.5"/>
+        </svg>
+        <span class="state-label">確認</span>
+      </div>
+      <div class="divider"></div>
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-pending">
+          <rect x="3" y="3" width="18" height="20" rx="2"/>
+          <line x1="3" y1="7" x2="21" y2="7"/>
+          <circle cx="7" cy="5" r="1"/>
+          <circle cx="12" cy="14" r="5"/>
+          <circle cx="12" cy="14" r="2.5"/>
+        </svg>
+        <span class="state-label">待確認</span>
+      </div>
+    </div>
+    <div class="card-name">洗衣機</div>
+    <div class="card-key">washing_machine</div>
+  </div>
+
+  <!-- 11. spin_dryer 脫水機 -->
+  <div class="card">
+    <div class="card-icons">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-confirmed">
+          <!-- cylinder body -->
+          <rect x="5" y="7" width="14" height="14" rx="2"/>
+          <!-- top lid (ellipse) -->
+          <ellipse cx="12" cy="7" rx="7" ry="2"/>
+          <!-- inner drum circle -->
+          <circle cx="12" cy="14" r="4"/>
+          <!-- rotation arrow (partial arc with arrowhead) -->
+          <path d="M10 11 A3 3 0 0 1 14 11"/>
+          <polyline points="14,9.5 14,11.5 16,11"/>
+        </svg>
+        <span class="state-label">確認</span>
+      </div>
+      <div class="divider"></div>
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-pending">
+          <rect x="5" y="7" width="14" height="14" rx="2"/>
+          <ellipse cx="12" cy="7" rx="7" ry="2"/>
+          <circle cx="12" cy="14" r="4"/>
+          <path d="M10 11 A3 3 0 0 1 14 11"/>
+          <polyline points="14,9.5 14,11.5 16,11"/>
+        </svg>
+        <span class="state-label">待確認</span>
+      </div>
+    </div>
+    <div class="card-name">脫水機</div>
+    <div class="card-key">spin_dryer</div>
+  </div>
+
+  <!-- 12. sink 洗滌槽 -->
+  <div class="card">
+    <div class="card-icons">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-confirmed">
+          <!-- sink basin (top view, rect) -->
+          <rect x="3" y="9" width="18" height="13" rx="2"/>
+          <!-- drain hole -->
+          <circle cx="12" cy="16" r="2"/>
+          <!-- drain cross lines -->
+          <line x1="12" y1="14" x2="12" y2="18"/>
+          <line x1="10" y1="16" x2="14" y2="16"/>
+          <!-- faucet (center top) -->
+          <path d="M10 9 L10 6 L14 6 L14 9"/>
+          <!-- faucet spout -->
+          <line x1="12" y1="6" x2="12" y2="4"/>
+        </svg>
+        <span class="state-label">確認</span>
+      </div>
+      <div class="divider"></div>
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-pending">
+          <rect x="3" y="9" width="18" height="13" rx="2"/>
+          <circle cx="12" cy="16" r="2"/>
+          <line x1="12" y1="14" x2="12" y2="18"/>
+          <line x1="10" y1="16" x2="14" y2="16"/>
+          <path d="M10 9 L10 6 L14 6 L14 9"/>
+          <line x1="12" y1="6" x2="12" y2="4"/>
+        </svg>
+        <span class="state-label">待確認</span>
+      </div>
+    </div>
+    <div class="card-name">洗滌槽</div>
+    <div class="card-key">sink</div>
+  </div>
+
+  <!-- 13. refrigerator 冰箱 -->
+  <div class="card">
+    <div class="card-icons">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-confirmed">
+          <!-- fridge body -->
+          <rect x="5" y="2" width="14" height="21" rx="2"/>
+          <!-- divider between freezer and fridge -->
+          <line x1="5" y1="10" x2="19" y2="10"/>
+          <!-- left handle top section -->
+          <line x1="8" y1="5" x2="8" y2="8"/>
+          <!-- left handle bottom section -->
+          <line x1="8" y1="13" x2="8" y2="18"/>
+        </svg>
+        <span class="state-label">確認</span>
+      </div>
+      <div class="divider"></div>
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-pending">
+          <rect x="5" y="2" width="14" height="21" rx="2"/>
+          <line x1="5" y1="10" x2="19" y2="10"/>
+          <line x1="8" y1="5" x2="8" y2="8"/>
+          <line x1="8" y1="13" x2="8" y2="18"/>
+        </svg>
+        <span class="state-label">待確認</span>
+      </div>
+    </div>
+    <div class="card-name">冰箱</div>
+    <div class="card-key">refrigerator</div>
+  </div>
+
+  <!-- 14. shared_kitchen 公用廚房 -->
+  <div class="card">
+    <div class="card-icons">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-confirmed">
+          <!-- stovetop surface (top view rectangle) -->
+          <rect x="3" y="5" width="18" height="15" rx="2"/>
+          <!-- 4 burner circles -->
+          <circle cx="8" cy="10" r="2.5"/>
+          <circle cx="16" cy="10" r="2.5"/>
+          <circle cx="8" cy="17" r="2.5"/>
+          <circle cx="16" cy="17" r="2.5"/>
+        </svg>
+        <span class="state-label">確認</span>
+      </div>
+      <div class="divider"></div>
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-pending">
+          <rect x="3" y="5" width="18" height="15" rx="2"/>
+          <circle cx="8" cy="10" r="2.5"/>
+          <circle cx="16" cy="10" r="2.5"/>
+          <circle cx="8" cy="17" r="2.5"/>
+          <circle cx="16" cy="17" r="2.5"/>
+        </svg>
+        <span class="state-label">待確認</span>
+      </div>
+    </div>
+    <div class="card-name">公用廚房</div>
+    <div class="card-key">shared_kitchen</div>
+  </div>
+
+  <!-- 15. food_service 餐飲服務 -->
+  <div class="card">
+    <div class="card-icons">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-confirmed">
+          <!-- fork (left) -->
+          <line x1="8" y1="3" x2="8" y2="21"/>
+          <line x1="6" y1="3" x2="6" y2="8"/>
+          <line x1="10" y1="3" x2="10" y2="8"/>
+          <path d="M6 8 Q8 10 10 8"/>
+          <!-- knife (right) -->
+          <line x1="16" y1="3" x2="16" y2="21"/>
+          <path d="M16 3 Q20 6 16 11"/>
+        </svg>
+        <span class="state-label">確認</span>
+      </div>
+      <div class="divider"></div>
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-pending">
+          <line x1="8" y1="3" x2="8" y2="21"/>
+          <line x1="6" y1="3" x2="6" y2="8"/>
+          <line x1="10" y1="3" x2="10" y2="8"/>
+          <path d="M6 8 Q8 10 10 8"/>
+          <line x1="16" y1="3" x2="16" y2="21"/>
+          <path d="M16 3 Q20 6 16 11"/>
+        </svg>
+        <span class="state-label">待確認</span>
+      </div>
+    </div>
+    <div class="card-name">餐飲服務</div>
+    <div class="card-key">food_service</div>
+  </div>
+
+  <!-- 16. convenience_store 便利商店 -->
+  <div class="card">
+    <div class="card-icons">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-confirmed">
+          <!-- building outline -->
+          <rect x="3" y="8" width="18" height="14" rx="1"/>
+          <!-- roof / sign awning -->
+          <rect x="2" y="5" width="20" height="4" rx="1"/>
+          <!-- door (center) -->
+          <rect x="9" y="15" width="6" height="7" rx="1"/>
+          <!-- door handle -->
+          <line x1="13" y1="18.5" x2="14" y2="18.5"/>
+          <!-- window left -->
+          <rect x="4" y="11" width="4" height="3" rx="0.5"/>
+          <!-- window right -->
+          <rect x="16" y="11" width="4" height="3" rx="0.5"/>
+        </svg>
+        <span class="state-label">確認</span>
+      </div>
+      <div class="divider"></div>
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-pending">
+          <rect x="3" y="8" width="18" height="14" rx="1"/>
+          <rect x="2" y="5" width="20" height="4" rx="1"/>
+          <rect x="9" y="15" width="6" height="7" rx="1"/>
+          <line x1="13" y1="18.5" x2="14" y2="18.5"/>
+          <rect x="4" y="11" width="4" height="3" rx="0.5"/>
+          <rect x="16" y="11" width="4" height="3" rx="0.5"/>
+        </svg>
+        <span class="state-label">待確認</span>
+      </div>
+    </div>
+    <div class="card-name">便利商店</div>
+    <div class="card-key">convenience_store</div>
+  </div>
+
+  <!-- 17. outdoor_seating 戶外桌椅 -->
+  <div class="card">
+    <div class="card-icons">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-confirmed">
+          <!-- table top -->
+          <line x1="4" y1="10" x2="20" y2="10"/>
+          <!-- table center leg -->
+          <line x1="12" y1="10" x2="12" y2="16"/>
+          <!-- table base spread -->
+          <line x1="9" y1="16" x2="15" y2="16"/>
+          <!-- left bench -->
+          <line x1="2" y1="14" x2="9" y2="14"/>
+          <line x1="4" y1="14" x2="4" y2="17"/>
+          <!-- right bench -->
+          <line x1="15" y1="14" x2="22" y2="14"/>
+          <line x1="20" y1="14" x2="20" y2="17"/>
+        </svg>
+        <span class="state-label">確認</span>
+      </div>
+      <div class="divider"></div>
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-pending">
+          <line x1="4" y1="10" x2="20" y2="10"/>
+          <line x1="12" y1="10" x2="12" y2="16"/>
+          <line x1="9" y1="16" x2="15" y2="16"/>
+          <line x1="2" y1="14" x2="9" y2="14"/>
+          <line x1="4" y1="14" x2="4" y2="17"/>
+          <line x1="15" y1="14" x2="22" y2="14"/>
+          <line x1="20" y1="14" x2="20" y2="17"/>
+        </svg>
+        <span class="state-label">待確認</span>
+      </div>
+    </div>
+    <div class="card-name">戶外桌椅</div>
+    <div class="card-key">outdoor_seating</div>
+  </div>
+
+  <!-- 18. trash_bin 垃圾桶 -->
+  <div class="card">
+    <div class="card-icons">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-confirmed">
+          <!-- lid -->
+          <path d="M6 7 L18 7"/>
+          <!-- lid handle -->
+          <path d="M10 7 L10 5 L14 5 L14 7"/>
+          <!-- bin body (trapezoid) -->
+          <path d="M7 7 L8 21 L16 21 L17 7"/>
+          <!-- vertical lines on bin -->
+          <line x1="10" y1="10" x2="10" y2="19"/>
+          <line x1="14" y1="10" x2="14" y2="19"/>
+        </svg>
+        <span class="state-label">確認</span>
+      </div>
+      <div class="divider"></div>
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-pending">
+          <path d="M6 7 L18 7"/>
+          <path d="M10 7 L10 5 L14 5 L14 7"/>
+          <path d="M7 7 L8 21 L16 21 L17 7"/>
+          <line x1="10" y1="10" x2="10" y2="19"/>
+          <line x1="14" y1="10" x2="14" y2="19"/>
+        </svg>
+        <span class="state-label">待確認</span>
+      </div>
+    </div>
+    <div class="card-name">垃圾桶</div>
+    <div class="card-key">trash_bin</div>
+  </div>
+
+  <!-- 19. playground 遊樂設施 -->
+  <div class="card">
+    <div class="card-icons">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-confirmed">
+          <!-- slide platform (top left) -->
+          <rect x="2" y="3" width="7" height="4" rx="1"/>
+          <!-- slide slope (diagonal line) -->
+          <line x1="9" y1="7" x2="18" y2="16"/>
+          <!-- slide base / landing -->
+          <line x1="16" y1="16" x2="21" y2="16"/>
+          <!-- vertical support pole left -->
+          <line x1="4" y1="7" x2="4" y2="20"/>
+          <!-- vertical support pole right -->
+          <line x1="19" y1="16" x2="19" y2="20"/>
+          <!-- ground line -->
+          <line x1="2" y1="20" x2="22" y2="20"/>
+        </svg>
+        <span class="state-label">確認</span>
+      </div>
+      <div class="divider"></div>
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-pending">
+          <rect x="2" y="3" width="7" height="4" rx="1"/>
+          <line x1="9" y1="7" x2="18" y2="16"/>
+          <line x1="16" y1="16" x2="21" y2="16"/>
+          <line x1="4" y1="7" x2="4" y2="20"/>
+          <line x1="19" y1="16" x2="19" y2="20"/>
+          <line x1="2" y1="20" x2="22" y2="20"/>
+        </svg>
+        <span class="state-label">待確認</span>
+      </div>
+    </div>
+    <div class="card-name">遊樂設施</div>
+    <div class="card-key">playground</div>
+  </div>
+
+  <!-- 20. basketball_court 籃球場 -->
+  <div class="card">
+    <div class="card-icons">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-confirmed">
+          <!-- backboard -->
+          <line x1="7" y1="3" x2="17" y2="3"/>
+          <!-- support arm -->
+          <line x1="12" y1="3" x2="12" y2="6"/>
+          <!-- rim (hoop) circle -->
+          <ellipse cx="12" cy="8" rx="4" ry="1.5"/>
+          <!-- net lines -->
+          <path d="M8 8 L9 13 L12 14 L15 13 L16 8"/>
+          <!-- pole -->
+          <line x1="12" y1="6" x2="12" y2="22"/>
+          <!-- base -->
+          <line x1="10" y1="22" x2="14" y2="22"/>
+        </svg>
+        <span class="state-label">確認</span>
+      </div>
+      <div class="divider"></div>
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-pending">
+          <line x1="7" y1="3" x2="17" y2="3"/>
+          <line x1="12" y1="3" x2="12" y2="6"/>
+          <ellipse cx="12" cy="8" rx="4" ry="1.5"/>
+          <path d="M8 8 L9 13 L12 14 L15 13 L16 8"/>
+          <line x1="12" y1="6" x2="12" y2="22"/>
+          <line x1="10" y1="22" x2="14" y2="22"/>
+        </svg>
+        <span class="state-label">待確認</span>
+      </div>
+    </div>
+    <div class="card-name">籃球場</div>
+    <div class="card-key">basketball_court</div>
+  </div>
+
+  <!-- 21. sandbox 沙坑 -->
+  <div class="card">
+    <div class="card-icons">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-confirmed">
+          <!-- sandbox border (rounded square top-view) -->
+          <rect x="3" y="10" width="14" height="12" rx="2"/>
+          <!-- sand texture dots (3 dots) -->
+          <circle cx="7" cy="15" r="0.8"/>
+          <circle cx="10" cy="18" r="0.8"/>
+          <circle cx="13" cy="14" r="0.8"/>
+          <!-- shovel handle -->
+          <line x1="17" y1="3" x2="20" y2="6"/>
+          <line x1="20" y1="6" x2="17" y2="10"/>
+          <!-- shovel head -->
+          <path d="M15 8 Q17 6 19 8 Q19 11 17 11 Q15 11 15 8Z"/>
+        </svg>
+        <span class="state-label">確認</span>
+      </div>
+      <div class="divider"></div>
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-pending">
+          <rect x="3" y="10" width="14" height="12" rx="2"/>
+          <circle cx="7" cy="15" r="0.8"/>
+          <circle cx="10" cy="18" r="0.8"/>
+          <circle cx="13" cy="14" r="0.8"/>
+          <line x1="17" y1="3" x2="20" y2="6"/>
+          <line x1="20" y1="6" x2="17" y2="10"/>
+          <path d="M15 8 Q17 6 19 8 Q19 11 17 11 Q15 11 15 8Z"/>
+        </svg>
+        <span class="state-label">待確認</span>
+      </div>
+    </div>
+    <div class="card-name">沙坑</div>
+    <div class="card-key">sandbox</div>
+  </div>
+
+  <!-- 22. swimming_pool 游泳池 -->
+  <div class="card">
+    <div class="card-icons">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-confirmed">
+          <!-- pool rectangle (top view) -->
+          <rect x="3" y="5" width="18" height="14" rx="2"/>
+          <!-- lane dividers -->
+          <line x1="3" y1="10" x2="21" y2="10"/>
+          <line x1="3" y1="15" x2="21" y2="15"/>
+          <!-- wave lines in top lane -->
+          <path d="M5 7.5 Q7 6 9 7.5 Q11 9 13 7.5 Q15 6 17 7.5 Q19 9 20 7.5"/>
+          <!-- wave line in middle lane -->
+          <path d="M5 12.5 Q7 11 9 12.5 Q11 14 13 12.5 Q15 11 17 12.5 Q19 14 20 12.5"/>
+          <!-- wave line in bottom lane -->
+          <path d="M5 17.5 Q7 16 9 17.5 Q11 19 13 17.5 Q15 16 17 17.5 Q19 19 20 17.5"/>
+        </svg>
+        <span class="state-label">確認</span>
+      </div>
+      <div class="divider"></div>
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-pending">
+          <rect x="3" y="5" width="18" height="14" rx="2"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+          <line x1="3" y1="15" x2="21" y2="15"/>
+          <path d="M5 7.5 Q7 6 9 7.5 Q11 9 13 7.5 Q15 6 17 7.5 Q19 9 20 7.5"/>
+          <path d="M5 12.5 Q7 11 9 12.5 Q11 14 13 12.5 Q15 11 17 12.5 Q19 14 20 12.5"/>
+          <path d="M5 17.5 Q7 16 9 17.5 Q11 19 13 17.5 Q15 16 17 17.5 Q19 19 20 17.5"/>
+        </svg>
+        <span class="state-label">待確認</span>
+      </div>
+    </div>
+    <div class="card-name">游泳池</div>
+    <div class="card-key">swimming_pool</div>
+  </div>
+
 </div>
 
-<!-- ════════════════════════════════════ -->
-<!--  SECTION 5: SVG Source Code        -->
-<!-- ════════════════════════════════════ -->
-<div class="section">
-  <div class="section-title">⑤ SVG Source Code（點擊展開）</div>
-  <div class="source-grid">
-
-    <!-- wifi source -->
-    <details class="source-card">
-      <summary>
-        <span class="mini-icon">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 3.5C8.47 3.5 5.28 4.93 2.96 7.26a.875.875 0 0 0 1.24 1.23A10.13 10.13 0 0 1 12 5.25c2.8 0 5.34 1.13 7.2 2.97a.875.875 0 1 0 1.23-1.24A11.87 11.87 0 0 0 12 3.5ZM12 7.5c-2.37 0-4.51.96-6.07 2.51a.875.875 0 1 0 1.24 1.23A7.11 7.11 0 0 1 12 9.25c1.97 0 3.75.8 5.04 2.09a.875.875 0 1 0 1.24-1.23A8.85 8.85 0 0 0 12 7.5ZM12 11.5c-1.3 0-2.47.53-3.33 1.38a.875.875 0 1 0 1.24 1.23A3.36 3.36 0 0 1 12 13.25c.93 0 1.77.38 2.38.98a.875.875 0 1 0 1.24-1.23A5.1 5.1 0 0 0 12 11.5ZM12 15.5a1.75 1.75 0 1 0 0 3.5 1.75 1.75 0 0 0 0-3.5Z"/></svg>
-        </span>
-        wifi — WiFi 訊號
-      </summary>
-      <pre class="source-code">&lt;svg viewBox="0 0 24 24" fill="currentColor"
-  xmlns="http://www.w3.org/2000/svg"&gt;
-  &lt;path fill-rule="evenodd" clip-rule="evenodd"
-    d="M12 3.5C8.47 3.5 5.28 4.93 2.96 7.26a.875.875 0 0 0 1.24 1.23
-       A10.13 10.13 0 0 1 12 5.25c2.8 0 5.34 1.13 7.2 2.97
-       a.875.875 0 1 0 1.23-1.24A11.87 11.87 0 0 0 12 3.5Z
-     M12 7.5c-2.37 0-4.51.96-6.07 2.51a.875.875 0 1 0 1.24 1.23
-       A7.11 7.11 0 0 1 12 9.25c1.97 0 3.75.8 5.04 2.09
-       a.875.875 0 1 0 1.24-1.23A8.85 8.85 0 0 0 12 7.5Z
-     M12 11.5c-1.3 0-2.47.53-3.33 1.38a.875.875 0 1 0 1.24 1.23
-       A3.36 3.36 0 0 1 12 13.25c.93 0 1.77.38 2.38.98
-       a.875.875 0 1 0 1.24-1.23A5.1 5.1 0 0 0 12 11.5Z
-     M12 15.5a1.75 1.75 0 1 0 0 3.5 1.75 1.75 0 0 0 0-3.5Z"/&gt;
-&lt;/svg&gt;</pre>
-    </details>
-
-    <!-- power_outlet source -->
-    <details class="source-card">
-      <summary>
-        <span class="mini-icon">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2Zm0 1.75a8.25 8.25 0 1 1 0 16.5A8.25 8.25 0 0 1 12 3.75ZM9.25 7a.875.875 0 0 0-.875.875v3.5a.875.875 0 0 0 1.75 0v-3.5A.875.875 0 0 0 9.25 7Zm5.5 0a.875.875 0 0 0-.875.875v3.5a.875.875 0 0 0 1.75 0v-3.5A.875.875 0 0 0 14.75 7ZM9.5 13.25a.875.875 0 0 0-.875.875v.25a3.375 3.375 0 0 0 6.75 0v-.25a.875.875 0 0 0-1.75 0v.25a1.625 1.625 0 0 1-3.25 0v-.25A.875.875 0 0 0 9.5 13.25Z"/></svg>
-        </span>
-        power_outlet — 電源插座
-      </summary>
-      <pre class="source-code">&lt;svg viewBox="0 0 24 24" fill="currentColor"
-  xmlns="http://www.w3.org/2000/svg"&gt;
-  &lt;path fill-rule="evenodd" clip-rule="evenodd"
-    d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10
-       10-4.477 10-10S17.523 2 12 2Z
-     m0 1.75a8.25 8.25 0 1 1 0 16.5A8.25 8.25 0 0 1 12 3.75Z
-     M9.25 7a.875.875 0 0 0-.875.875v3.5a.875.875 0 0 0 1.75 0v-3.5
-       A.875.875 0 0 0 9.25 7Z
-     m5.5 0a.875.875 0 0 0-.875.875v3.5a.875.875 0 0 0 1.75 0v-3.5
-       A.875.875 0 0 0 14.75 7Z
-     M9.5 13.25a.875.875 0 0 0-.875.875v.25a3.375 3.375 0 0 0 6.75 0v-.25
-       a.875.875 0 0 0-1.75 0v.25a1.625 1.625 0 0 1-3.25 0v-.25
-       A.875.875 0 0 0 9.5 13.25Z"/&gt;
-&lt;/svg&gt;</pre>
-    </details>
-
-    <!-- parking source -->
-    <details class="source-card">
-      <summary>
-        <span class="mini-icon">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 3.75A1.75 1.75 0 0 0 2.25 5.5v13a1.75 1.75 0 0 0 1.75 1.75h16A1.75 1.75 0 0 0 21.75 18.5v-13A1.75 1.75 0 0 0 20 3.75H4ZM8 7.5a.875.875 0 0 0-.875.875v8.25a.875.875 0 0 0 1.75 0v-2.75h2.875a3.625 3.625 0 0 0 0-7.25H8Zm2.875 4.625H8.875V9.25h2A1.875 1.875 0 0 1 10.875 13V13a.01.01 0 0 1 0 .125Z"/></svg>
-        </span>
-        parking — 停車場
-      </summary>
-      <pre class="source-code">&lt;svg viewBox="0 0 24 24" fill="currentColor"
-  xmlns="http://www.w3.org/2000/svg"&gt;
-  &lt;path fill-rule="evenodd" clip-rule="evenodd"
-    d="M4 3.75A1.75 1.75 0 0 0 2.25 5.5v13
-       a1.75 1.75 0 0 0 1.75 1.75h16
-       A1.75 1.75 0 0 0 21.75 18.5v-13
-       A1.75 1.75 0 0 0 20 3.75H4Z
-     M8 7.5a.875.875 0 0 0-.875.875v8.25
-       a.875.875 0 0 0 1.75 0v-2.75h2.875
-       a3.625 3.625 0 0 0 0-7.25H8Z
-     m2.875 4.625H8.875V9.25h2
-       A1.875 1.875 0 0 1 10.875 13V13
-       a.01.01 0 0 1 0 .125Z"/&gt;
-&lt;/svg&gt;</pre>
-    </details>
-
-    <!-- flush_toilet source -->
-    <details class="source-card">
-      <summary>
-        <span class="mini-icon">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.5 2.25A.875.875 0 0 0 6.625 3.125v3.5C6.625 9.2 8.8 11.375 11.375 11.375h.25c2.575 0 4.75-2.175 4.75-4.75v-3.5A.875.875 0 0 0 15.5 2.25h-8Zm.875 1.75h6.25v2.625a3 3 0 0 1-3 3h-.25a3 3 0 0 1-3-3V4ZM9 12.5a.875.875 0 0 0-.875.875v1.25H7.5a3.125 3.125 0 0 0-3.125 3.125v.5A3.125 3.125 0 0 0 7.5 21.375h9A3.125 3.125 0 0 0 19.625 18.25v-.5A3.125 3.125 0 0 0 16.5 14.625h-.625v-1.25a.875.875 0 0 0-1.75 0v1.25h-4.25v-1.25A.875.875 0 0 0 9 12.5Zm-2.875 3.875a1.375 1.375 0 0 1 1.375-1.375h9a1.375 1.375 0 0 1 1.375 1.375v.5a1.375 1.375 0 0 1-1.375 1.375h-9a1.375 1.375 0 0 1-1.375-1.375v-.5Z"/></svg>
-        </span>
-        flush_toilet — 沖水廁所
-      </summary>
-      <pre class="source-code">&lt;svg viewBox="0 0 24 24" fill="currentColor"
-  xmlns="http://www.w3.org/2000/svg"&gt;
-  &lt;path fill-rule="evenodd" clip-rule="evenodd"
-    d="M7.5 2.25A.875.875 0 0 0 6.625 3.125v3.5
-       C6.625 9.2 8.8 11.375 11.375 11.375h.25
-       c2.575 0 4.75-2.175 4.75-4.75v-3.5
-       A.875.875 0 0 0 15.5 2.25h-8Z
-     m.875 1.75h6.25v2.625a3 3 0 0 1-3 3h-.25
-       a3 3 0 0 1-3-3V4Z
-     M9 12.5a.875.875 0 0 0-.875.875v1.25H7.5
-       a3.125 3.125 0 0 0-3.125 3.125v.5
-       A3.125 3.125 0 0 0 7.5 21.375h9
-       A3.125 3.125 0 0 0 19.625 18.25v-.5
-       A3.125 3.125 0 0 0 16.5 14.625h-.625v-1.25
-       a.875.875 0 0 0-1.75 0v1.25h-4.25v-1.25
-       A.875.875 0 0 0 9 12.5Z
-     m-2.875 3.875a1.375 1.375 0 0 1 1.375-1.375h9
-       a1.375 1.375 0 0 1 1.375 1.375v.5
-       a1.375 1.375 0 0 1-1.375 1.375h-9
-       a1.375 1.375 0 0 1-1.375-1.375v-.5Z"/&gt;
-&lt;/svg&gt;</pre>
-    </details>
-
-    <!-- shower source -->
-    <details class="source-card">
-      <summary>
-        <span class="mini-icon">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.5 2.25A.875.875 0 0 0 4.625 3.125v6.75a5.25 5.25 0 0 0 4.375 5.173v1.327H8.125a.875.875 0 0 0 0 1.75h.875v2.5a.875.875 0 0 0 1.75 0v-2.5h.875a.875.875 0 0 0 0-1.75H10.75v-1.327A5.25 5.25 0 0 0 15.125 9.875V3.125A.875.875 0 0 0 14.25 2.25h-8.75Zm.875 1.75h7v5.875a3.5 3.5 0 0 1-7 0V4ZM3.25 14.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm3 1.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm3 1.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm3-1.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm3 0a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm-1.5 2a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm-3 0a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Zm-3 0a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Z"/></svg>
-        </span>
-        shower — 淋浴間
-      </summary>
-      <pre class="source-code">&lt;svg viewBox="0 0 24 24" fill="currentColor"
-  xmlns="http://www.w3.org/2000/svg"&gt;
-  &lt;path fill-rule="evenodd" clip-rule="evenodd"
-    d="M5.5 2.25A.875.875 0 0 0 4.625 3.125v6.75
-       a5.25 5.25 0 0 0 4.375 5.173v1.327H8.125
-       a.875.875 0 0 0 0 1.75h.875v2.5
-       a.875.875 0 0 0 1.75 0v-2.5h.875
-       a.875.875 0 0 0 0-1.75H10.75v-1.327
-       A5.25 5.25 0 0 0 15.125 9.875V3.125
-       A.875.875 0 0 0 14.25 2.25h-8.75Z
-     m.875 1.75h7v5.875a3.5 3.5 0 0 1-7 0V4Z
-     M3.25 14.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Z
-     m3 1.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Z
-     m3 1.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Z
-     m3-1.5a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Z
-     m3 0a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Z
-     m-1.5 2a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Z
-     m-3 0a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Z
-     m-3 0a.875.875 0 1 0 0 1.75.875.875 0 0 0 0-1.75Z"/&gt;
-&lt;/svg&gt;</pre>
-    </details>
-
-    <!-- hot_water source -->
-    <details class="source-card">
-      <summary>
-        <span class="mini-icon">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.5 2.25a.875.875 0 0 0-.714 1.386c.38.527.464.91.35 1.254-.126.373-.52.735-1.09 1.178C6.07 6.8 5.25 7.68 5.25 9a.875.875 0 0 0 1.75 0c0-.68.43-1.2 1.246-1.832.683-.524 1.358-1.145 1.654-2.032.29-.86.064-1.77-.514-2.572A.875.875 0 0 0 8.5 2.25ZM12.5 2.25a.875.875 0 0 0-.714 1.386c.38.527.464.91.35 1.254-.126.373-.52.735-1.09 1.178C10.07 6.8 9.25 7.68 9.25 9a.875.875 0 0 0 1.75 0c0-.68.43-1.2 1.246-1.832.683-.524 1.358-1.145 1.654-2.032.29-.86.064-1.77-.514-2.572A.875.875 0 0 0 12.5 2.25ZM16.5 2.25a.875.875 0 0 0-.714 1.386c.38.527.464.91.35 1.254-.126.373-.52.735-1.09 1.178C14.07 6.8 13.25 7.68 13.25 9a.875.875 0 0 0 1.75 0c0-.68.43-1.2 1.246-1.832.683-.524 1.358-1.145 1.654-2.032.29-.86.064-1.77-.514-2.572A.875.875 0 0 0 16.5 2.25ZM4 11.25A1.75 1.75 0 0 0 2.25 13v5A1.75 1.75 0 0 0 4 19.75h2v1.375a.875.875 0 0 0 1.75 0V19.75h8.5v1.375a.875.875 0 0 0 1.75 0V19.75H20A1.75 1.75 0 0 0 21.75 18v-5A1.75 1.75 0 0 0 20 11.25H4ZM4 13h16v5H4v-5Z"/></svg>
-        </span>
-        hot_water — 熱水
-      </summary>
-      <pre class="source-code">&lt;svg viewBox="0 0 24 24" fill="currentColor"
-  xmlns="http://www.w3.org/2000/svg"&gt;
-  &lt;path fill-rule="evenodd" clip-rule="evenodd"
-    d="M8.5 2.25a.875.875 0 0 0-.714 1.386
-       c.38.527.464.91.35 1.254
-       -.126.373-.52.735-1.09 1.178
-       C6.07 6.8 5.25 7.68 5.25 9
-       a.875.875 0 0 0 1.75 0
-       c0-.68.43-1.2 1.246-1.832
-       .683-.524 1.358-1.145 1.654-2.032
-       .29-.86.064-1.77-.514-2.572
-       A.875.875 0 0 0 8.5 2.25Z
-     ... (×3 steam paths)
-     M4 11.25A1.75 1.75 0 0 0 2.25 13v5
-       A1.75 1.75 0 0 0 4 19.75h2v1.375
-       a.875.875 0 0 0 1.75 0V19.75h8.5v1.375
-       a.875.875 0 0 0 1.75 0V19.75H20
-       A1.75 1.75 0 0 0 21.75 18v-5
-       A1.75 1.75 0 0 0 20 11.25H4Z
-     M4 13h16v5H4v-5Z"/&gt;
-&lt;/svg&gt;</pre>
-    </details>
-
-    <!-- trash_disposal source -->
-    <details class="source-card">
-      <summary>
-        <span class="mini-icon">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.5 2.25a.875.875 0 0 0-.875.875v.625H4.875a.875.875 0 0 0 0 1.75H5.5l.924 13.877A2.625 2.625 0 0 0 9.047 21.75h5.906a2.625 2.625 0 0 0 2.623-2.373L18.5 5.5h.625a.875.875 0 0 0 0-1.75h-3.75V3.125A.875.875 0 0 0 14.5 2.25h-5ZM10.375 4V3.875h3.25V4h-3.25Zm-3.108 1.5h9.466l-.898 13.502a.875.875 0 0 1-.882.748H9.047a.875.875 0 0 1-.874-.8L7.267 5.5ZM10.25 8.375a.875.875 0 0 0-1.75 0v7.25a.875.875 0 0 0 1.75 0V8.375Zm4.25 0a.875.875 0 0 0-1.75 0v7.25a.875.875 0 0 0 1.75 0V8.375Z"/></svg>
-        </span>
-        trash_disposal — 垃圾桶
-      </summary>
-      <pre class="source-code">&lt;svg viewBox="0 0 24 24" fill="currentColor"
-  xmlns="http://www.w3.org/2000/svg"&gt;
-  &lt;path fill-rule="evenodd" clip-rule="evenodd"
-    d="M9.5 2.25a.875.875 0 0 0-.875.875v.625
-       H4.875a.875.875 0 0 0 0 1.75H5.5
-       l.924 13.877A2.625 2.625 0 0 0 9.047 21.75h5.906
-       a2.625 2.625 0 0 0 2.623-2.373L18.5 5.5h.625
-       a.875.875 0 0 0 0-1.75h-3.75V3.125
-       A.875.875 0 0 0 14.5 2.25h-5Z
-     M10.375 4V3.875h3.25V4h-3.25Z
-     m-3.108 1.5h9.466l-.898 13.502
-       a.875.875 0 0 1-.882.748H9.047
-       a.875.875 0 0 1-.874-.8L7.267 5.5Z
-     M10.25 8.375a.875.875 0 0 0-1.75 0v7.25
-       a.875.875 0 0 0 1.75 0V8.375Z
-     m4.25 0a.875.875 0 0 0-1.75 0v7.25
-       a.875.875 0 0 0 1.75 0V8.375Z"/&gt;
-&lt;/svg&gt;</pre>
-    </details>
-
-    <!-- laundry source -->
-    <details class="source-card">
-      <summary>
-        <span class="mini-icon">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M5 2.25A2.75 2.75 0 0 0 2.25 5v14A2.75 2.75 0 0 0 5 21.75h14A2.75 2.75 0 0 0 21.75 19V5A2.75 2.75 0 0 0 19 2.25H5ZM4 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2.5H4V5Zm0 4.25h16V19a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9.25ZM7.625 4a.875.875 0 1 0 0 1.75A.875.875 0 0 0 7.625 4ZM10.5 4a.875.875 0 1 0 0 1.75A.875.875 0 0 0 10.5 4Zm1.5 6.75a4.25 4.25 0 1 0 0 8.5 4.25 4.25 0 0 0 0-8.5Zm-2.5 4.25a2.5 2.5 0 1 1 5 0 2.5 2.5 0 0 1-5 0Zm1.5-1.5a.875.875 0 0 0 0 1.75h2a.875.875 0 0 0 0-1.75h-2Z"/></svg>
-        </span>
-        laundry — 洗衣機
-      </summary>
-      <pre class="source-code">&lt;svg viewBox="0 0 24 24" fill="currentColor"
-  xmlns="http://www.w3.org/2000/svg"&gt;
-  &lt;path fill-rule="evenodd" clip-rule="evenodd"
-    d="M5 2.25A2.75 2.75 0 0 0 2.25 5v14
-       A2.75 2.75 0 0 0 5 21.75h14
-       A2.75 2.75 0 0 0 21.75 19V5
-       A2.75 2.75 0 0 0 19 2.25H5Z
-     M4 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2.5H4V5Z
-     m0 4.25h16V19a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9.25Z
-     M7.625 4a.875.875 0 1 0 0 1.75A.875.875 0 0 0 7.625 4Z
-     M10.5 4a.875.875 0 1 0 0 1.75A.875.875 0 0 0 10.5 4Z
-     m1.5 6.75a4.25 4.25 0 1 0 0 8.5 4.25 4.25 0 0 0 0-8.5Z
-     m-2.5 4.25a2.5 2.5 0 1 1 5 0 2.5 2.5 0 0 1-5 0Z
-     m1.5-1.5a.875.875 0 0 0 0 1.75h2
-       a.875.875 0 0 0 0-1.75h-2Z"/&gt;
-&lt;/svg&gt;</pre>
-    </details>
-
-    <!-- convenience_store source -->
-    <details class="source-card">
-      <summary>
-        <span class="mini-icon">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M3.75 2.25a.875.875 0 0 0 0 1.75h.375L5.5 9.25H4.5a2.25 2.25 0 0 0 0 4.5h.25V20.5H4a.875.875 0 0 0 0 1.75h16a.875.875 0 0 0 0-1.75h-.75v-6.75H19.5a2.25 2.25 0 0 0 0-4.5h-1L19.875 4h.375a.875.875 0 0 0 0-1.75H3.75ZM17.5 9.25H6.5l-.847-5.25h12.694L17.5 9.25ZM4.5 11h15a.5.5 0 0 1 0 1H4.5a.5.5 0 0 1 0-1Zm2 2.75v6.75h3.25v-4a.875.875 0 0 1 .875-.875h2.75a.875.875 0 0 1 .875.875v4h3.25v-6.75H6.5Zm4.5 6.75v-3.125h2V20.5h-2Z"/></svg>
-        </span>
-        convenience_store — 便利商店
-      </summary>
-      <pre class="source-code">&lt;svg viewBox="0 0 24 24" fill="currentColor"
-  xmlns="http://www.w3.org/2000/svg"&gt;
-  &lt;path fill-rule="evenodd" clip-rule="evenodd"
-    d="M3.75 2.25a.875.875 0 0 0 0 1.75h.375
-       L5.5 9.25H4.5a2.25 2.25 0 0 0 0 4.5h.25V20.5
-       H4a.875.875 0 0 0 0 1.75h16
-       a.875.875 0 0 0 0-1.75h-.75v-6.75H19.5
-       a2.25 2.25 0 0 0 0-4.5h-1L19.875 4h.375
-       a.875.875 0 0 0 0-1.75H3.75Z
-     M17.5 9.25H6.5l-.847-5.25h12.694L17.5 9.25Z
-     M4.5 11h15a.5.5 0 0 1 0 1H4.5a.5.5 0 0 1 0-1Z
-     m2 2.75v6.75h3.25v-4
-       a.875.875 0 0 1 .875-.875h2.75
-       a.875.875 0 0 1 .875.875v4h3.25v-6.75H6.5Z
-     m4.5 6.75v-3.125h2V20.5h-2Z"/&gt;
-&lt;/svg&gt;</pre>
-    </details>
-
-    <!-- restaurant source -->
-    <details class="source-card">
-      <summary>
-        <span class="mini-icon">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.5 2.25A.875.875 0 0 0 7.625 3.125v5.5a2.375 2.375 0 0 0 1.5 2.2V20.875a.875.875 0 0 0 1.75 0V10.825a2.375 2.375 0 0 0 1.5-2.2v-5.5A.875.875 0 0 0 11.5 2.25H8.5Zm.875 1.75H10.5v4.625a.625.625 0 0 1-1.125 0V4ZM15 2.25a.875.875 0 0 0-.875.875v8.125a2.375 2.375 0 0 0 1.5 2.2v7.425a.875.875 0 0 0 1.75 0v-7.425a2.375 2.375 0 0 0 1.5-2.2V7.75a5.5 5.5 0 0 0-3.875-5.5ZM15 9.375V4.26A3.75 3.75 0 0 1 17.125 7.75v3.5a.625.625 0 0 1-1.25 0v-1.5a.875.875 0 0 0-1.75 0v-.375H15Z"/></svg>
-        </span>
-        restaurant — 餐廳
-      </summary>
-      <pre class="source-code">&lt;svg viewBox="0 0 24 24" fill="currentColor"
-  xmlns="http://www.w3.org/2000/svg"&gt;
-  &lt;path fill-rule="evenodd" clip-rule="evenodd"
-    d="M8.5 2.25A.875.875 0 0 0 7.625 3.125v5.5
-       a2.375 2.375 0 0 0 1.5 2.2V20.875
-       a.875.875 0 0 0 1.75 0V10.825
-       a2.375 2.375 0 0 0 1.5-2.2v-5.5
-       A.875.875 0 0 0 11.5 2.25H8.5Z
-     m.875 1.75H10.5v4.625
-       a.625.625 0 0 1-1.125 0V4Z
-     M15 2.25a.875.875 0 0 0-.875.875v8.125
-       a2.375 2.375 0 0 0 1.5 2.2v7.425
-       a.875.875 0 0 0 1.75 0v-7.425
-       a2.375 2.375 0 0 0 1.5-2.2V7.75
-       a5.5 5.5 0 0 0-3.875-5.5Z
-     M15 9.375V4.26A3.75 3.75 0 0 1 17.125 7.75v3.5
-       a.625.625 0 0 1-1.25 0v-1.5
-       a.875.875 0 0 0-1.75 0v-.375H15Z"/&gt;
-&lt;/svg&gt;</pre>
-    </details>
-
-  </div><!-- /source-grid -->
-</div>
-
-<footer style="text-align:center; font-size:11px; color:#9ca3af; margin-top:48px; padding-bottom:32px;">
-  Wildmap Solid Icon System · v2.1 · 設施類 22 icons · 2026-03-11<br>
-  viewBox 0 0 24 24 · fill currentColor · fill-rule evenodd · Heroicons Solid 風格
+<footer style="font-size:11px;color:#9ca3af;border-top:1px solid #e5e7eb;padding-top:16px;margin-top:8px;">
+  Wildmap Icon System v2 · 設施與服務 22 icons · Outline Style · stroke-width: 2 · viewBox 0 0 24 24
 </footer>
 
 </body>
