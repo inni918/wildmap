@@ -146,7 +146,7 @@ export default function BottomSheetCard({ spot, onClose, onOpenDetail }: Props) 
       const [fdResult, fvResult] = await Promise.all([
         supabase
           .from('feature_definitions')
-          .select('id, key, category, sort_order')
+          .select('id, key, group_key, sort_order')
           .order('sort_order'),
         supabase
           .from('feature_votes')
@@ -200,7 +200,7 @@ export default function BottomSheetCard({ spot, onClose, onOpenDetail }: Props) 
           const noVotes = v?.no ?? 0
           const total = yesVotes + noVotes
           const isConfirmed = total >= 3 && (yesVotes / total) >= 0.6
-          return { key: fd.key, category: fd.category, isConfirmed }
+          return { key: fd.key, category: fd.group_key, isConfirmed }
         })
         .sort((a, b) => {
           const catA = CATEGORY_ORDER[a.category] ?? 99
