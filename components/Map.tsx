@@ -855,34 +855,39 @@ export default function Map({
 
 
 
-      {/* Category Filter Bar + 地圖/列表切換 */}
+      {/* Category Filter Bar + 地圖/列表切換（收藏模式隱藏分類按鈕，只保留切換按鈕） */}
       <div
         className="absolute left-0 right-0 z-10 px-3 py-2 flex gap-2 items-center overflow-x-auto bg-surface/80 backdrop-blur-sm transition-all duration-200"
-        style={{ top: hasExternalUI ? '7rem' : searchExpanded ? '6.5rem' : '3.5rem' }}
+        style={{ top: hasExternalUI ? (favoritesMode ? '3.5rem' : '7rem') : searchExpanded ? '6.5rem' : '3.5rem' }}
       >
-        <button
-          onClick={() => setActiveFilter('all')}
-          className={`flex-shrink-0 px-4 py-2 min-h-[36px] rounded-full text-sm font-medium border transition-colors active:scale-95 ${
-            activeFilter === 'all'
-              ? 'bg-primary text-text-on-primary border-primary'
-              : 'bg-surface text-text-secondary border-border'
-          }`}
-        >
-          全部
-        </button>
-        {(['camping'] as SpotCategory[]).map(cat => (
-          <button
-            key={cat}
-            onClick={() => setActiveFilter(cat)}
-            className={`flex-shrink-0 px-4 py-2 min-h-[36px] rounded-full text-sm font-medium border transition-colors active:scale-95 ${
-              activeFilter === cat
-                ? 'bg-primary text-text-on-primary border-primary'
-                : 'bg-surface text-text-secondary border-border'
-            }`}
-          >
-            {CATEGORY_EMOJI[cat]} {CATEGORY_LABEL[cat]}
-          </button>
-        ))}
+        {/* 分類按鈕：收藏模式隱藏 */}
+        {!favoritesMode && (
+          <>
+            <button
+              onClick={() => setActiveFilter('all')}
+              className={`flex-shrink-0 px-4 py-2 min-h-[36px] rounded-full text-sm font-medium border transition-colors active:scale-95 ${
+                activeFilter === 'all'
+                  ? 'bg-primary text-text-on-primary border-primary'
+                  : 'bg-surface text-text-secondary border-border'
+              }`}
+            >
+              全部
+            </button>
+            {(['camping'] as SpotCategory[]).map(cat => (
+              <button
+                key={cat}
+                onClick={() => setActiveFilter(cat)}
+                className={`flex-shrink-0 px-4 py-2 min-h-[36px] rounded-full text-sm font-medium border transition-colors active:scale-95 ${
+                  activeFilter === cat
+                    ? 'bg-primary text-text-on-primary border-primary'
+                    : 'bg-surface text-text-secondary border-border'
+                }`}
+              >
+                {CATEGORY_EMOJI[cat]} {CATEGORY_LABEL[cat]}
+              </button>
+            ))}
+          </>
+        )}
 
         {/* 地圖 / 列表 切換按鈕 */}
         <div className="flex-shrink-0 ml-auto flex items-center gap-1 bg-surface-alt rounded-lg p-0.5 border border-border">
