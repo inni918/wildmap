@@ -326,16 +326,15 @@ function AddFeaturePanel({
       {!open ? (
         <button
           onClick={handleOpen}
-          disabled={!userId}
-          className="flex items-center gap-2 w-full py-2.5 px-4 rounded-xl text-sm font-medium transition-colors cursor-pointer active:scale-[0.98] disabled:opacity-50"
+          className="flex items-center gap-2 w-full py-2.5 px-4 rounded-xl text-sm font-medium transition-colors cursor-pointer active:scale-[0.98]"
           style={{
             backgroundColor: '#2D6A4F10',
-            color: '#2D6A4F',
-            border: '1px dashed #2D6A4F40',
+            color: userId ? '#2D6A4F' : '#9ca3af',
+            border: `1px dashed ${userId ? '#2D6A4F40' : '#d1d5db'}`,
           }}
         >
           <FontAwesomeIcon icon={faPlus} className="text-xs" />
-          新增我知道的特性
+          {userId ? '新增我知道的特性' : '🔒 登入後可新增特性'}
         </button>
       ) : (
         <div>
