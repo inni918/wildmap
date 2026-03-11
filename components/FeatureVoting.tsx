@@ -51,6 +51,8 @@ interface Props {
 interface VoteState {
   yes_count: number
   no_count: number
+  weighted_yes: number
+  weighted_no: number
   user_vote: boolean | null
 }
 
@@ -167,6 +169,8 @@ function VoteButtons({
       newState = {
         yes_count: vote ? voteState.yes_count - 1 : voteState.yes_count,
         no_count: !vote ? voteState.no_count - 1 : voteState.no_count,
+        weighted_yes: vote ? voteState.weighted_yes - 1 : voteState.weighted_yes,
+        weighted_no: !vote ? voteState.weighted_no - 1 : voteState.weighted_no,
         user_vote: null,
       }
     } else if (voteState.user_vote === null) {
@@ -174,6 +178,8 @@ function VoteButtons({
       newState = {
         yes_count: vote ? voteState.yes_count + 1 : voteState.yes_count,
         no_count: !vote ? voteState.no_count + 1 : voteState.no_count,
+        weighted_yes: vote ? voteState.weighted_yes + 1 : voteState.weighted_yes,
+        weighted_no: !vote ? voteState.weighted_no + 1 : voteState.weighted_no,
         user_vote: vote,
       }
     } else {
@@ -181,6 +187,8 @@ function VoteButtons({
       newState = {
         yes_count: vote ? voteState.yes_count + 1 : voteState.yes_count - 1,
         no_count: !vote ? voteState.no_count + 1 : voteState.no_count - 1,
+        weighted_yes: vote ? voteState.weighted_yes + 1 : voteState.weighted_yes - 1,
+        weighted_no: !vote ? voteState.weighted_no + 1 : voteState.weighted_no - 1,
         user_vote: vote,
       }
     }
@@ -285,9 +293,11 @@ function AddFeaturePanel({
     setLoading(false)
   }, [])
 
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false)
+
   const handleOpen = () => {
     if (!userId) {
-      onLoginRequired?.()
+      setShowLoginPrompt(true)
       return
     }
     if (!open) fetchDefs()
@@ -324,18 +334,55 @@ function AddFeaturePanel({
   return (
     <div className="border-t border-border/40 pt-3 mt-1">
       {!open ? (
+        <>
         <button
           onClick={handleOpen}
           className="flex items-center gap-2 w-full py-2.5 px-4 rounded-xl text-sm font-medium transition-colors cursor-pointer active:scale-[0.98]"
           style={{
             backgroundColor: '#2D6A4F10',
-            color: userId ? '#2D6A4F' : '#9ca3af',
-            border: `1px dashed ${userId ? '#2D6A4F40' : '#d1d5db'}`,
+            color: '#2D6A4F',
+            border: '1px dashed #2D6A4F40',
           }}
         >
           <FontAwesomeIcon icon={faPlus} className="text-xs" />
-          {userId ? '新增我知道的特性' : '🔒 登入後可新增特性'}
+          新增我知道的特性
         </button>
+
+        {/* 未登入提示 modal */}
+        {showLoginPrompt && (
+          <div
+            className="fixed inset-0 z-[200] flex items-center justify-center"
+            style={{ background: 'rgba(0,0,0,0.45)' }}
+            onClick={() => setShowLoginPrompt(false)}
+          >
+            <div
+              className="bg-white rounded-2xl shadow-xl p-6 mx-4 max-w-sm w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="text-center mb-4">
+                <div className="text-4xl mb-2">🔒</div>
+                <h3 className="text-lg font-bold text-text-main">需要登入</h3>
+                <p className="text-sm text-text-secondary mt-1">
+                  新增特性功能需要先登入才能使用
+                </p>
+              </div>
+              <a
+                href="/login"
+                className="block w-full py-3 text-center rounded-xl font-semibold text-white text-sm"
+                style={{ backgroundColor: '#2D6A4F' }}
+              >
+                前往登入
+              </a>
+              <button
+                onClick={() => setShowLoginPrompt(false)}
+                className="block w-full py-2 mt-2 text-center text-sm text-text-secondary cursor-pointer"
+              >
+                取消
+              </button>
+            </div>
+          </div>
+        )}
+        </>
       ) : (
         <div>
           <div className="flex items-center justify-between mb-2">
@@ -422,6 +469,8 @@ function DetailSheet({
           map[f.id] = {
             yes_count: f.yes_count,
             no_count: f.no_count,
+            weighted_yes: f.weighted_yes ?? f.yes_count,
+            weighted_no: f.weighted_no ?? f.no_count,
             user_vote: f.user_vote ?? null,
           }
         }
@@ -539,11 +588,13 @@ function DetailSheet({
                         const state = voteStates[feature.id] || {
                           yes_count: feature.yes_count,
                           no_count: feature.no_count,
+                          weighted_yes: feature.weighted_yes ?? feature.yes_count,
+                          weighted_no: feature.weighted_no ?? feature.no_count,
                           user_vote: feature.user_vote ?? null,
                         }
                         const faIcon = getFeatureIcon(feature.key)
-                        const totalVotes = state.yes_count + state.no_count
-                        const confirmed = state.yes_count >= state.no_count && state.yes_count > 0
+                        const totalVotes = state.weighted_yes + state.weighted_no
+                        const confirmed = state.weighted_yes >= state.weighted_no && state.weighted_yes > 0
 
                         return (
                           <div
@@ -571,8 +622,8 @@ function DetailSheet({
                                 <span className="text-[11px] text-text-secondary/60">
                                   {totalVotes > 0
                                     ? confirmed
-                                      ? `${state.yes_count}人確認`
-                                      : `${totalVotes}人投票`
+                                      ? `${state.weighted_yes}票確認`
+                                      : `${totalVotes}票投票`
                                     : '尚無投票'}
                                 </span>
                               </div>
