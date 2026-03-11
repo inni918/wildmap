@@ -22,8 +22,8 @@ export default function MapPage() {
   const [nameFilter, setNameFilter] = useState('')
   const [filterSheetOpen, setFilterSheetOpen] = useState(false)
   const [appliedFilter, setAppliedFilter] = useState<FilterState>({
-    spotType: 'all',
-    features: [],
+    featureIds: [],
+    // spotType: 'all',  // 暫時隱藏付費類型
   })
 
   // Debounced name filter（避免每次按鍵都 refetch）
@@ -42,23 +42,16 @@ export default function MapPage() {
     setAppliedFilter(filter)
   }, [])
 
-  // 轉換 spotType → isFreeFilter（配合現有 Map props）
-  // wild_camping → 免費 (is_free=true), campsite → 付費 (is_free=false)
-  const isFreeFilter: boolean | null =
-    appliedFilter.spotType === 'wild_camping' ? true
-    : appliedFilter.spotType === 'campsite' ? false
-    : null
-
-  const activeFilterCount =
-    (appliedFilter.spotType !== 'all' ? 1 : 0) + appliedFilter.features.length
+  // activeFilterCount：選中 featureIds 數量
+  // spotType 暫時隱藏，不計入
+  const activeFilterCount = appliedFilter.featureIds.length
 
   return (
     <main className="w-full h-screen">
       <Map
         nameFilter={debouncedName}
         onNameFilterChange={handleNameChange}
-        isFreeFilter={isFreeFilter}
-        facilityKeys={appliedFilter.features}
+        featureIds={appliedFilter.featureIds}
         onFilterClick={() => setFilterSheetOpen(true)}
         activeFilterCount={activeFilterCount}
       />

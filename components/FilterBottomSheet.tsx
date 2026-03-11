@@ -1,14 +1,21 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS, FEATURE_ICON_MAP } from '@/lib/icons'
+import { supabase } from '@/lib/supabase'
 
-export type SpotTypeFilter = 'all' | 'campsite' | 'wild_camping'
+// ── 付費類型相關型別與 state 暫時保留（預留架構），待有多個分類時再開啟 ──
+// export type SpotTypeFilter = 'all' | 'campsite' | 'wild_camping'
+// const SPOT_TYPE_OPTIONS: { value: SpotTypeFilter; label: string; emoji: string }[] = [
+//   { value: 'all', label: '全部', emoji: '🏕' },
+//   { value: 'campsite', label: '付費露營地', emoji: '💰' },
+//   { value: 'wild_camping', label: '免費野營', emoji: '🌿' },
+// ]
 
 export interface FilterState {
-  spotType: SpotTypeFilter
-  features: string[]
+  featureIds: string[]
+  // spotType: SpotTypeFilter  // 暫時隱藏付費類型篩選
 }
 
 interface FilterBottomSheetProps {
@@ -18,32 +25,33 @@ interface FilterBottomSheetProps {
   onApply: (filter: FilterState) => void
 }
 
-const SPOT_TYPE_OPTIONS: { value: SpotTypeFilter; label: string; emoji: string }[] = [
-  { value: 'all', label: '全部', emoji: '🏕' },
-  { value: 'campsite', label: '付費露營地', emoji: '💰' },
-  { value: 'wild_camping', label: '免費野營', emoji: '🌿' },
-]
+// 六大分類定義（group_key 排序用）
+const GROUP_ORDER = [
+  'camp_traits',
+  'facilities',
+  'environment',
+  'activities',
+  'restrictions',
+  'warnings',
+] as const
 
-const FEATURE_OPTIONS: { key: string; label: string }[] = [
-  { key: 'mountain_view', label: '山景' },
-  { key: 'forest', label: '森林' },
-  { key: 'river_stream', label: '溪流' },
-  { key: 'sea_of_clouds', label: '雲海' },
-  { key: 'stargazing', label: '觀星' },
-  { key: 'fireflies', label: '螢火蟲' },
-  { key: 'hot_spring', label: '溫泉' },
-  { key: 'child_friendly', label: '親子友善' },
-  { key: 'grassland', label: '大片草皮' },
-  { key: 'ocean_view', label: '海景' },
-  { key: 'accommodation', label: '提供住宿' },
-  { key: 'glamping', label: '豪華露營' },
-  { key: 'hiking_trails', label: '健行步道' },
-  { key: 'seasonal_flowers', label: '季節賞花' },
-  { key: 'playground', label: '遊樂設施' },
-  { key: 'high_mountain', label: '高山百岳' },
-]
+const GROUP_LABEL: Record<string, string> = {
+  camp_traits:  '營地特性',
+  facilities:   '設施與服務',
+  environment:  '周邊環境',
+  activities:   '可進行活動',
+  restrictions: '區域與限制',
+  warnings:     '注意事項',
+}
 
-import { useState } from 'react'
+interface FeatureDef {
+  id: string
+  key: string
+  name_zh: string
+  group_key: string
+  group_name: string
+  sort_order: number
+}
 
 export default function FilterBottomSheet({
   open,
@@ -51,15 +59,44 @@ export default function FilterBottomSheet({
   filter,
   onApply,
 }: FilterBottomSheetProps) {
-  const [localFilter, setLocalFilter] = useState<FilterState>(filter)
+  // ── local state ──
+  // const [localSpotType, setLocalSpotType] = useState<SpotTypeFilter>('all')  // 暫時隱藏付費類型
+  const [localFeatureIds, setLocalFeatureIds] = useState<string[]>([])
+
+  // ── feature_definitions from Supabase ──
+  const [featureDefs, setFeatureDefs] = useState<FeatureDef[]>([])
+  const [featureLoading, setFeatureLoading] = useState(false)
+
+  // ── 每個分類的展開狀態（預設全部收合） ──
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({})
+
   const sheetRef = useRef<HTMLDivElement>(null)
 
-  // 同步外部 filter
+  // ── 開啟時同步外部 filter + 撈 feature_definitions ──
   useEffect(() => {
-    if (open) {
-      setLocalFilter(filter)
+    if (!open) return
+
+    // 同步 filter state
+    setLocalFeatureIds(filter.featureIds)
+    // setLocalSpotType(filter.spotType ?? 'all')  // 暫時隱藏付費類型
+
+    // 撈 feature_definitions（只撈一次）
+    if (featureDefs.length === 0) {
+      setFeatureLoading(true)
+      supabase
+        .from('feature_definitions')
+        .select('id, key, name_zh, group_key, group_name, sort_order')
+        .order('group_key')
+        .order('sort_order')
+        .then(({ data, error }) => {
+          if (!error && data) {
+            setFeatureDefs(data as FeatureDef[])
+          }
+          setFeatureLoading(false)
+        })
     }
-  }, [open, filter])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open])
 
   // 按 Esc 關閉
   useEffect(() => {
@@ -81,29 +118,48 @@ export default function FilterBottomSheet({
     return () => { document.body.style.overflow = '' }
   }, [open])
 
-  function toggleFeature(key: string) {
-    setLocalFilter(prev => ({
-      ...prev,
-      features: prev.features.includes(key)
-        ? prev.features.filter(k => k !== key)
-        : [...prev.features, key],
-    }))
+  // ── Toggle feature id ──
+  function toggleFeatureId(id: string) {
+    setLocalFeatureIds(prev =>
+      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+    )
   }
 
+  // ── Toggle group expand ──
+  function toggleGroup(groupKey: string) {
+    setExpandedGroups(prev => ({ ...prev, [groupKey]: !prev[groupKey] }))
+  }
+
+  // ── 清除 ──
   function handleClear() {
-    const cleared: FilterState = { spotType: 'all', features: [] }
-    setLocalFilter(cleared)
+    const cleared: FilterState = {
+      featureIds: [],
+      // spotType: 'all',  // 暫時隱藏付費類型
+    }
+    setLocalFeatureIds([])
+    // setLocalSpotType('all')  // 暫時隱藏付費類型
     onApply(cleared)
     onClose()
   }
 
+  // ── 套用 ──
   function handleApply() {
-    onApply(localFilter)
+    onApply({
+      featureIds: localFeatureIds,
+      // spotType: localSpotType,  // 暫時隱藏付費類型
+    })
     onClose()
   }
 
-  const activeCount =
-    (localFilter.spotType !== 'all' ? 1 : 0) + localFilter.features.length
+  // 按 group_key 分組（依照 GROUP_ORDER 排序）
+  const grouped = GROUP_ORDER.reduce<Record<string, FeatureDef[]>>((acc, gk) => {
+    acc[gk] = featureDefs.filter(f => f.group_key === gk)
+    return acc
+  }, {} as Record<string, FeatureDef[]>)
+
+  // activeCount：選中 featureIds 數量
+  // const spotTypeCount = localSpotType !== 'all' ? 1 : 0  // 暫時隱藏付費類型
+  const activeCount = localFeatureIds.length /* + spotTypeCount */
 
   if (!open) return null
 
@@ -115,19 +171,19 @@ export default function FilterBottomSheet({
         onClick={onClose}
       />
 
-      {/* Bottom Sheet */}
+      {/* Bottom Sheet 容器 */}
       <div
         ref={sheetRef}
-        className="fixed bottom-0 left-0 right-0 z-50 bg-surface rounded-t-2xl shadow-2xl border-t border-border"
-        style={{ maxHeight: '85vh', overflowY: 'auto' }}
+        className="fixed bottom-0 left-0 right-0 z-50 bg-surface rounded-t-2xl shadow-2xl border-t border-border flex flex-col"
+        style={{ maxHeight: '85vh' }}
       >
         {/* 拖曳把手 */}
-        <div className="flex justify-center pt-3 pb-1">
+        <div className="flex justify-center pt-3 pb-1 flex-shrink-0">
           <div className="w-10 h-1 rounded-full bg-border" />
         </div>
 
-        {/* Header */}
-        <div className="flex items-center justify-between px-5 py-3 border-b border-border">
+        {/* Header（固定） */}
+        <div className="flex items-center justify-between px-5 py-3 border-b border-border flex-shrink-0">
           <div className="flex items-center gap-2">
             <h2 className="text-base font-bold text-text-main">篩選</h2>
             {activeCount > 0 && (
@@ -144,17 +200,22 @@ export default function FilterBottomSheet({
           </button>
         </div>
 
-        <div className="px-5 py-4 space-y-6">
-          {/* ── 付費類型 ── */}
+        {/* 可滾動內容區 */}
+        <div
+          className="flex-1 overflow-y-auto px-5 py-4 space-y-2"
+          style={{ WebkitOverflowScrolling: 'touch' }}
+        >
+          {/* 暫時隱藏付費類型區塊，預留架構，未來多分類時再開啟 */}
+          {/*
           <section>
             <h3 className="text-sm font-semibold text-text-main mb-3">付費類型</h3>
             <div className="flex gap-2 flex-wrap">
               {SPOT_TYPE_OPTIONS.map(opt => (
                 <button
                   key={opt.value}
-                  onClick={() => setLocalFilter(prev => ({ ...prev, spotType: opt.value }))}
+                  onClick={() => setLocalSpotType(opt.value)}
                   className={`flex items-center gap-1.5 px-4 py-2.5 min-h-[44px] rounded-full text-sm font-medium border transition-colors cursor-pointer active:scale-95 ${
-                    localFilter.spotType === opt.value
+                    localSpotType === opt.value
                       ? 'bg-primary text-white border-primary'
                       : 'bg-surface text-text-secondary border-border hover:border-primary hover:text-primary'
                   }`}
@@ -165,44 +226,94 @@ export default function FilterBottomSheet({
               ))}
             </div>
           </section>
+          */}
+          {/* 付費類型區塊結束 */}
 
-          {/* ── 常用特性 ── */}
+          {/* ── 特性：六大分類展開式 ── */}
           <section>
-            <h3 className="text-sm font-semibold text-text-main mb-3">常用特性</h3>
-            <div className="grid grid-cols-2 gap-2">
-              {FEATURE_OPTIONS.map(opt => {
-                const icon = FEATURE_ICON_MAP[opt.key] ?? NAV_ICONS.filter
-                const selected = localFilter.features.includes(opt.key)
-                return (
-                  <button
-                    key={opt.key}
-                    onClick={() => toggleFeature(opt.key)}
-                    className={`flex items-center gap-2.5 px-4 py-3 min-h-[48px] rounded-xl text-sm font-medium border transition-colors cursor-pointer active:scale-95 ${
-                      selected
-                        ? 'bg-[#f0fdf4] text-primary border-primary'
-                        : 'bg-surface text-text-secondary border-border hover:border-primary/50 hover:text-primary'
-                    }`}
-                  >
-                    <FontAwesomeIcon
-                      icon={icon}
-                      className={`text-sm flex-shrink-0 ${selected ? 'text-primary' : 'text-text-secondary'}`}
-                    />
-                    <span>{opt.label}</span>
-                    {selected && (
-                      <FontAwesomeIcon
-                        icon={NAV_ICONS.check}
-                        className="ml-auto text-xs text-primary flex-shrink-0"
-                      />
-                    )}
-                  </button>
-                )
-              })}
-            </div>
+            <h3 className="text-sm font-semibold text-text-main mb-3">營地特性</h3>
+
+            {featureLoading ? (
+              <div className="flex items-center justify-center py-8 text-text-secondary">
+                <FontAwesomeIcon icon={NAV_ICONS.spinner} className="animate-spin mr-2" />
+                <span className="text-sm">載入特性中…</span>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {GROUP_ORDER.map(groupKey => {
+                  const items = grouped[groupKey]
+                  if (!items || items.length === 0) return null
+                  const isExpanded = !!expandedGroups[groupKey]
+                  const selectedInGroup = items.filter(f => localFeatureIds.includes(f.id)).length
+
+                  return (
+                    <div key={groupKey} className="border border-border rounded-xl overflow-hidden">
+                      {/* 分類標題（可點擊展開/收合） */}
+                      <button
+                        onClick={() => toggleGroup(groupKey)}
+                        className="w-full flex items-center justify-between px-4 py-3 bg-surface-alt hover:bg-surface-alt/80 transition-colors cursor-pointer"
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-semibold text-text-main">
+                            {GROUP_LABEL[groupKey] ?? groupKey}
+                          </span>
+                          {selectedInGroup > 0 && (
+                            <span className="bg-primary text-white text-[10px] rounded-full px-1.5 py-0.5 font-medium">
+                              {selectedInGroup}
+                            </span>
+                          )}
+                        </div>
+                        <FontAwesomeIcon
+                          icon={isExpanded ? NAV_ICONS.chevronUp : NAV_ICONS.chevronDown}
+                          className="text-text-secondary text-xs"
+                        />
+                      </button>
+
+                      {/* 展開後的特性清單 */}
+                      {isExpanded && (
+                        <div className="grid grid-cols-2 gap-2 p-3 bg-surface">
+                          {items.map(feat => {
+                            const icon = FEATURE_ICON_MAP[feat.key] ?? NAV_ICONS.filter
+                            const selected = localFeatureIds.includes(feat.id)
+                            return (
+                              <button
+                                key={feat.id}
+                                onClick={() => toggleFeatureId(feat.id)}
+                                className="flex items-center gap-2 px-3 py-2.5 min-h-[44px] rounded-xl text-sm font-medium border transition-colors cursor-pointer active:scale-95"
+                                style={selected ? {
+                                  backgroundColor: '#D1FAE5',
+                                  color: '#065F46',
+                                  borderColor: '#2D6A4F',
+                                } : {}}
+                              >
+                                <FontAwesomeIcon
+                                  icon={icon}
+                                  className="text-sm flex-shrink-0"
+                                  style={{ color: selected ? '#065F46' : undefined }}
+                                />
+                                <span className="leading-tight text-left">{feat.name_zh}</span>
+                                {selected && (
+                                  <FontAwesomeIcon
+                                    icon={NAV_ICONS.check}
+                                    className="ml-auto text-xs flex-shrink-0"
+                                    style={{ color: '#065F46' }}
+                                  />
+                                )}
+                              </button>
+                            )
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            )}
           </section>
         </div>
 
-        {/* 底部按鈕 */}
-        <div className="px-5 pb-8 pt-2 flex gap-3 border-t border-border bg-surface">
+        {/* 底部按鈕（固定在底部） */}
+        <div className="flex-shrink-0 px-5 pb-8 pt-3 flex gap-3 border-t border-border bg-surface">
           <button
             onClick={handleClear}
             className="flex-1 py-3 min-h-[48px] rounded-xl text-sm font-semibold bg-surface-alt text-text-secondary border border-border hover:bg-surface-alt/80 transition-colors cursor-pointer active:scale-95"

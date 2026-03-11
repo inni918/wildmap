@@ -69,7 +69,9 @@ export default function FilterChips({
           className="flex items-center gap-2 px-3 pb-2 overflow-x-auto scrollbar-hide"
           style={{ WebkitOverflowScrolling: 'touch' }}
         >
+          {/* 暫時隱藏，未來加車宿/釣魚分類時再開啟 */}
           {/* ── 分類 Chips（單選） ── */}
+          {/*
           <ChipButton
             label="🏕 全部"
             selected={freeFilter === 'all'}
@@ -89,9 +91,8 @@ export default function FilterChips({
               onFreeFilterChange(freeFilter === 'free' ? 'all' : 'free')
             }
           />
-
-          {/* 分隔線 */}
-          <div className="flex-shrink-0 w-px h-5 bg-border mx-1" />
+          */}
+          {/* 暫時隱藏結束 */}
 
           {/* ── 設施 Chips（多選） ── */}
           {FACILITY_CHIPS.map((chip) => (
