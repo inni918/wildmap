@@ -59,8 +59,10 @@ interface VoteState {
 // ─── Helper ──────────────────────────────────
 
 function isConfirmed(f: FeatureWithVotes): boolean {
-  // true 票 ≥ false 票（且有人投票）
-  return f.yes_count > 0 && f.yes_count >= f.no_count
+  // 加權票數 >= 3 且 yes >= no
+  const wy = f.weighted_yes ?? f.yes_count
+  const wn = f.weighted_no ?? f.no_count
+  return wy >= 3 && wy >= wn
 }
 
 function hexToRgba(hex: string, alpha: number): string {
@@ -620,11 +622,13 @@ function DetailSheet({
                                   {feature.name_zh}
                                 </span>
                                 <span className="text-[11px] text-text-secondary/60">
-                                  {totalVotes > 0
-                                    ? confirmed
-                                      ? `${state.weighted_yes}票確認`
-                                      : `${totalVotes}票投票`
-                                    : '尚無投票'}
+                                  {totalVotes === 0
+                                    ? '尚無投票'
+                                    : confirmed
+                                      ? '✅ 已確認'
+                                      : state.weighted_yes > 0 && state.weighted_yes < 3
+                                        ? '少數人認為有'
+                                        : '⏳ 待確認'}
                                 </span>
                               </div>
                             </div>
