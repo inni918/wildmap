@@ -815,8 +815,8 @@ export default function Map({
         onSearchExpandedChange={nameFilter !== undefined ? undefined : setSearchExpanded}
       />
 
-      {/* ── 外部 SearchBar + 篩選按鈕（當 hasExternalUI 時渲染） ── */}
-      {hasExternalUI && (
+      {/* ── 外部 SearchBar + 篩選按鈕（收藏模式時隱藏） ── */}
+      {hasExternalUI && !favoritesMode && (
         <div className="absolute left-0 right-0 z-20 px-3 py-2 bg-surface/95 backdrop-blur-sm border-b border-border flex items-center gap-2" style={{ top: '3.5rem' }}>
           <SearchBar
             value={nameFilter ?? ''}
