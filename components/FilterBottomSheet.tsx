@@ -212,8 +212,8 @@ export default function FilterBottomSheet({
           })}
         </div>
 
-        {/* 底部按鈕 — flex-shrink-0 固定不滾動 */}
-        <div className="px-5 pb-8 pt-3 flex gap-3 border-t border-border bg-surface flex-shrink-0">
+        {/* 底部按鈕 — flex-shrink-0 固定不滾動，pb-safe 保留底部安全區 */}
+        <div className="px-5 pt-3 flex gap-3 border-t border-border bg-surface flex-shrink-0" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 80px)' }}>
           <button
             onClick={handleClear}
             className="flex-1 py-3 min-h-[48px] rounded-xl text-sm font-semibold bg-surface-alt text-text-secondary border border-border hover:bg-surface-alt/80 transition-colors cursor-pointer active:scale-95"
