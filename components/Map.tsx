@@ -167,14 +167,18 @@ function SpotMarker({ isSelected, isSuspended }: { isSelected: boolean; isSuspen
   )
 }
 
-// ====== External filter props（來自 page.tsx 的 SearchBar + FilterBottomSheet） ======
+// ====== External filter props（來自 page.tsx 的 SearchBar + FilterChips） ======
 export interface MapFilterProps {
   /** 名稱搜尋關鍵字（由外部控制） */
   nameFilter?: string
   /** 名稱搜尋變更 callback */
   onNameFilterChange?: (v: string) => void
-  /** 選中的 feature_definitions.id 陣列（UUID），來自 FilterBottomSheet */
-  featureIds?: string[]
+  /** 付費/免費篩選：true=免費, false=付費, null/undefined=全部 */
+  isFreeFilter?: boolean | null
+  /** 設施 key 陣列（由外部 FilterChips 提供） */
+  facilityKeys?: string[]
+  /** 設施篩選變更 callback */
+  onFacilitiesChange?: (keys: string[]) => void
   /** 篩選按鈕點擊 callback（由外部提供） */
   onFilterClick?: () => void
   /** 目前套用的篩選數量（用來顯示徽章） */
@@ -184,7 +188,9 @@ export interface MapFilterProps {
 export default function Map({
   nameFilter,
   onNameFilterChange,
-  featureIds,
+  isFreeFilter,
+  facilityKeys,
+  onFacilitiesChange,
   onFilterClick,
   activeFilterCount = 0,
 }: MapFilterProps = {}) {
@@ -201,6 +207,8 @@ export default function Map({
   const [activeFilter, setActiveFilter] = useState<SpotCategory | 'all'>('all')
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([])
   const [featureSpotIds, setFeatureSpotIds] = useState<Set<string> | null>(null)
+  // facilityKeys prop 篩選產生的 spot id 集合（獨立於 featureSpotIds）
+  const [facilitySpotIds, setFacilitySpotIds] = useState<Set<string> | null>(null)
   const [addModal, setAddModal] = useState<{ lat: number; lng: number } | null>(null)
   const [detailSpotId, setDetailSpotId] = useState<string | null>(null)
   const [placingMode, setPlacingMode] = useState(false) // 放置模式
@@ -237,6 +245,7 @@ export default function Map({
     category: SpotCategory | 'all',
     search: string,
     featureIds: Set<string> | null,
+    isFree?: boolean | null,
   ) => {
     setLoadError(null)
 
@@ -271,6 +280,13 @@ export default function Map({
 
           if (featureIds !== null) {
             query = query.in('id', Array.from(featureIds))
+          }
+
+          // 外部 isFree 篩選（來自 FilterChips）
+          if (isFree === true) {
+            query = query.eq('is_free', true)
+          } else if (isFree === false) {
+            query = query.eq('is_free', false)
           }
 
           query = query.limit(500)
@@ -309,6 +325,7 @@ export default function Map({
     search: string,
     featureIds: Set<string> | null,
     bounds?: [number, number, number, number],
+    isFree?: boolean | null,
   ) => {
     // 若 featureIds 為空集合，count 直接為 0
     if (featureIds !== null && featureIds.size === 0) {
@@ -331,6 +348,13 @@ export default function Map({
 
       if (featureIds !== null) {
         query = query.in('id', Array.from(featureIds))
+      }
+
+      // 外部 isFree 篩選
+      if (isFree === true) {
+        query = query.eq('is_free', true)
+      } else if (isFree === false) {
+        query = query.eq('is_free', false)
       }
 
       // 搜尋時也限制 viewport bounds，讓計數與列表一致
@@ -359,13 +383,14 @@ export default function Map({
     category: SpotCategory | 'all',
     search: string,
     featureIds: Set<string> | null,
+    isFree?: boolean | null,
   ) => {
     if (debounceRef.current) {
       clearTimeout(debounceRef.current)
     }
     debounceRef.current = setTimeout(() => {
-      fetchViewportSpots(bounds, category, search, featureIds)
-      fetchTotalCount(category, search, featureIds, bounds)
+      fetchViewportSpots(bounds, category, search, featureIds, isFree)
+      fetchTotalCount(category, search, featureIds, bounds, isFree)
     }, 300)
   }, [fetchViewportSpots, fetchTotalCount])
 
@@ -435,30 +460,27 @@ export default function Map({
     loadFavorites()
   }, [favoritesMode, user])
 
-  // 合併 featureSpotIds（FeatureFilter 元件內部特性篩選）與外部 featureIds prop（FilterBottomSheet UUID 陣列）
-  // featureIds prop 為選中的 feature_definitions.id（UUID）陣列，需先查 feature_votes 取出 spot ids
-  const [externalFeatureSpotIds, setExternalFeatureSpotIds] = useState<Set<string> | null>(null)
-
+  // 合併 featureSpotIds（FeatureFilter 元件）與 facilitySpotIds（FilterChips）
   // 必須在使用它的 effects 之前宣告
   const combinedFeatureIds = useMemo((): Set<string> | null => {
-    if (featureSpotIds === null && externalFeatureSpotIds === null) return null
-    if (featureSpotIds === null) return externalFeatureSpotIds
-    if (externalFeatureSpotIds === null) return featureSpotIds
+    if (featureSpotIds === null && facilitySpotIds === null) return null
+    if (featureSpotIds === null) return facilitySpotIds
+    if (facilitySpotIds === null) return featureSpotIds
     // 兩者都有時取交集
     const intersection = new Set<string>()
     for (const id of featureSpotIds) {
-      if (externalFeatureSpotIds.has(id)) intersection.add(id)
+      if (facilitySpotIds.has(id)) intersection.add(id)
     }
     return intersection
-  }, [featureSpotIds, externalFeatureSpotIds])
+  }, [featureSpotIds, facilitySpotIds])
 
   // ====== 初次載入：直接 fetch（不經過 debounce） ======
   const initialFetchDone = useRef(false)
   useEffect(() => {
     if (!initialFetchDone.current) {
       initialFetchDone.current = true
-      fetchViewportSpots(mapBounds, activeFilter, effectiveSearchQuery, combinedFeatureIds)
-      fetchTotalCount(activeFilter, effectiveSearchQuery, combinedFeatureIds, mapBounds)
+      fetchViewportSpots(mapBounds, activeFilter, effectiveSearchQuery, combinedFeatureIds, isFreeFilter)
+      fetchTotalCount(activeFilter, effectiveSearchQuery, combinedFeatureIds, mapBounds, isFreeFilter)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -472,9 +494,9 @@ export default function Map({
     filterChangeCount.current++
     if (filterChangeCount.current <= 1) return
 
-    triggerFetch(mapBounds, activeFilter, effectiveSearchQuery, combinedFeatureIds)
+    triggerFetch(mapBounds, activeFilter, effectiveSearchQuery, combinedFeatureIds, isFreeFilter)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeFilter, effectiveSearchQuery, combinedFeatureIds])
+  }, [activeFilter, effectiveSearchQuery, combinedFeatureIds, isFreeFilter])
 
   // ====== 行為追蹤：search ======
   const searchTrackRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -577,36 +599,52 @@ export default function Map({
     fetchFeatureFilteredSpots()
   }, [selectedFeatures])
 
-  // ====== featureIds prop（UUID 陣列）改變：查 feature_votes 取 spot ids ======
+  // ====== facilityKeys prop 改變：查 feature_votes（by key） ======
   useEffect(() => {
-    if (!featureIds || featureIds.length === 0) {
-      setExternalFeatureSpotIds(null)
+    if (!facilityKeys || facilityKeys.length === 0) {
+      setFacilitySpotIds(null)
       return
     }
 
-    async function fetchExternalFeatureSpots() {
+    async function fetchFacilityFilteredSpots() {
       try {
-        // 查 feature_votes（用 feature_id UUID），含 weight
+        // 1. 先從 feature_definitions 查出對應的 feature id
+        const defsResult = await withTimeout(
+          supabase
+            .from('feature_definitions')
+            .select('id, key')
+            .in('key', facilityKeys!),
+          8000,
+          'feature_definitions query'
+        )
+        if (defsResult.error || !defsResult.data || defsResult.data.length === 0) {
+          setFacilitySpotIds(new Set())
+          return
+        }
+        const defs = defsResult.data as { id: string; key: string }[]
+        const featureIds = defs.map((d) => d.id)
+
+        // 2. 查 feature_votes（用 feature_id），含 weight
         const votesResult = await withTimeout(
           supabase
             .from('feature_votes')
             .select('spot_id, feature_id, vote, weight')
-            .in('feature_id', featureIds!),
+            .in('feature_id', featureIds),
           8000,
-          'external feature_votes query'
+          'facility feature_votes query'
         )
         if (votesResult.error || !votesResult.data) {
-          setExternalFeatureSpotIds(new Set())
+          setFacilitySpotIds(new Set())
           return
         }
         const votes = votesResult.data as { spot_id: string; feature_id: string; vote: boolean; weight: number | null }[]
 
         if (votes.length === 0) {
-          setExternalFeatureSpotIds(new Set())
+          setFacilitySpotIds(new Set())
           return
         }
 
-        // 按 spot+feature 聚合加權投票
+        // 3. 按 spot+feature 聚合加權投票
         const voteMap = new globalThis.Map<string, { weightedYes: number; weightedNo: number }>()
         for (const v of votes) {
           const k = `${v.spot_id}::${v.feature_id}`
@@ -616,9 +654,9 @@ export default function Map({
           if (v.vote) entry.weightedYes += w; else entry.weightedNo += w
         }
 
-        // 按 feature 分組，weighted_yes >= 3 的 spot 視為確認
+        // 4. 按 feature 分組，weighted_yes >= 3 的 spot 視為確認
         const perFeature = new globalThis.Map<string, Set<string>>()
-        for (const fId of featureIds!) perFeature.set(fId, new Set())
+        for (const fId of featureIds) perFeature.set(fId, new Set())
 
         for (const [k, counts] of voteMap.entries()) {
           const [spotId, featureId] = k.split('::')
@@ -627,7 +665,7 @@ export default function Map({
           }
         }
 
-        // AND 交集（所有選定特性都要符合）
+        // 5. AND 交集（所有選定設施都要符合）
         let result: Set<string> | null = null
         for (const spotSet of perFeature.values()) {
           if (result === null) {
@@ -639,16 +677,16 @@ export default function Map({
           }
         }
 
-        setExternalFeatureSpotIds(result ?? new Set())
+        setFacilitySpotIds(result ?? new Set())
       } catch (err) {
-        console.error('fetchExternalFeatureSpots failed:', err)
-        setExternalFeatureSpotIds(new Set())
+        console.error('fetchFacilityFilteredSpots failed:', err)
+        setFacilitySpotIds(new Set())
       }
     }
 
-    fetchExternalFeatureSpots()
+    fetchFacilityFilteredSpots()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [(featureIds ?? []).join(',')])
+  }, [(facilityKeys ?? []).join(',')])
 
   const handleMapClick = useCallback((e: MapMouseEvent) => {
     if (placingMode) {
@@ -719,7 +757,7 @@ export default function Map({
         b.getNorth(),
       ]
       setMapBounds(newBounds)
-      triggerFetch(newBounds, activeFilter, effectiveSearchQuery, combinedFeatureIds)
+      triggerFetch(newBounds, activeFilter, effectiveSearchQuery, combinedFeatureIds, isFreeFilter)
 
       // 行為追蹤：map_move（tracker 內部有 10 秒節流）
       track({
@@ -732,7 +770,7 @@ export default function Map({
         },
       })
     }
-  }, [triggerFetch, activeFilter, effectiveSearchQuery, combinedFeatureIds])
+  }, [triggerFetch, activeFilter, effectiveSearchQuery, combinedFeatureIds, isFreeFilter])
 
   // 點擊 cluster → zoom in
   const handleClusterClick = useCallback((clusterId: number, longitude: number, latitude: number) => {
@@ -755,16 +793,16 @@ export default function Map({
   // 新增地點後重新 fetch viewport
   const handleSpotAdded = useCallback(() => {
     setAddModal(null)
-    fetchViewportSpots(mapBounds, activeFilter, effectiveSearchQuery, combinedFeatureIds)
-    fetchTotalCount(activeFilter, effectiveSearchQuery, combinedFeatureIds, mapBounds)
-  }, [mapBounds, activeFilter, effectiveSearchQuery, combinedFeatureIds, fetchViewportSpots, fetchTotalCount])
+    fetchViewportSpots(mapBounds, activeFilter, effectiveSearchQuery, combinedFeatureIds, isFreeFilter)
+    fetchTotalCount(activeFilter, effectiveSearchQuery, combinedFeatureIds, mapBounds, isFreeFilter)
+  }, [mapBounds, activeFilter, effectiveSearchQuery, combinedFeatureIds, isFreeFilter, fetchViewportSpots, fetchTotalCount])
 
   // SpotDetail 更新後重新 fetch viewport
   const handleSpotUpdated = useCallback(() => {
     setDetailSpotId(null)
-    fetchViewportSpots(mapBounds, activeFilter, effectiveSearchQuery, combinedFeatureIds)
-    fetchTotalCount(activeFilter, effectiveSearchQuery, combinedFeatureIds, mapBounds)
-  }, [mapBounds, activeFilter, effectiveSearchQuery, combinedFeatureIds, fetchViewportSpots, fetchTotalCount])
+    fetchViewportSpots(mapBounds, activeFilter, effectiveSearchQuery, combinedFeatureIds, isFreeFilter)
+    fetchTotalCount(activeFilter, effectiveSearchQuery, combinedFeatureIds, mapBounds, isFreeFilter)
+  }, [mapBounds, activeFilter, effectiveSearchQuery, combinedFeatureIds, isFreeFilter, fetchViewportSpots, fetchTotalCount])
 
   return (
     <div className="relative w-full h-full flex flex-col">
@@ -777,8 +815,8 @@ export default function Map({
         onSearchExpandedChange={nameFilter !== undefined ? undefined : setSearchExpanded}
       />
 
-      {/* ── 外部 SearchBar + 篩選按鈕（當 hasExternalUI 且非收藏模式時渲染） ── */}
-      {hasExternalUI && !favoritesMode && (
+      {/* ── 外部 SearchBar + 篩選按鈕（當 hasExternalUI 時渲染） ── */}
+      {hasExternalUI && (
         <div className="absolute left-0 right-0 z-20 px-3 py-2 bg-surface/95 backdrop-blur-sm border-b border-border flex items-center gap-2" style={{ top: '3.5rem' }}>
           <SearchBar
             value={nameFilter ?? ''}
@@ -820,7 +858,7 @@ export default function Map({
       {/* Category Filter Bar + 地圖/列表切換 */}
       <div
         className="absolute left-0 right-0 z-10 px-3 py-2 flex gap-2 items-center overflow-x-auto bg-surface/80 backdrop-blur-sm transition-all duration-200"
-        style={{ top: (hasExternalUI && !favoritesMode) ? '7rem' : searchExpanded ? '6.5rem' : '3.5rem' }}
+        style={{ top: hasExternalUI ? '7rem' : searchExpanded ? '6.5rem' : '3.5rem' }}
       >
         <button
           onClick={() => setActiveFilter('all')}
@@ -899,8 +937,8 @@ export default function Map({
                       onClick={() => {
                         setLoading(true)
                         setLoadError(null)
-                        fetchViewportSpots(mapBounds, activeFilter, effectiveSearchQuery, combinedFeatureIds)
-                        fetchTotalCount(activeFilter, effectiveSearchQuery, combinedFeatureIds, mapBounds)
+                        fetchViewportSpots(mapBounds, activeFilter, effectiveSearchQuery, combinedFeatureIds, isFreeFilter)
+                        fetchTotalCount(activeFilter, effectiveSearchQuery, combinedFeatureIds, mapBounds, isFreeFilter)
                       }}
                       className="mt-2 px-6 py-2.5 bg-primary text-text-on-primary rounded-xl text-sm font-semibold hover:bg-primary-dark transition-colors cursor-pointer active:scale-95"
                     >
@@ -927,7 +965,7 @@ export default function Map({
           )}
 
           {/* Empty state for 0 results in map mode */}
-          {!loading && spots.length === 0 && (effectiveSearchQuery || activeFilter !== 'all' || combinedFeatureIds !== null) && (
+          {!loading && spots.length === 0 && (effectiveSearchQuery || activeFilter !== 'all' || combinedFeatureIds !== null || isFreeFilter != null) && (
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 bg-surface/95 backdrop-blur-sm rounded-2xl shadow-lg border border-border p-6 max-w-xs text-center">
               <div className="w-16 h-16 mx-auto rounded-full bg-surface-alt flex items-center justify-center mb-3">
                 <span className="text-3xl">😕</span>
@@ -1170,7 +1208,7 @@ export default function Map({
       {viewMode === 'list' && (
         <div
           className="absolute left-0 right-0 bottom-0 overflow-y-auto bg-surface transition-all duration-200"
-          style={{ top: (hasExternalUI && !favoritesMode) ? '11rem' : searchExpanded ? '12rem' : '8.5rem' }}
+          style={{ top: hasExternalUI ? '11rem' : searchExpanded ? '12rem' : '8.5rem' }}
         >
           {/* 收藏模式標題列 */}
           {favoritesMode && (
