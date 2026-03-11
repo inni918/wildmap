@@ -1078,12 +1078,6 @@ export default function Map({
             </div>
           )}
 
-          {/* Add Spot Hint */}
-          <div className="absolute bottom-8 right-4 z-10 bg-primary text-text-on-primary rounded-xl shadow-md px-4 py-2 text-sm flex items-center gap-2 md:bottom-8 bottom-20">
-            點地圖新增地點
-            <FontAwesomeIcon icon={NAV_ICONS.plus} className="text-xs" />
-          </div>
-
           {/* SVG filter defs（全域共用，避免每個 marker 重複定義 filter id 衝突） */}
           <svg width="0" height="0" style={{ position: 'absolute' }}>
             <defs>
