@@ -212,6 +212,7 @@ export default function Map({
   const [addModal, setAddModal] = useState<{ lat: number; lng: number } | null>(null)
   const [detailSpotId, setDetailSpotId] = useState<string | null>(null)
   const [placingMode, setPlacingMode] = useState(false) // 放置模式
+  const [pendingLocation, setPendingLocation] = useState<{ lat: number; lng: number } | null>(null) // 待確認位置
   const [searchQuery, setSearchQuery] = useState('')
   // 使用外部 nameFilter（若有）覆蓋本地 searchQuery
   const effectiveSearchQuery = nameFilter !== undefined ? nameFilter : searchQuery
@@ -688,9 +689,28 @@ export default function Map({
   }, [(facilityKeys ?? []).join(',')])
 
   const handleMapClick = useCallback((e: MapMouseEvent) => {
+    if (placingMode) {
+      // 放置模式：記錄點擊座標，顯示確認 Popup
+      setPendingLocation({ lat: e.lngLat.lat, lng: e.lngLat.lng })
+      return
+    }
     setSelectedSpot(null)
-    // 不再直接開 AddSpotModal，改用放置模式
-  }, [])
+  }, [placingMode])
+
+  // ====== Esc 鍵退出放置模式 ======
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (pendingLocation) {
+          setPendingLocation(null)
+        } else if (placingMode) {
+          setPlacingMode(false)
+        }
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [placingMode, pendingLocation])
 
   // ====== Supercluster 建立（直接用 viewport spots） ======
   const supercluster = useMemo(() => {
@@ -992,7 +1012,7 @@ export default function Map({
             onClick={handleMapClick}
             style={{ width: '100%', height: '100%' }}
             mapStyle={MAP_STYLE}
-            cursor={placingMode ? 'move' : 'grab'}
+            cursor={placingMode ? 'crosshair' : 'grab'}
             maxBounds={[
               [118.0, 21.0],  // 西南角（涵蓋金門）
               [123.0, 26.5],  // 東北角（涵蓋馬祖）
@@ -1084,9 +1104,14 @@ export default function Map({
             />
           )}
 
-          {/* 放置模式：十字準心 + 確認/取消 */}
-          {placingMode && (
+          {/* 放置模式：十字準心 + 頂部提示 */}
+          {placingMode && !pendingLocation && (
             <>
+              {/* 頂部提示 banner */}
+              <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-text-on-primary text-sm font-medium shadow-md pointer-events-none">
+                <span>點擊地圖選擇位置，再次點擊確認</span>
+              </div>
+
               {/* 十字準心（畫面正中央） */}
               <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-20">
                 <div className="relative w-12 h-12">
@@ -1097,38 +1122,62 @@ export default function Map({
                   {/* 中心點 */}
                   <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-primary ring-2 ring-white shadow" />
                 </div>
-                {/* 提示文字 */}
-                <p className="text-xs text-text-main font-medium bg-surface/90 backdrop-blur-sm rounded-full px-3 py-1 mt-2 text-center shadow-sm whitespace-nowrap -translate-x-1/4">
-                  拖動地圖選擇位置
-                </p>
               </div>
 
-              {/* 確認 / 取消按鈕 */}
-              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
+              {/* 取消按鈕 */}
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20">
                 <button
                   onClick={() => setPlacingMode(false)}
                   className="px-5 py-2.5 bg-surface text-text-secondary border border-border rounded-xl text-sm font-medium shadow-lg hover:bg-surface-hover transition-colors cursor-pointer"
                 >
-                  取消
-                </button>
-                <button
-                  onClick={() => {
-                    const map = mapRef.current?.getMap()
-                    if (map) {
-                      const center = map.getCenter()
-                      setPlacingMode(false)
-                      setAddModal({ lat: center.lat, lng: center.lng })
-                    }
-                  }}
-                  className="px-5 py-2.5 bg-primary text-text-on-primary rounded-xl text-sm font-medium shadow-lg hover:bg-primary-dark transition-colors cursor-pointer"
-                >
-                  ✓ 確認位置
+                  取消（Esc）
                 </button>
               </div>
 
               {/* 半透明遮罩提示 */}
               <div className="absolute inset-0 pointer-events-none z-10 border-4 border-primary/30 rounded-none" />
             </>
+          )}
+
+          {/* 確認 Popup（點地圖後） */}
+          {placingMode && pendingLocation && (
+            <div
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+              onClick={() => setPendingLocation(null)}
+            >
+              <div
+                className="bg-surface rounded-2xl border border-border p-6 mx-4 max-w-sm w-full text-center shadow-xl"
+                onClick={e => e.stopPropagation()}
+              >
+                <div className="text-3xl mb-3">📍</div>
+                <h3 className="text-base font-bold text-text-main mb-2">要在這裡新增地點嗎？</h3>
+                <p className="text-sm text-text-secondary mb-1">
+                  緯度：{pendingLocation.lat.toFixed(5)}
+                </p>
+                <p className="text-sm text-text-secondary mb-5">
+                  經度：{pendingLocation.lng.toFixed(5)}
+                </p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setPendingLocation(null)}
+                    className="flex-1 px-4 py-2.5 bg-surface text-text-secondary border border-border rounded-xl text-sm font-medium hover:bg-surface-hover transition-colors cursor-pointer"
+                  >
+                    取消
+                  </button>
+                  <button
+                    onClick={() => {
+                      const loc = pendingLocation
+                      setPendingLocation(null)
+                      setPlacingMode(false)
+                      setAddModal({ lat: loc.lat, lng: loc.lng })
+                    }}
+                    className="flex-1 px-4 py-2.5 bg-primary text-text-on-primary rounded-xl text-sm font-medium hover:bg-primary-dark transition-colors cursor-pointer"
+                  >
+                    確認新增
+                  </button>
+                </div>
+              </div>
+            </div>
           )}
 
           {/* ＋ 新增地點 FAB（非放置模式時顯示） */}

@@ -5,6 +5,7 @@ import { LevelProvider } from "@/lib/level-context";
 import PWARegister from "@/components/PWARegister";
 import CookieConsent from "@/components/CookieConsent";
 import TrackerInit from "@/components/TrackerInit";
+import ConditionalFooter from "@/components/ConditionalFooter";
 import "@/lib/fontawesome";
 import "./globals.css";
 
@@ -61,6 +62,7 @@ export default function RootLayout({
           <LevelProvider>
             <AchievementProvider>
               {children}
+              <ConditionalFooter />
             </AchievementProvider>
           </LevelProvider>
         </AuthProvider>
