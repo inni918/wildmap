@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Bottom Sheet v6 — 特性列</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, sans-serif; background: #e8f4f0; height: 100vh; position: relative; overflow: hidden; }
+
+.map-bg { position: absolute; inset: 0; }
+.map-img {
+  width: 100%; height: 100%;
+  background: linear-gradient(135deg, #d4e8d4 0%, #e8f0d8 30%, #f0e8d0 60%, #d8e8f0 100%);
+}
+.map-img::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: linear-gradient(#c8d8b8 1px, transparent 1px), linear-gradient(90deg, #c8d8b8 1px, transparent 1px);
+  background-size: 60px 60px; opacity: 0.3;
+}
+
+.header {
+  position: absolute; top: 0; left: 0; right: 0; z-index: 10;
+  background: white; padding: 12px 16px;
+  display: flex; align-items: center; gap: 8px;
+  border-bottom: 1px solid #e5e7eb;
+}
+.logo { width: 28px; height: 28px; background: #2D6A4F; border-radius: 6px; display:flex; align-items:center; justify-content:center; color:white; font-size:14px; }
+.header-title { font-weight: 700; font-size: 16px; }
+.header-right { margin-left: auto; background: #2D6A4F; color: white; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; }
+
+/* 卡片 */
+.bottom-sheet {
+  position: absolute; z-index: 20;
+  left: 50%; transform: translateX(-50%);
+  width: calc(100% - 48px); max-width: 420px;
+  bottom: 80px;
+  background: white; border-radius: 20px;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.18);
+  overflow: hidden;
+  animation: slideUp 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+}
+@keyframes slideUp { from { transform: translateX(-50%) translateY(100%); } to { transform: translateX(-50%) translateY(0); } }
+
+/* 拖曳把手 */
+.drag-handle {
+  position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+  width: 32px; height: 3px; background: rgba(255,255,255,0.5); border-radius: 2px; z-index: 5;
+}
+
+/* 照片 */
+.photo-banner { width: 100%; height: 120px; position: relative; overflow: hidden; }
+.photo-banner img { width: 100%; height: 100%; object-fit: cover; }
+.fav-btn {
+  position: absolute; top: 10px; right: 10px;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(0,0,0,0.32); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  border: none; cursor: pointer; font-size: 15px;
+}
+.nav-btn {
+  position: absolute; bottom: 10px; right: 10px;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(0,0,0,0.32); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  border: none; cursor: pointer;
+}
+.category-badge {
+  position: absolute; bottom: 10px; left: 10px;
+  display: flex; align-items: center; gap: 4px;
+  padding: 4px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 700;
+  background: rgba(45,106,79,0.88); color: white;
+}
+
+/* 資訊區 */
+.card-info { padding: 10px 14px 0; }
+.spot-name { font-size: 16px; font-weight: 700; color: #111; margin-bottom: 5px; }
+.meta-row { display: flex; align-items: center; gap: 6px; }
+.rating-num-big { font-size: 15px; font-weight: 800; color: #111; }
+.star-icon { color: #f59e0b; font-size: 13px; }
+.rating-count { font-size: 11px; color: #9ca3af; }
+.dot { color: #d1d5db; font-size: 10px; }
+.region { font-size: 12px; color: #6b7280; }
+.shield { display: inline-flex; align-items: center; color: #15803d; }
+
+/* 特性橫向捲動列 */
+.features-row {
+  margin-top: 10px;
+  padding: 8px 14px 12px;
+  border-top: 1px solid #f3f4f6;
+  overflow-x: auto;
+  display: flex; gap: 10px; align-items: center;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.features-row::-webkit-scrollbar { display: none; }
+.feat-icon {
+  flex-shrink: 0;
+  width: 20px; height: 20px;
+  display: flex; align-items: center; justify-content: center;
+}
+.feat-icon svg { width: 20px; height: 20px; }
+
+/* 分類顏色 */
+.col-fac  { color: #2D6A4F; }
+.col-camp { color: #d97706; }
+.col-env  { color: #388e3c; }
+.col-act  { color: #1565c0; }
+/* 待確認淡版 */
+.col-fac-dim  { color: rgba(45,106,79,0.35); }
+.col-camp-dim { color: rgba(217,119,6,0.35); }
+.col-env-dim  { color: rgba(56,142,60,0.35); }
+
+/* 示範切換 */
+.demo-btns {
+  position: absolute; top: 60px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 8px; z-index: 25;
+}
+.demo-btn {
+  background: white; border: none; padding: 6px 10px; border-radius: 20px;
+  font-size: 11px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  color: #374151; font-weight: 600; white-space: nowrap;
+}
+.demo-btn.active { background: #2D6A4F; color: white; }
+</style>
+</head>
+<body>
+<div class="map-bg"><div class="map-img"></div></div>
+<div class="header">
+  <div class="logo">🏕</div>
+  <span class="header-title">Wildmap</span>
+  <div class="header-right">登入</div>
+</div>
+
+<!-- Sheet 1: 多特性 -->
+<div class="bottom-sheet" id="sheet1">
+  <div class="drag-handle"></div>
+  <div class="photo-banner">
+    <img src="https://picsum.photos/seed/camping1/800/300" alt="">
+    <button class="fav-btn">🤍</button>
+    <button class="nav-btn">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="3,11 22,2 13,21 11,13 3,11"/></svg>
+    </button>
+    <div class="category-badge">
+      <svg width="13" height="13" viewBox="0 0 40 52" fill="white"><polygon points="20,4 5,34 35,34"/><rect x="14" y="30" width="12" height="8" rx="1" fill="#2D6A4F"/></svg>
+      付費露營地
+    </div>
+  </div>
+  <div class="card-info">
+    <div class="spot-name">松嶺露營區</div>
+    <div class="meta-row">
+      <span class="rating-num-big">4.2</span>
+      <span class="star-icon">★</span>
+      <span class="rating-count">(38)</span>
+      <span class="dot">·</span>
+      <span class="shield"><svg width="12" height="12" viewBox="0 0 24 24" fill="#15803d"><path d="M12 2L4 6v6c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V6l-8-4z"/></svg></span>
+      <span class="dot">·</span>
+      <span class="region">新竹縣尖石鄉</span>
+    </div>
+  </div>
+  <!-- 特性橫向捲動列 -->
+  <div class="features-row">
+    <!-- 設施（綠，確認） -->
+    <div class="feat-icon col-fac"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M1 9C1 5.13 4.13 2 8 2s7 3.13 7 7-3.13 7-7 7-7-3.13-7-7zm9.29-1.29L8 5.41 5.71 7.71 7 9l1-1 2.29 2.29 1.42-1.42zM23 2h-4v2h1v14h-1v2h4v-2h-1V4h1V2z"/></svg></div>
+    <div class="feat-icon col-fac"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z"/></svg></div>
+    <div class="feat-icon col-fac"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20c4 0 4-2 8-2s4 2 8 2v-2c-4 0-4-2-8-2c-1.16 0-1.96.1-2.65.19C13.5 11.53 15.07 9.15 17 8m2-6c0 1.1-.9 2-2 2s-2-.9-2-2s.9-2 2-2s2 .9 2 2"/></svg></div>
+    <div class="feat-icon col-fac"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C6.48 3 2 7.48 2 13v7h4v-7c0-3.31 2.69-6 6-6s6 2.69 6 6v7h4v-7c0-5.52-4.48-10-10-10z"/></svg></div>
+    <!-- 營地特性（橙，確認） -->
+    <div class="feat-icon col-camp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z"/></svg></div>
+    <div class="feat-icon col-camp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 6l-1-2H5v17h2v-7h5l1 2h7V6h-6zm4 8h-4l-1-2H7V6h5l1 2h5v6z"/></svg></div>
+    <!-- 環境（草綠，確認） -->
+    <div class="feat-icon col-env"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg></div>
+    <div class="feat-icon col-env"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20c4 0 4-2 8-2s4 2 8 2v-2c-4 0-4-2-8-2c-1.16 0-1.96.1-2.65.19C13.5 11.53 15.07 9.15 17 8"/></svg></div>
+    <!-- 待確認（淡色） -->
+    <div class="feat-icon col-fac-dim"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg></div>
+    <div class="feat-icon col-camp-dim"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div>
+    <div class="feat-icon col-env-dim"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div>
+    <div class="feat-icon col-fac-dim"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.5 6.5v3h-3v-3h3M11 5H5v6h6V5zm-1.5 9.5v3h-3v-3h3M11 13H5v6h6v-6zm6.5-6.5v3h-3v-3h3M19 5h-6v6h6V5zm-6 8h1.5v1.5H13V13zm1.5 1.5H16V16h-1.5v-1.5zM16 13h1.5v1.5H16V13zm-3 3h1.5v1.5H13V16zm1.5 1.5H16V19h-1.5v-1.5zM16 16h1.5v1.5H16V16zm1.5-1.5H19V16h-1.5v-1.5zM19 13h1v1h-1v-1zm0 3h1v1h-1v-1z"/></svg></div>
+  </div>
+</div>
+
+<div class="demo-btns">
+  <button class="demo-btn active" id="b1">有特性列 ↑</button>
+</div>
+
+</body>
+</html>

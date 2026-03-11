@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>SpotDetail 詳情頁 mockup</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, sans-serif; background: #f5f5f5; max-width: 390px; margin: 0 auto; }
+
+/* Header */
+.header { position: sticky; top: 0; z-index: 50; background: white; display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid #e5e7eb; gap: 12px; }
+.back-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #f3f4f6; border: none; cursor: pointer; }
+.header-name { font-size: 16px; font-weight: 700; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fav-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: none; background: none; cursor: pointer; font-size: 20px; }
+
+/* 照片 */
+.photo-wrap { position: relative; width: 100%; height: 220px; overflow: hidden; }
+.photo-wrap img { width: 100%; height: 100%; object-fit: cover; }
+.category-badge { position: absolute; bottom: 12px; left: 12px; background: rgba(45,106,79,0.88); color: white; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; display: flex; align-items: center; gap: 4px; }
+.gov-badge { position: absolute; bottom: 12px; right: 12px; background: rgba(255,255,255,0.9); color: #15803d; font-size: 11px; font-weight: 600; padding: 4px 8px; border-radius: 20px; display: flex; align-items: center; gap: 3px; }
+
+/* 기본 정보 */
+.info-section { background: white; padding: 16px; }
+.spot-name { font-size: 22px; font-weight: 800; color: #111; margin-bottom: 6px; }
+.rating-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.rating-big { font-size: 18px; font-weight: 800; }
+.stars { color: #f59e0b; letter-spacing: 1px; }
+.rating-count { color: #6b7280; font-size: 13px; }
+.address { font-size: 13px; color: #6b7280; margin-top: 4px; }
+
+/* Tab */
+.tabs { display: flex; background: white; border-bottom: 1px solid #e5e7eb; position: sticky; top: 57px; z-index: 40; }
+.tab { flex: 1; padding: 12px; text-align: center; font-size: 14px; font-weight: 600; color: #6b7280; border-bottom: 2px solid transparent; cursor: pointer; }
+.tab.active { color: #2D6A4F; border-bottom-color: #2D6A4F; }
+
+/* Section */
+.section { background: white; margin-top: 8px; padding: 16px; }
+.section-title { font-size: 13px; font-weight: 700; color: #9ca3af; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 12px; }
+
+/* 基本資料 */
+.info-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; font-size: 14px; color: #374151; }
+.info-icon { width: 18px; color: #9ca3af; flex-shrink: 0; margin-top: 1px; }
+
+/* 特性 */
+.feature-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+.feat-item { display: flex; flex-direction: column; align-items: center; gap: 3px; width: 36px; }
+.feat-icon { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.feat-label { font-size: 9px; color: #6b7280; text-align: center; line-height: 1.2; }
+.view-all-btn { width: 100%; padding: 8px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 13px; font-weight: 600; color: #2D6A4F; cursor: pointer; text-align: center; }
+
+/* 評分 */
+.rating-summary { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; }
+.rating-num-huge { font-size: 48px; font-weight: 800; color: #111; line-height: 1; }
+.rating-bars { flex: 1; }
+.bar-row { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+.bar-label { font-size: 11px; color: #6b7280; width: 20px; text-align: right; }
+.bar-track { flex: 1; height: 6px; background: #f3f4f6; border-radius: 3px; overflow: hidden; }
+.bar-fill { height: 100%; background: #f59e0b; border-radius: 3px; }
+.bar-count { font-size: 11px; color: #9ca3af; width: 20px; }
+.rate-btn { width: 100%; padding: 10px; background: #2D6A4F; color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 4px; }
+
+/* 小地圖 */
+.mini-map { width: 100%; height: 140px; background: linear-gradient(135deg, #d4e8d4, #e8f0d8); border-radius: 10px; position: relative; overflow: hidden; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; }
+.mini-map::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(#c8d8b8 1px, transparent 1px), linear-gradient(90deg, #c8d8b8 1px, transparent 1px); background-size: 30px 30px; opacity: 0.4; }
+.map-pin { font-size: 28px; position: relative; z-index: 1; }
+.map-open-btn { width: 100%; padding: 8px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 13px; font-weight: 600; color: #2D6A4F; cursor: pointer; text-align: center; }
+
+/* 天氣 */
+.weather-row { display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; margin-bottom: 4px; }
+.weather-row::-webkit-scrollbar { display: none; }
+.weather-day { flex-shrink: 0; width: 46px; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 4px; border-radius: 8px; }
+.weather-day.today { background: #f0fdf4; }
+.weather-dow { font-size: 10px; color: #9ca3af; font-weight: 600; }
+.weather-icon { font-size: 20px; }
+.weather-hi { font-size: 12px; font-weight: 700; color: #111; }
+.weather-lo { font-size: 11px; color: #9ca3af; }
+.weather-credit { font-size: 10px; color: #d1d5db; text-align: right; margin-top: 2px; }
+
+/* 附近地標 */
+.nearby-list { display: flex; flex-direction: column; gap: 10px; }
+.nearby-item { display: flex; gap: 10px; align-items: center; }
+.nearby-photo { width: 56px; height: 56px; border-radius: 8px; object-fit: cover; background: #e5e7eb; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.nearby-info { flex: 1; }
+.nearby-name { font-size: 14px; font-weight: 600; color: #111; margin-bottom: 2px; }
+.nearby-meta { font-size: 12px; color: #9ca3af; }
+.nearby-dist { font-size: 12px; color: #2D6A4F; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <button class="back-btn">←</button>
+  <div class="header-name">松嶺露營區</div>
+  <button class="fav-btn">🤍</button>
+</div>
+
+<!-- 照片 -->
+<div class="photo-wrap">
+  <img src="https://picsum.photos/seed/camping1/800/440" alt="">
+  <div class="category-badge">▲ 付費露營地</div>
+  <div class="gov-badge">🛡 合法登記</div>
+</div>
+
+<!-- 基本資訊 -->
+<div class="info-section">
+  <div class="spot-name">松嶺露營區</div>
+  <div class="rating-row">
+    <span class="rating-big">4.2</span>
+    <span class="stars">★★★★☆</span>
+    <span class="rating-count">38 則評分</span>
+  </div>
+  <div class="address">📍 新竹縣尖石鄉秀巒村</div>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+  <div class="tab active">資訊</div>
+  <div class="tab">討論</div>
+</div>
+
+<!-- 基本資料 -->
+<div class="section">
+  <div class="section-title">基本資料</div>
+  <div class="info-row"><span class="info-icon">📞</span><span>03-584-7788</span></div>
+  <div class="info-row"><span class="info-icon">🌐</span><span style="color:#2D6A4F">www.songling-camping.com.tw</span></div>
+  <div class="info-row"><span class="info-icon">💰</span><span>平日 NT$800 / 假日 NT$1,200（每帳）</span></div>
+  <div class="info-row"><span class="info-icon">🕐</span><span>入營 14:00 · 退營 12:00</span></div>
+</div>
+
+<!-- 特性 -->
+<div class="section">
+  <div class="section-title">地標特性</div>
+  <div class="feature-grid">
+    <!-- 設施（綠，確認） -->
+    <div class="feat-item"><div class="feat-icon" style="color:#2D6A4F">🚿</div><div class="feat-label">熱水澡</div></div>
+    <div class="feat-item"><div class="feat-icon" style="color:#2D6A4F">📶</div><div class="feat-label">WiFi</div></div>
+    <div class="feat-item"><div class="feat-icon" style="color:#2D6A4F">🔌</div><div class="feat-label">電源插座</div></div>
+    <div class="feat-item"><div class="feat-icon" style="color:#2D6A4F">🚻</div><div class="feat-label">廁所</div></div>
+    <!-- 營地特性（橙，確認） -->
+    <div class="feat-item"><div class="feat-icon" style="color:#d97706">⛺</div><div class="feat-label">帳篷營位</div></div>
+    <div class="feat-item"><div class="feat-icon" style="color:#d97706">🌄</div><div class="feat-label">山景</div></div>
+    <div class="feat-item"><div class="feat-icon" style="color:#d97706">🐾</div><div class="feat-label">寵物友善</div></div>
+    <!-- 環境（草綠，確認） -->
+    <div class="feat-item"><div class="feat-icon" style="color:#388e3c">🌲</div><div class="feat-label">樹林</div></div>
+    <div class="feat-item"><div class="feat-icon" style="color:#388e3c">💧</div><div class="feat-label">溪流</div></div>
+    <!-- 活動（藍，確認） -->
+    <div class="feat-item"><div class="feat-icon" style="color:#1565c0">🏊</div><div class="feat-label">戲水</div></div>
+    <!-- 待確認（淡色） -->
+    <div class="feat-item"><div class="feat-icon" style="color:rgba(45,106,79,0.3)">🍖</div><div class="feat-label" style="color:#d1d5db">烤肉區</div></div>
+    <div class="feat-item"><div class="feat-icon" style="color:rgba(217,119,6,0.3)">🚗</div><div class="feat-label" style="color:#d1d5db">停車場</div></div>
+  </div>
+  <button class="view-all-btn">查看全部特性 →</button>
+</div>
+
+<!-- 評分 -->
+<div class="section">
+  <div class="section-title">評分</div>
+  <div class="rating-summary">
+    <div>
+      <div class="rating-num-huge">4.2</div>
+      <div style="color:#f59e0b;font-size:16px;margin-top:2px">★★★★☆</div>
+      <div style="font-size:11px;color:#9ca3af;margin-top:2px">38 則評分</div>
+    </div>
+    <div class="rating-bars">
+      <div class="bar-row"><span class="bar-label">5★</span><div class="bar-track"><div class="bar-fill" style="width:52%"></div></div><span class="bar-count">20</span></div>
+      <div class="bar-row"><span class="bar-label">4★</span><div class="bar-track"><div class="bar-fill" style="width:32%"></div></div><span class="bar-count">12</span></div>
+      <div class="bar-row"><span class="bar-label">3★</span><div class="bar-track"><div class="bar-fill" style="width:10%"></div></div><span class="bar-count">4</span></div>
+      <div class="bar-row"><span class="bar-label">2★</span><div class="bar-track"><div class="bar-fill" style="width:3%"></div></div><span class="bar-count">1</span></div>
+      <div class="bar-row"><span class="bar-label">1★</span><div class="bar-track"><div class="bar-fill" style="width:3%"></div></div><span class="bar-count">1</span></div>
+    </div>
+  </div>
+  <button class="rate-btn">⭐ 為這個地方評分</button>
+</div>
+
+<!-- 小地圖 -->
+<div class="section">
+  <div class="section-title">位置</div>
+  <div class="mini-map"><div class="map-pin">📍</div></div>
+  <button class="map-open-btn">在地圖上開啟 →</button>
+</div>
+
+<!-- 天氣 -->
+<div class="section">
+  <div class="section-title">本週天氣</div>
+  <div class="weather-row">
+    <div class="weather-day today">
+      <div class="weather-dow">今天</div>
+      <div class="weather-icon">⛅</div>
+      <div class="weather-hi">18°</div>
+      <div class="weather-lo">12°</div>
+    </div>
+    <div class="weather-day">
+      <div class="weather-dow">四</div>
+      <div class="weather-icon">🌧</div>
+      <div class="weather-hi">15°</div>
+      <div class="weather-lo">10°</div>
+    </div>
+    <div class="weather-day">
+      <div class="weather-dow">五</div>
+      <div class="weather-icon">🌧</div>
+      <div class="weather-hi">14°</div>
+      <div class="weather-lo">9°</div>
+    </div>
+    <div class="weather-day">
+      <div class="weather-dow">六</div>
+      <div class="weather-icon">🌤</div>
+      <div class="weather-hi">19°</div>
+      <div class="weather-lo">11°</div>
+    </div>
+    <div class="weather-day">
+      <div class="weather-dow">日</div>
+      <div class="weather-icon">☀️</div>
+      <div class="weather-hi">22°</div>
+      <div class="weather-lo">13°</div>
+    </div>
+    <div class="weather-day">
+      <div class="weather-dow">一</div>
+      <div class="weather-icon">☀️</div>
+      <div class="weather-hi">23°</div>
+      <div class="weather-lo">14°</div>
+    </div>
+    <div class="weather-day">
+      <div class="weather-dow">二</div>
+      <div class="weather-icon">⛅</div>
+      <div class="weather-hi">20°</div>
+      <div class="weather-lo">12°</div>
+    </div>
+  </div>
+  <div class="weather-credit">資料來源：Open-Meteo</div>
+</div>
+
+<!-- 附近露營地 -->
+<div class="section" style="margin-bottom:32px">
+  <div class="section-title">附近露營地</div>
+  <div class="nearby-list">
+    <div class="nearby-item">
+      <div class="nearby-photo">🏕</div>
+      <div class="nearby-info">
+        <div class="nearby-name">青山野營地</div>
+        <div class="nearby-meta">4.5 ★ · 免費露營地</div>
+      </div>
+      <div class="nearby-dist">3.2km</div>
+    </div>
+    <div class="nearby-item">
+      <div class="nearby-photo">🌲</div>
+      <div class="nearby-info">
+        <div class="nearby-name">石磊部落營地</div>
+        <div class="nearby-meta">4.1 ★ · 付費露營地</div>
+      </div>
+      <div class="nearby-dist">5.8km</div>
+    </div>
+    <div class="nearby-item">
+      <div class="nearby-photo">⛺</div>
+      <div class="nearby-info">
+        <div class="nearby-name">那羅溪露營區</div>
+        <div class="nearby-meta">3.9 ★ · 付費露營地</div>
+      </div>
+      <div class="nearby-dist">8.1km</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Marker Design v2</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, sans-serif; background: #e8f0e0; min-height: 100vh; }
+.map-bg {
+  width: 100%; height: 100vh;
+  background: linear-gradient(135deg, #d4e8d4 0%, #e8f0d8 30%, #f0e8d0 60%, #d8e8f0 100%);
+  position: relative; overflow: hidden;
+}
+.map-bg::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: linear-gradient(#c8d8b8 1px, transparent 1px), linear-gradient(90deg, #c8d8b8 1px, transparent 1px);
+  background-size: 50px 50px; opacity: 0.25;
+}
+.title-bar {
+  position: absolute; top: 0; left: 0; right: 0;
+  background: white; padding: 10px 16px;
+  font-size: 13px; font-weight: 700; color: #374151;
+  border-bottom: 1px solid #e5e7eb; z-index: 10;
+}
+
+.marker-wrap {
+  position: absolute;
+  display: flex; flex-direction: column; align-items: center;
+  transform: translate(-50%, -100%);
+  filter: drop-shadow(0 2px 5px rgba(0,0,0,0.22));
+}
+.marker-label {
+  position: absolute; top: 100%; margin-top: 3px;
+  font-size: 10px; font-weight: 700; color: #374151;
+  background: white; padding: 2px 6px; border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12); white-space: nowrap;
+}
+
+/* Cluster — 維持較大 */
+.cluster {
+  position: absolute; transform: translate(-50%, -50%);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-weight: 800; color: white; cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border: 2.5px solid rgba(255,255,255,0.8);
+}
+
+.legend {
+  position: absolute; bottom: 16px; left: 16px; right: 16px;
+  background: white; border-radius: 16px; padding: 14px 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+}
+.legend-title { font-size: 11px; font-weight: 700; color: #9ca3af; letter-spacing: 0.05em; margin-bottom: 10px; }
+.legend-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.legend-item { display: flex; align-items: center; gap: 7px; }
+.legend-dot { width: 22px; height: 22px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.legend-name { font-size: 11px; font-weight: 600; color: #374151; }
+
+/* 尺寸對比說明 */
+.size-note {
+  position: absolute; top: 50px; right: 12px;
+  background: white; border-radius: 10px; padding: 8px 10px;
+  font-size: 10px; color: #6b7280; line-height: 1.8;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+</style>
+</head>
+<body>
+<div class="map-bg">
+  <div class="title-bar">📍 Marker v2 — 圖釘 28px，Cluster 36~56px，暫停保留分類色</div>
+
+  <div class="size-note">
+    圖釘：28×36px<br>
+    Cluster S：36px<br>
+    Cluster M：46px<br>
+    Cluster L：56px
+  </div>
+
+  <!-- 露營（森林綠，一般） -->
+  <div class="marker-wrap" style="left:50%;top:30%">
+    <svg width="28" height="36" viewBox="0 0 40 52">
+      <path d="M20 2C10.059 2 2 10.059 2 20C2 31.5 20 50 20 50C20 50 38 31.5 38 20C38 10.059 29.941 2 20 2Z" fill="#2D6A4F"/>
+      <g transform="translate(20,19)">
+        <polygon points="0,-8 -9,5 9,5" fill="white"/>
+        <rect x="-3" y="1" width="6" height="4" rx="1" fill="#2D6A4F"/>
+      </g>
+    </svg>
+    <div class="marker-label">松嶺露營區</div>
+  </div>
+
+  <!-- 露營（選中） -->
+  <div class="marker-wrap" style="left:28%;top:40%">
+    <svg width="36" height="46" viewBox="0 0 50 64">
+      <path d="M25 3C13.402 3 4 12.402 4 24C4 38 25 61 25 61C25 61 46 38 46 24C46 12.402 36.598 3 25 3Z" fill="#2D6A4F"/>
+      <path d="M25 3C13.402 3 4 12.402 4 24C4 38 25 61 25 61C25 61 46 38 46 24C46 12.402 36.598 3 25 3Z" fill="none" stroke="white" stroke-width="3"/>
+      <g transform="translate(25,23)">
+        <polygon points="0,-9 -10,6 10,6" fill="white"/>
+        <rect x="-3.5" y="2" width="7" height="4" rx="1" fill="#2D6A4F"/>
+      </g>
+    </svg>
+    <div class="marker-label" style="background:#2D6A4F;color:white">青山野營地 ✓</div>
+  </div>
+
+  <!-- 釣魚（藍） -->
+  <div class="marker-wrap" style="left:72%;top:26%">
+    <svg width="28" height="36" viewBox="0 0 40 52">
+      <path d="M20 2C10.059 2 2 10.059 2 20C2 31.5 20 50 20 50C20 50 38 31.5 38 20C38 10.059 29.941 2 20 2Z" fill="#0284c7"/>
+      <g transform="translate(20,19)">
+        <path d="M-5,-7 L-5,2 Q-5,6 -1,6 Q3,6 3,2" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+        <circle cx="-5" cy="-7" r="2" fill="white"/>
+        <path d="M3,2 L5,5" stroke="white" stroke-width="2" stroke-linecap="round"/>
+      </g>
+    </svg>
+    <div class="marker-label">大溪釣場</div>
+  </div>
+
+  <!-- 登山（棕） -->
+  <div class="marker-wrap" style="left:18%;top:22%">
+    <svg width="28" height="36" viewBox="0 0 40 52">
+      <path d="M20 2C10.059 2 2 10.059 2 20C2 31.5 20 50 20 50C20 50 38 31.5 38 20C38 10.059 29.941 2 20 2Z" fill="#92400e"/>
+      <g transform="translate(20,19)">
+        <polygon points="0,-8 -9,5 9,5" fill="white"/>
+        <polygon points="-9,5 -2,-1 3,5" fill="#92400e" opacity="0.35"/>
+      </g>
+    </svg>
+    <div class="marker-label">玉山登山口</div>
+  </div>
+
+  <!-- 車宿（橘） -->
+  <div class="marker-wrap" style="left:62%;top:46%">
+    <svg width="28" height="36" viewBox="0 0 40 52">
+      <path d="M20 2C10.059 2 2 10.059 2 20C2 31.5 20 50 20 50C20 50 38 31.5 38 20C38 10.059 29.941 2 20 2Z" fill="#ea580c"/>
+      <g transform="translate(20,19)">
+        <rect x="-9" y="-3" width="18" height="8" rx="2" fill="white"/>
+        <path d="M-6,-3 L-3,-7 L7,-7 L9,-3" fill="white"/>
+        <circle cx="-5" cy="5" r="2.2" fill="#ea580c"/>
+        <circle cx="5" cy="5" r="2.2" fill="#ea580c"/>
+      </g>
+    </svg>
+    <div class="marker-label">福隆車宿區</div>
+  </div>
+
+  <!-- 衝浪（青） -->
+  <div class="marker-wrap" style="left:38%;top:54%">
+    <svg width="28" height="36" viewBox="0 0 40 52">
+      <path d="M20 2C10.059 2 2 10.059 2 20C2 31.5 20 50 20 50C20 50 38 31.5 38 20C38 10.059 29.941 2 20 2Z" fill="#0891b2"/>
+      <g transform="translate(20,19)">
+        <path d="M-9,2 Q-5,-6 0,-1 Q5,4 9,-4" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M-9,6 Q-4,-1 1,3 Q6,7 9,0" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.55"/>
+      </g>
+    </svg>
+    <div class="marker-label">墾丁衝浪點</div>
+  </div>
+
+  <!-- 暫停營業：保留分類色（露營綠）+ 灰色半透明遮罩 -->
+  <div class="marker-wrap" style="left:82%;top:42%">
+    <svg width="28" height="36" viewBox="0 0 40 52">
+      <!-- 底色保留分類色 -->
+      <path d="M20 2C10.059 2 2 10.059 2 20C2 31.5 20 50 20 50C20 50 38 31.5 38 20C38 10.059 29.941 2 20 2Z" fill="#2D6A4F"/>
+      <!-- 灰色半透明遮罩 -->
+      <path d="M20 2C10.059 2 2 10.059 2 20C2 31.5 20 50 20 50C20 50 38 31.5 38 20C38 10.059 29.941 2 20 2Z" fill="#9ca3af" opacity="0.65"/>
+      <!-- icon 半透明 -->
+      <g transform="translate(20,19)" opacity="0.6">
+        <polygon points="0,-8 -9,5 9,5" fill="white"/>
+        <rect x="-3" y="1" width="6" height="4" rx="1" fill="#9ca3af"/>
+      </g>
+    </svg>
+    <div class="marker-label" style="color:#9ca3af">⚠️ 暫停</div>
+  </div>
+
+  <!-- Cluster 大小對比 -->
+  <div class="cluster" style="left:44%;top:68%;width:40px;height:40px;background:rgba(45,106,79,0.28);font-size:13px;color:#2D6A4F;border-color:rgba(45,106,79,0.4)">8</div>
+  <div class="cluster" style="left:22%;top:74%;width:50px;height:50px;background:rgba(234,88,12,0.25);font-size:15px;color:#ea580c;border-color:rgba(234,88,12,0.4)">34</div>
+  <div class="cluster" style="left:66%;top:65%;width:60px;height:60px;background:rgba(107,114,128,0.22);font-size:16px;color:#6b7280;border-color:rgba(107,114,128,0.4)">120</div>
+
+  <!-- 圖例 -->
+  <div class="legend">
+    <div class="legend-title">分類顏色 · 圖釘 28px < Cluster 36~56px</div>
+    <div class="legend-grid">
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#2D6A4F">
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="white"><polygon points="7,1 1,12 13,12"/><rect x="4.5" y="8" width="5" height="3" rx="0.5" fill="#2D6A4F"/></svg>
+        </div>
+        <span class="legend-name">露營</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#ea580c">
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="white"><rect x="1" y="5" width="12" height="5" rx="1.5"/><path d="M2,5 L4,2 L10,2 L12,5" fill="white"/><circle cx="3.5" cy="10.5" r="1.5" fill="#ea580c"/><circle cx="10.5" cy="10.5" r="1.5" fill="#ea580c"/></svg>
+        </div>
+        <span class="legend-name">車宿</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#0284c7">
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round"><path d="M3,2 L3,8 Q3,12 7,12 Q11,12 11,8"/><circle cx="3" cy="2" r="1.2" fill="white"/></svg>
+        </div>
+        <span class="legend-name">釣魚</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#92400e">
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="white"><polygon points="7,1 1,13 13,13"/></svg>
+        </div>
+        <span class="legend-name">登山</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#0891b2">
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M1,7 Q4,2 7,6 Q10,10 13,5"/></svg>
+        </div>
+        <span class="legend-name">衝浪</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#2D6A4F;position:relative;overflow:hidden">
+          <div style="position:absolute;inset:0;background:#9ca3af;opacity:0.65;border-radius:6px"></div>
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="white" style="opacity:0.6;position:relative"><polygon points="7,1 1,12 13,12"/></svg>
+        </div>
+        <span class="legend-name" style="color:#9ca3af">暫停</span>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
