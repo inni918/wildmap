@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { supabase, type Spot, CATEGORY_EMOJI, CATEGORY_LABEL } from '@/lib/supabase'
+import { supabase, type Spot, CATEGORY_EMOJI, CATEGORY_LABEL, SUPABASE_URL, SUPABASE_ANON_KEY } from '@/lib/supabase'
 import { fetchSpotFeatures, type GroupedFeatures } from '@/lib/features'
 import { useAuth } from '@/lib/auth-context'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -157,44 +157,70 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated, onOpenSpot 
       setSpotLoading(true)
       setLoading(true)
 
-      const { data: spotData, error: spotError } = await supabase
-        .from('spots')
-        .select('*')
-        .eq('id', spotId)
-        .single()
-
-      if (spotError || !spotData || cancelled) {
+      // 用 native fetch 繞開 Supabase auth lock
+      let fullSpot: Spot | null = null
+      try {
+        const spotUrl = `${SUPABASE_URL}/rest/v1/spots?id=eq.${encodeURIComponent(spotId)}&limit=1`
+        const spotRes = await fetch(spotUrl, {
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+            'Accept': 'application/json',
+          },
+        })
+        if (!spotRes.ok) throw new Error(`HTTP ${spotRes.status}`)
+        const spotArr = await spotRes.json()
+        if (!spotArr || spotArr.length === 0 || cancelled) {
+          setSpotLoading(false)
+          setLoading(false)
+          return
+        }
+        fullSpot = spotArr[0] as Spot
+      } catch {
         setSpotLoading(false)
         setLoading(false)
         return
       }
 
-      const fullSpot = spotData as Spot
+      if (!fullSpot) {
+        setSpotLoading(false)
+        setLoading(false)
+        return
+      }
       if (!cancelled) {
         setSpot(fullSpot)
         setSpotLoading(false)
       }
 
-      const [featureResult, commentRes, ratingRes] = await Promise.all([
+      const nativeFetchHeaders = {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Accept': 'application/json',
+      }
+
+      const [featureResult, commentData, ratingData] = await Promise.all([
         fetchSpotFeatures(fullSpot.id, fullSpot.category, user?.id),
-        supabase
-          .from('comments')
-          .select('id', { count: 'exact', head: true })
-          .eq('spot_id', fullSpot.id),
-        supabase.from('ratings').select('score').eq('spot_id', fullSpot.id),
+        fetch(
+          `${SUPABASE_URL}/rest/v1/comments?spot_id=eq.${encodeURIComponent(fullSpot.id)}&select=id`,
+          { headers: nativeFetchHeaders }
+        ).then(r => r.ok ? r.json() : []).catch(() => []),
+        fetch(
+          `${SUPABASE_URL}/rest/v1/ratings?spot_id=eq.${encodeURIComponent(fullSpot.id)}&select=score`,
+          { headers: nativeFetchHeaders }
+        ).then(r => r.ok ? r.json() : []).catch(() => []),
       ])
 
       if (!cancelled) {
         setGroups(featureResult)
-        setDiscussionCount(commentRes.count || 0)
-        if (ratingRes.data && ratingRes.data.length > 0) {
-          const total = ratingRes.data.reduce((sum, r) => sum + r.score, 0)
+        setDiscussionCount(Array.isArray(commentData) ? commentData.length : 0)
+        if (Array.isArray(ratingData) && ratingData.length > 0) {
+          const total = ratingData.reduce((sum: number, r: { score: number }) => sum + r.score, 0)
           const dist = [0, 0, 0, 0, 0]
-          for (const r of ratingRes.data) {
+          for (const r of ratingData as { score: number }[]) {
             const idx = Math.min(Math.max(Math.round(r.score), 1), 5) - 1
             dist[idx]++
           }
-          setRatingInfo({ avg: total / ratingRes.data.length, count: ratingRes.data.length, dist })
+          setRatingInfo({ avg: total / ratingData.length, count: ratingData.length, dist })
         } else {
           setRatingInfo({ avg: 0, count: 0, dist: [0, 0, 0, 0, 0] })
         }
