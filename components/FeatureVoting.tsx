@@ -457,6 +457,7 @@ function DetailSheet({
 }) {
   const [showHelp, setShowHelp] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false)
   const [voteStates, setVoteStates] = useState<Record<string, VoteState>>(() => {
     const map: Record<string, VoteState> = {}
     for (const group of groups) {
@@ -483,7 +484,7 @@ function DetailSheet({
   }, [])
 
   const handleLoginRequired = useCallback(() => {
-    setToast('請先登入')
+    setShowLoginPrompt(true)
     onLoginRequired?.()
   }, [onLoginRequired])
 
@@ -659,6 +660,41 @@ function DetailSheet({
 
       {/* Toast */}
       {toast && <MiniToast message={toast} onHide={() => setToast(null)} />}
+
+      {/* 未登入提示 modal */}
+      {showLoginPrompt && (
+        <div
+          className="fixed inset-0 z-[200] flex items-center justify-center"
+          style={{ background: 'rgba(0,0,0,0.45)' }}
+          onClick={() => setShowLoginPrompt(false)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-xl p-6 mx-4 max-w-sm w-full"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="text-center mb-4">
+              <div className="text-4xl mb-2">🔒</div>
+              <h3 className="text-lg font-bold text-text-main">需要登入</h3>
+              <p className="text-sm text-text-secondary mt-1">
+                投票功能需要先登入才能使用
+              </p>
+            </div>
+            <a
+              href="/login"
+              className="block w-full py-3 text-center rounded-xl font-semibold text-white text-sm"
+              style={{ backgroundColor: '#2D6A4F' }}
+            >
+              前往登入
+            </a>
+            <button
+              onClick={() => setShowLoginPrompt(false)}
+              className="block w-full py-2 mt-2 text-center text-sm text-text-secondary cursor-pointer"
+            >
+              取消
+            </button>
+          </div>
+        </div>
+      )}
     </>
   )
 }

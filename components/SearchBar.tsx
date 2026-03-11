@@ -9,6 +9,7 @@ interface SpotResult {
   id: string
   name: string
   address: string | null
+  county: string | null
   latitude: number
   longitude: number
 }
@@ -64,7 +65,7 @@ export default function SearchBar({
     try {
       const { data, error } = await supabase
         .from('spots')
-        .select('id, name, address, latitude, longitude')
+        .select('id, name, address, county, latitude, longitude')
         .ilike('name', `%${query.trim()}%`)
         .limit(10)
 
@@ -108,16 +109,6 @@ export default function SearchBar({
     onChange(spot.name)
     setShowDropdown(false)
     onSelectSpot?.(spot)
-  }
-
-  // 從 address 擷取縣市（格式通常是 "台灣縣市..."）
-  function extractCity(address: string | null): string {
-    if (!address) return ''
-    // 嘗試找出縣市（XXX縣/XXX市）
-    const match = address.match(/([^\s,、]+[縣市])/)
-    if (match) return match[1]
-    // 取第一段逗號前的內容
-    return address.split(/[,，]/)[0]?.trim() || ''
   }
 
   return (
@@ -167,7 +158,7 @@ export default function SearchBar({
       {showDropdown && results.length > 0 && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-surface border border-border rounded-2xl shadow-xl z-50 overflow-hidden">
           {results.map((spot) => {
-            const city = extractCity(spot.address)
+            const city = spot.county || null
             return (
               <button
                 key={spot.id}
