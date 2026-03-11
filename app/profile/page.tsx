@@ -69,7 +69,7 @@ export default function ProfilePage() {
       supabase.from('favorites').select('id, spot_id, created_at').eq('user_id', user.id).order('created_at', { ascending: false }),
       supabase.from('ratings').select('id, spot_id, score, created_at').eq('user_id', user.id).order('created_at', { ascending: false }),
       supabase.from('comments').select('id, spot_id, content, created_at').eq('user_id', user.id).order('created_at', { ascending: false }),
-      supabase.from('photos').select('id').eq('user_id', user.id),
+      supabase.from('spot_images').select('id').eq('user_id', user.id),
     ])
 
     setStats({

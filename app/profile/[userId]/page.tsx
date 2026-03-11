@@ -56,7 +56,7 @@ export default function PublicProfilePage() {
       const [ratingsRes, commentsRes, photosRes, spotsRes] = await Promise.all([
         supabase.from('ratings').select('id', { count: 'exact', head: true }).eq('user_id', userId),
         supabase.from('comments').select('id', { count: 'exact', head: true }).eq('user_id', userId),
-        supabase.from('photos').select('id', { count: 'exact', head: true }).eq('user_id', userId),
+        supabase.from('spot_images').select('id', { count: 'exact', head: true }).eq('user_id', userId),
         supabase.from('spots').select('id', { count: 'exact', head: true }).eq('created_by', userId),
       ])
 
