@@ -68,7 +68,14 @@ export default function PermissionGate({ permission, children, fallback, hide }:
  * Hook 版本：用於程式邏輯中的權限檢查
  */
 export function usePermission(permission: Permission) {
-  const { profile } = useAuth()
-  const userLevel = profile?.level || 1
-  return checkPermission(permission, userLevel)
+  const { profile, loading } = useAuth()
+  // loading 時用實際等級（若已有 profile），否則暫時用 1 避免誤判
+  // profile 有可能是 null（未登入），level 預設 1
+  const userLevel = profile?.level ?? 1
+  const result = checkPermission(permission, userLevel)
+  // 若 auth 還在載入中且尚無 profile，暫時回傳 allowed=false 並標記 loading
+  if (loading && !profile) {
+    return { ...result, allowed: false, isLoading: true }
+  }
+  return { ...result, isLoading: false }
 }

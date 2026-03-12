@@ -1211,6 +1211,8 @@ export default function Map({
           {!placingMode && viewMode === 'map' && (
             <button
               onClick={() => {
+                // 還在載入中，等一下再試
+                if (addSpotPerm.isLoading) return
                 if (!addSpotPerm.allowed) {
                   setAddModal({ lat: 0, lng: 0 }) // 觸發權限不足提示
                   return
