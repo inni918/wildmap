@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS, FEATURE_ICON_MAP } from '@/lib/icons'
-import { supabase } from '@/lib/supabase'
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '@/lib/supabase'
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons'
 
 // ── v1.0 只有特性篩選，付費類型暫時隱藏（未來開放）
@@ -62,17 +62,20 @@ export default function FilterBottomSheet({
     if (open) setLocalFilter(filter)
   }, [open, filter])
 
-  // 撈 feature_definitions
+  // 撈 feature_definitions（用 native fetch 繞過 Supabase auth lock 問題）
   useEffect(() => {
     if (!open || allDefs.length > 0) return
-    supabase
-      .from('feature_definitions')
-      .select('id, key, name_zh, group_key, sort_order')
-      .order('group_key')
-      .order('sort_order')
-      .then(({ data }: { data: FeatureDef[] | null }) => {
-        if (data) setAllDefs(data)
-      })
+    const url = `${SUPABASE_URL}/rest/v1/feature_definitions?select=id,key,name_zh,group_key,sort_order&order=group_key,sort_order`
+    fetch(url, {
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Accept': 'application/json',
+      },
+    })
+      .then(res => res.ok ? res.json() : Promise.reject(res.status))
+      .then((data: FeatureDef[]) => { if (data) setAllDefs(data) })
+      .catch(err => console.error('feature_definitions fetch failed:', err))
   }, [open, allDefs.length])
 
   // Esc 關閉

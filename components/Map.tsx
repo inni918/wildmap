@@ -630,36 +630,31 @@ export default function Map({
 
     async function fetchFacilityFilteredSpots() {
       try {
-        // 1. 先從 feature_definitions 查出對應的 feature id
-        const defsResult = await withTimeout(
-          supabase
-            .from('feature_definitions')
-            .select('id, key')
-            .in('key', facilityKeys!),
+        // 1. 先從 feature_definitions 查出對應的 feature id（native fetch 繞過 Supabase auth lock）
+        const defsUrl = `${SUPABASE_URL}/rest/v1/feature_definitions?select=id,key&key=in.(${facilityKeys!.map(k => encodeURIComponent(k)).join(',')})`
+        const defsRes = await withTimeout(
+          fetch(defsUrl, {
+            headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Accept': 'application/json' },
+          }),
           8000,
           'feature_definitions query'
         )
-        if (defsResult.error || !defsResult.data || defsResult.data.length === 0) {
-          setFacilitySpotIds(new Set())
-          return
-        }
-        const defs = defsResult.data as { id: string; key: string }[]
+        if (!defsRes.ok) { setFacilitySpotIds(new Set()); return }
+        const defs = await defsRes.json() as { id: string; key: string }[]
+        if (!defs || defs.length === 0) { setFacilitySpotIds(new Set()); return }
         const featureIds = defs.map((d) => d.id)
 
-        // 2. 查 feature_votes（用 feature_id），含 weight
-        const votesResult = await withTimeout(
-          supabase
-            .from('feature_votes')
-            .select('spot_id, feature_id, vote, weight')
-            .in('feature_id', featureIds),
+        // 2. 查 feature_votes（用 feature_id），含 weight（native fetch）
+        const votesUrl = `${SUPABASE_URL}/rest/v1/feature_votes?select=spot_id,feature_id,vote,weight&feature_id=in.(${featureIds.join(',')})`
+        const votesRes = await withTimeout(
+          fetch(votesUrl, {
+            headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Accept': 'application/json' },
+          }),
           8000,
           'facility feature_votes query'
         )
-        if (votesResult.error || !votesResult.data) {
-          setFacilitySpotIds(new Set())
-          return
-        }
-        const votes = votesResult.data as { spot_id: string; feature_id: string; vote: boolean; weight: number | null }[]
+        if (!votesRes.ok) { setFacilitySpotIds(new Set()); return }
+        const votes = await votesRes.json() as { spot_id: string; feature_id: string; vote: boolean; weight: number | null }[]
 
         if (votes.length === 0) {
           setFacilitySpotIds(new Set())
@@ -767,8 +762,14 @@ export default function Map({
   }, [spots])
 
   // 地圖移動時更新 bounds + 觸發 debounced fetch
-  const handleMapMove = useCallback((evt: { viewState: typeof viewState }) => {
-    setViewState(evt.viewState)
+  const handleMapMove = useCallback((evt: { viewState: { longitude: number; latitude: number; zoom: number; bearing?: number; pitch?: number; [key: string]: unknown } }) => {
+    // 只保留 longitude/latitude/zoom，避免 bearing/pitch/padding 等額外欄位
+    // spread 到 <ReactMapGL> 導致 controlled mode 重新初始化地圖（Bug fix: zoom 後 markers 消失）
+    setViewState({
+      longitude: evt.viewState.longitude,
+      latitude: evt.viewState.latitude,
+      zoom: evt.viewState.zoom,
+    })
     const map = mapRef.current?.getMap()
     if (map) {
       const b = map.getBounds()

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
 import { supabase, type Spot, CATEGORY_EMOJI, CATEGORY_LABEL, SUPABASE_URL, SUPABASE_ANON_KEY } from '@/lib/supabase'
 import { fetchSpotFeatures, type GroupedFeatures } from '@/lib/features'
 import { useAuth } from '@/lib/auth-context'
@@ -957,6 +958,7 @@ function RatingBlock({
   userId: string | null
 }) {
   const { user } = useAuth()
+  const router = useRouter()
   const [userScore, setUserScore] = useState<number | null>(null)
   const [hoverScore, setHoverScore] = useState(0)
   const [submitting, setSubmitting] = useState(false)
@@ -1159,12 +1161,15 @@ function RatingBlock({
           </div>
         </div>
       ) : (
-        <div className="flex items-center justify-center py-3 rounded-xl border border-border/40 bg-surface-alt">
+        <button
+          onClick={() => router.push('/login')}
+          className="w-full flex items-center justify-center py-3 rounded-xl border border-border/40 bg-surface-alt hover:bg-primary/5 hover:border-primary/30 transition-colors cursor-pointer active:scale-[0.98]"
+        >
           <span className="text-sm text-text-secondary">
             <FontAwesomeIcon icon={NAV_ICONS.starSolid} className="text-accent mr-2 text-xs" />
             為這個地方評分（需要登入）
           </span>
-        </div>
+        </button>
       )}
 
       {/* 評論列表 */}
