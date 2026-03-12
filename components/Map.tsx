@@ -456,12 +456,19 @@ export default function Map({
     async function loadFavorites() {
       setFavoritesLoading(true)
       try {
-        const { data, error } = await supabase
-          .from('favorites')
-          .select('spot_id')
-          .eq('user_id', user!.id)
-        if (!error && data) {
-          setFavoriteSpotIds(new Set(data.map((f: { spot_id: string }) => f.spot_id)))
+        const res = await fetch(
+          `${SUPABASE_URL}/rest/v1/favorites?user_id=eq.${encodeURIComponent(user!.id)}&select=spot_id`,
+          {
+            headers: {
+              'apikey': SUPABASE_ANON_KEY,
+              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+              'Accept': 'application/json',
+            },
+          }
+        )
+        if (res.ok) {
+          const data: { spot_id: string }[] = await res.json()
+          setFavoriteSpotIds(new Set(data.map(f => f.spot_id)))
         } else {
           setFavoriteSpotIds(new Set())
         }
