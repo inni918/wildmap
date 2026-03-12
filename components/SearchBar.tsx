@@ -3,7 +3,7 @@
 import { useRef, useEffect, useState, useCallback } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS } from '@/lib/icons'
-import { supabase } from '@/lib/supabase'
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '@/lib/supabase'
 
 interface SpotResult {
   id: string
@@ -63,13 +63,20 @@ export default function SearchBar({
     }
     setSearching(true)
     try {
-      const { data, error } = await supabase
-        .from('spots')
-        .select('id, name, address, county, latitude, longitude')
-        .ilike('name', `%${query.trim()}%`)
-        .limit(10)
-
-      if (!error && data) {
+      const params = new URLSearchParams()
+      params.set('select', 'id,name,address,county,latitude,longitude')
+      params.set('name', `ilike.*${query.trim()}*`)
+      params.set('limit', '10')
+      const url = `${SUPABASE_URL}/rest/v1/spots?${params.toString()}`
+      const res = await fetch(url, {
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Accept': 'application/json',
+        },
+      })
+      if (res.ok) {
+        const data = await res.json()
         setResults(data as SpotResult[])
         setShowDropdown(true)
       }
