@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import { supabase } from '@/lib/supabase'
+import { supabase, SUPABASE_URL, SUPABASE_ANON_KEY } from '@/lib/supabase'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar, faComment, faImage, faMapMarkerAlt, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import MobileTabBar from '@/components/MobileTabBar'
@@ -38,13 +38,25 @@ export default function PublicProfilePage() {
     if (!userId) return
     async function fetchProfile() {
       setLoading(true)
-      const { data, error } = await supabase
-        .from('users')
-        .select('id, display_name, avatar_url, level, points, created_at, role')
-        .eq('id', userId)
-        .single()
+      const uid = encodeURIComponent(userId)
+      const readHeaders = {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Accept': 'application/json',
+      }
+      const profileRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/users?select=id,display_name,avatar_url,level,points,created_at,role&id=eq.${uid}&limit=1`,
+        { headers: readHeaders }
+      )
+      if (!profileRes.ok) {
+        setNotFound(true)
+        setLoading(false)
+        return
+      }
+      const profileArr: PublicProfile[] = await profileRes.json()
+      const data = profileArr?.[0]
 
-      if (error || !data) {
+      if (!data) {
         setNotFound(true)
         setLoading(false)
         return
@@ -52,19 +64,35 @@ export default function PublicProfilePage() {
 
       setProfile(data)
 
-      // Fetch public stats in parallel
+      // Fetch public stats in parallel using native fetch（繞開 auth lock）
+      const countHeaders = {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Accept': 'application/json',
+        'Prefer': 'count=exact',
+      }
+      const base = `${SUPABASE_URL}/rest/v1`
+      const parseCount = (res: Response): number => {
+        const cr = res.headers.get('content-range')
+        if (!cr) return 0
+        const parts = cr.split('/')
+        if (parts.length < 2) return 0
+        const n = parseInt(parts[1], 10)
+        return isNaN(n) ? 0 : n
+      }
+
       const [ratingsRes, commentsRes, photosRes, spotsRes] = await Promise.all([
-        supabase.from('ratings').select('id', { count: 'exact', head: true }).eq('user_id', userId),
-        supabase.from('comments').select('id', { count: 'exact', head: true }).eq('user_id', userId),
-        supabase.from('spot_images').select('id', { count: 'exact', head: true }).eq('user_id', userId),
-        supabase.from('spots').select('id', { count: 'exact', head: true }).eq('created_by', userId),
+        fetch(`${base}/ratings?user_id=eq.${uid}&select=id`, { headers: countHeaders }),
+        fetch(`${base}/comments?user_id=eq.${uid}&select=id`, { headers: countHeaders }),
+        fetch(`${base}/spot_images?user_id=eq.${uid}&select=id`, { headers: countHeaders }),
+        fetch(`${base}/spots?created_by=eq.${uid}&select=id`, { headers: countHeaders }),
       ])
 
       setStats({
-        ratingsCount: ratingsRes.count || 0,
-        commentsCount: commentsRes.count || 0,
-        photosCount: photosRes.count || 0,
-        spotsCount: spotsRes.count || 0,
+        ratingsCount: parseCount(ratingsRes),
+        commentsCount: parseCount(commentsRes),
+        photosCount: parseCount(photosRes),
+        spotsCount: parseCount(spotsRes),
       })
 
       setLoading(false)

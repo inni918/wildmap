@@ -824,24 +824,32 @@ function NearbySection({
 
         if (cancelled) return
 
+        const nearbyReadHeaders = {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Accept': 'application/json',
+        }
         const enriched = await Promise.all(
           withDist.map(async (s) => {
             try {
+              const sid = encodeURIComponent(s.id)
               const [ratingRes, imgRes] = await Promise.all([
-                supabase.from('ratings').select('score').eq('spot_id', s.id),
-                supabase
-                  .from('spot_images')
-                  .select('url')
-                  .eq('spot_id', s.id)
-                  .order('created_at', { ascending: false })
-                  .limit(1),
+                fetch(
+                  `${SUPABASE_URL}/rest/v1/ratings?spot_id=eq.${sid}&select=score`,
+                  { headers: nearbyReadHeaders }
+                ),
+                fetch(
+                  `${SUPABASE_URL}/rest/v1/spot_images?spot_id=eq.${sid}&select=url&order=created_at.desc&limit=1`,
+                  { headers: nearbyReadHeaders }
+                ),
               ])
-              const scores = ratingRes.data
+              const scores: { score: number }[] = ratingRes.ok ? await ratingRes.json() : []
+              const imgData: { url: string }[] = imgRes.ok ? await imgRes.json() : []
               const avgRating =
                 scores && scores.length > 0
                   ? scores.reduce((sum, r) => sum + r.score, 0) / scores.length
                   : 0
-              const thumbUrl = imgRes.data?.[0]?.url
+              const thumbUrl = imgData?.[0]?.url
               return { ...s, avgRating, thumbUrl }
             } catch {
               return s

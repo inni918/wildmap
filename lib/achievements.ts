@@ -4,6 +4,7 @@
  * - 回傳新解鎖的成就列表供 Toast 顯示
  */
 import { supabase } from './supabase'
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '@/lib/supabase'
 // 等級定義從 levels.ts 引入（共用模組）
 export { LEVELS, getLevel, getNextLevel } from './levels'
 
@@ -53,30 +54,52 @@ export const CATEGORY_ICONS: Record<AchievementCategory, string> = {
   special: '🎪',
 }
 
+// === native fetch headers（繞開 auth lock）===
+const readHeaders = {
+  'apikey': SUPABASE_ANON_KEY,
+  'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+  'Accept': 'application/json',
+}
+
+const countHeaders = {
+  ...readHeaders,
+  'Prefer': 'count=exact',
+}
+
+// 解析 content-range header 取得 count，格式：0-N/COUNT 或 * /COUNT
+function parseCount(res: Response): number {
+  const cr = res.headers.get('content-range')
+  if (!cr) return 0
+  const parts = cr.split('/')
+  if (parts.length < 2) return 0
+  const n = parseInt(parts[1], 10)
+  return isNaN(n) ? 0 : n
+}
+
 /**
  * 取得所有成就定義
  */
 export async function getAllAchievements(): Promise<Achievement[]> {
-  const { data, error } = await supabase
-    .from('achievements')
-    .select('*')
-    .order('sort_order', { ascending: true })
-
-  if (error || !data) return []
-  return data as Achievement[]
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/achievements?select=*&order=sort_order.asc`,
+    { headers: readHeaders }
+  )
+  if (!res.ok) return []
+  const data = await res.json()
+  return Array.isArray(data) ? (data as Achievement[]) : []
 }
 
 /**
  * 取得用戶已解鎖的成就
  */
 export async function getUserAchievements(userId: string): Promise<UserAchievement[]> {
-  const { data, error } = await supabase
-    .from('user_achievements')
-    .select('*, achievement:achievements(*)')
-    .eq('user_id', userId)
-    .order('unlocked_at', { ascending: false })
-
-  if (error || !data) return []
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/user_achievements?select=*,achievement:achievements(*)&user_id=eq.${encodeURIComponent(userId)}&order=unlocked_at.desc`,
+    { headers: readHeaders }
+  )
+  if (!res.ok) return []
+  const data = await res.json()
+  if (!Array.isArray(data)) return []
   return data.map((d: Record<string, unknown>) => ({
     id: d.id as string,
     user_id: d.user_id as string,
@@ -105,10 +128,11 @@ export async function checkAchievements(userId: string): Promise<UnlockedAchieve
   const allAchievements = await getAllAchievements()
 
   // 2. 取得已解鎖的成就 keys
-  const { data: userAchievements } = await supabase
-    .from('user_achievements')
-    .select('achievement_id')
-    .eq('user_id', userId)
+  const uaRes = await fetch(
+    `${SUPABASE_URL}/rest/v1/user_achievements?select=achievement_id&user_id=eq.${encodeURIComponent(userId)}`,
+    { headers: readHeaders }
+  )
+  const userAchievements: { achievement_id: string }[] = uaRes.ok ? await uaRes.json() : []
 
   const unlockedIds = new Set((userAchievements || []).map((ua: { achievement_id: string }) => ua.achievement_id))
 
@@ -169,43 +193,41 @@ interface UserStats {
   currentHour: number
 }
 
+async function fetchCount(url: string): Promise<number> {
+  const res = await fetch(url, { headers: countHeaders })
+  if (!res.ok) return 0
+  return parseCount(res)
+}
+
 async function getUserStats(userId: string): Promise<UserStats> {
+  const uid = encodeURIComponent(userId)
+  const base = `${SUPABASE_URL}/rest/v1`
+
   // 批次查詢各項統計
   const [
-    spotsResult,
-    photosResult,
-    commentsResult,
-    repliesResult,
-    votesResult,
-    editsResult,
-    ratingsResult,
-    favoritesResult,
-    reportsResult,
-    fiveStarResult,
-    oneStarResult,
+    addedSpots,
+    photos,
+    comments,
+    replies,
+    votes,
+    edits,
+    ratings,
+    favorites,
+    reports,
+    fiveStarRatings,
+    oneStarRatings,
   ] = await Promise.all([
-    // 用戶新增的地點數
-    supabase.from('spots').select('id', { count: 'exact', head: true }).eq('created_by', userId),
-    // 照片數
-    supabase.from('spot_images').select('id', { count: 'exact', head: true }).eq('user_id', userId),
-    // 評論數（頂層）
-    supabase.from('comments').select('id', { count: 'exact', head: true }).eq('user_id', userId).is('parent_id', null),
-    // 回覆數
-    supabase.from('comments').select('id', { count: 'exact', head: true }).eq('user_id', userId).not('parent_id', 'is', null),
-    // 投票數
-    supabase.from('feature_votes').select('id', { count: 'exact', head: true }).eq('user_id', userId),
-    // 編輯數
-    supabase.from('spot_edits').select('id', { count: 'exact', head: true }).eq('user_id', userId),
-    // 評分數
-    supabase.from('ratings').select('id', { count: 'exact', head: true }).eq('user_id', userId),
-    // 收藏數
-    supabase.from('favorites').select('id', { count: 'exact', head: true }).eq('user_id', userId),
-    // 回報數
-    supabase.from('reports').select('id', { count: 'exact', head: true }).eq('user_id', userId),
-    // 5 星評分
-    supabase.from('ratings').select('id', { count: 'exact', head: true }).eq('user_id', userId).eq('score', 5),
-    // 1 星評分
-    supabase.from('ratings').select('id', { count: 'exact', head: true }).eq('user_id', userId).eq('score', 1),
+    fetchCount(`${base}/spots?created_by=eq.${uid}&select=id`),
+    fetchCount(`${base}/spot_images?user_id=eq.${uid}&select=id`),
+    fetchCount(`${base}/comments?user_id=eq.${uid}&parent_id=is.null&select=id`),
+    fetchCount(`${base}/comments?user_id=eq.${uid}&parent_id=not.is.null&select=id`),
+    fetchCount(`${base}/feature_votes?user_id=eq.${uid}&select=id`),
+    fetchCount(`${base}/spot_edits?user_id=eq.${uid}&select=id`),
+    fetchCount(`${base}/ratings?user_id=eq.${uid}&select=id`),
+    fetchCount(`${base}/favorites?user_id=eq.${uid}&select=id`),
+    fetchCount(`${base}/reports?user_id=eq.${uid}&select=id`),
+    fetchCount(`${base}/ratings?user_id=eq.${uid}&score=eq.5&select=id`),
+    fetchCount(`${base}/ratings?user_id=eq.${uid}&score=eq.1&select=id`),
   ])
 
   const now = new Date()
@@ -214,17 +236,17 @@ async function getUserStats(userId: string): Promise<UserStats> {
 
   return {
     viewedSpots: 0, // 需要由呼叫端傳入或從 view_count 追蹤
-    addedSpots: spotsResult.count || 0,
-    photos: photosResult.count || 0,
-    comments: commentsResult.count || 0,
-    replies: repliesResult.count || 0,
-    votes: votesResult.count || 0,
-    edits: editsResult.count || 0,
-    ratings: ratingsResult.count || 0,
-    favorites: favoritesResult.count || 0,
-    reports: reportsResult.count || 0,
-    fiveStarRatings: fiveStarResult.count || 0,
-    oneStarRatings: oneStarResult.count || 0,
+    addedSpots,
+    photos,
+    comments,
+    replies,
+    votes,
+    edits,
+    ratings,
+    favorites,
+    reports,
+    fiveStarRatings,
+    oneStarRatings,
     currentHour: taiwanHour,
   }
 }
@@ -395,19 +417,29 @@ async function checkCriteria(
  * 計算方式：用戶有互動（評分 / 留言 / 投票 / 收藏）的不同 spot 數
  */
 async function getViewedSpotCount(userId: string): Promise<number> {
+  const uid = encodeURIComponent(userId)
+  const base = `${SUPABASE_URL}/rest/v1`
   const spotIds = new Set<string>()
 
-  const [ratings, comments, votes, favorites] = await Promise.all([
-    supabase.from('ratings').select('spot_id').eq('user_id', userId),
-    supabase.from('comments').select('spot_id').eq('user_id', userId),
-    supabase.from('feature_votes').select('spot_id').eq('user_id', userId),
-    supabase.from('favorites').select('spot_id').eq('user_id', userId),
+  const [ratingsRes, commentsRes, votesRes, favoritesRes] = await Promise.all([
+    fetch(`${base}/ratings?user_id=eq.${uid}&select=spot_id`, { headers: readHeaders }),
+    fetch(`${base}/comments?user_id=eq.${uid}&select=spot_id`, { headers: readHeaders }),
+    fetch(`${base}/feature_votes?user_id=eq.${uid}&select=spot_id`, { headers: readHeaders }),
+    fetch(`${base}/favorites?user_id=eq.${uid}&select=spot_id`, { headers: readHeaders }),
   ])
 
-  for (const r of ratings.data || []) spotIds.add(r.spot_id)
-  for (const c of comments.data || []) spotIds.add(c.spot_id)
-  for (const v of votes.data || []) spotIds.add(v.spot_id)
-  for (const f of favorites.data || []) spotIds.add(f.spot_id)
+  type SpotRow = { spot_id: string }
+  const [ratData, comData, votData, favData] = await Promise.all([
+    ratingsRes.ok ? ratingsRes.json() as Promise<SpotRow[]> : Promise.resolve([]),
+    commentsRes.ok ? commentsRes.json() as Promise<SpotRow[]> : Promise.resolve([]),
+    votesRes.ok ? votesRes.json() as Promise<SpotRow[]> : Promise.resolve([]),
+    favoritesRes.ok ? favoritesRes.json() as Promise<SpotRow[]> : Promise.resolve([]),
+  ])
+
+  for (const r of ratData) spotIds.add(r.spot_id)
+  for (const c of comData) spotIds.add(c.spot_id)
+  for (const v of votData) spotIds.add(v.spot_id)
+  for (const f of favData) spotIds.add(f.spot_id)
 
   return spotIds.size
 }
@@ -441,12 +473,12 @@ async function getRegionViewCount(userId: string, region: string): Promise<numbe
   const batchSize = 50
   for (let i = 0; i < spotIds.length; i += batchSize) {
     const batch = spotIds.slice(i, i + batchSize)
-    const { data } = await supabase
-      .from('spots')
-      .select('id, address')
-      .in('id', batch)
-
-    if (data) {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/spots?select=id,address&id=in.(${batch.map(encodeURIComponent).join(',')})`,
+      { headers: readHeaders }
+    )
+    if (res.ok) {
+      const data: { id: string; address: string }[] = await res.json()
       for (const spot of data) {
         if (spot.address && counties.some(c => spot.address.includes(c))) {
           count++
@@ -473,12 +505,12 @@ async function getViewedCountiesCount(userId: string): Promise<number> {
   const batchSize = 50
   for (let i = 0; i < spotIds.length; i += batchSize) {
     const batch = spotIds.slice(i, i + batchSize)
-    const { data } = await supabase
-      .from('spots')
-      .select('address')
-      .in('id', batch)
-
-    if (data) {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/spots?select=address&id=in.(${batch.map(encodeURIComponent).join(',')})`,
+      { headers: readHeaders }
+    )
+    if (res.ok) {
+      const data: { address: string }[] = await res.json()
       for (const spot of data) {
         if (spot.address) {
           for (const county of allCounties) {
@@ -504,13 +536,11 @@ async function getCategoryViewCount(userId: string, category: string): Promise<n
   const batchSize = 50
   for (let i = 0; i < spotIds.length; i += batchSize) {
     const batch = spotIds.slice(i, i + batchSize)
-    const { count: c } = await supabase
-      .from('spots')
-      .select('id', { count: 'exact', head: true })
-      .in('id', batch)
-      .eq('category', category)
-
-    count += c || 0
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/spots?select=id&id=in.(${batch.map(encodeURIComponent).join(',')})&category=eq.${encodeURIComponent(category)}`,
+      { headers: countHeaders }
+    )
+    count += parseCount(res)
   }
 
   return count
@@ -524,13 +554,11 @@ async function getElevationViewCount(userId: string, minElevation: number): Prom
   const batchSize = 50
   for (let i = 0; i < spotIds.length; i += batchSize) {
     const batch = spotIds.slice(i, i + batchSize)
-    const { count: c } = await supabase
-      .from('spots')
-      .select('id', { count: 'exact', head: true })
-      .in('id', batch)
-      .gte('elevation', minElevation)
-
-    count += c || 0
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/spots?select=id&id=in.(${batch.map(encodeURIComponent).join(',')})&elevation=gte.${minElevation}`,
+      { headers: countHeaders }
+    )
+    count += parseCount(res)
   }
 
   return count
@@ -538,55 +566,67 @@ async function getElevationViewCount(userId: string, minElevation: number): Prom
 
 async function getSpotFavoritedCount(userId: string): Promise<number> {
   // 用戶新增的地點被多少不同用戶收藏
-  const { data: userSpots } = await supabase
-    .from('spots')
-    .select('id')
-    .eq('created_by', userId)
+  const uid = encodeURIComponent(userId)
+  const spotsRes = await fetch(
+    `${SUPABASE_URL}/rest/v1/spots?select=id&created_by=eq.${uid}`,
+    { headers: readHeaders }
+  )
+  if (!spotsRes.ok) return 0
+  const userSpots: { id: string }[] = await spotsRes.json()
 
   if (!userSpots || userSpots.length === 0) return 0
 
   const spotIds = userSpots.map(s => s.id)
-  const { count } = await supabase
-    .from('favorites')
-    .select('id', { count: 'exact', head: true })
-    .in('spot_id', spotIds)
-    .neq('user_id', userId) // 排除自己
-
-  return count || 0
+  const favRes = await fetch(
+    `${SUPABASE_URL}/rest/v1/favorites?select=id&spot_id=in.(${spotIds.map(encodeURIComponent).join(',')})&user_id=neq.${uid}`,
+    { headers: countHeaders }
+  )
+  return parseCount(favRes)
 }
 
 async function isEarlyUser(userId: string, threshold: number): Promise<boolean> {
-  const { data } = await supabase
-    .from('users')
-    .select('created_at')
-    .eq('id', userId)
-    .single()
+  const uid = encodeURIComponent(userId)
+  const userRes = await fetch(
+    `${SUPABASE_URL}/rest/v1/users?select=created_at&id=eq.${uid}&limit=1`,
+    { headers: readHeaders }
+  )
+  if (!userRes.ok) return false
+  const userData: { created_at: string }[] = await userRes.json()
+  if (!userData || userData.length === 0) return false
 
-  if (!data) return false
-
-  // 比自己早註冊的人數
-  const { count } = await supabase
-    .from('users')
-    .select('id', { count: 'exact', head: true })
-    .lt('created_at', data.created_at)
-
-  return (count || 0) < threshold
+  const createdAt = userData[0].created_at
+  const countRes = await fetch(
+    `${SUPABASE_URL}/rest/v1/users?select=id&created_at=lt.${encodeURIComponent(createdAt)}`,
+    { headers: countHeaders }
+  )
+  const count = parseCount(countRes)
+  return count < threshold
 }
 
 async function getInteractedSpotIds(userId: string): Promise<string[]> {
+  const uid = encodeURIComponent(userId)
+  const base = `${SUPABASE_URL}/rest/v1`
   const spotIds = new Set<string>()
 
-  const [ratings, comments, votes, favorites] = await Promise.all([
-    supabase.from('ratings').select('spot_id').eq('user_id', userId),
-    supabase.from('comments').select('spot_id').eq('user_id', userId),
-    supabase.from('feature_votes').select('spot_id').eq('user_id', userId),
-    supabase.from('favorites').select('spot_id').eq('user_id', userId),
+  const [ratingsRes, commentsRes, votesRes, favoritesRes] = await Promise.all([
+    fetch(`${base}/ratings?user_id=eq.${uid}&select=spot_id`, { headers: readHeaders }),
+    fetch(`${base}/comments?user_id=eq.${uid}&select=spot_id`, { headers: readHeaders }),
+    fetch(`${base}/feature_votes?user_id=eq.${uid}&select=spot_id`, { headers: readHeaders }),
+    fetch(`${base}/favorites?user_id=eq.${uid}&select=spot_id`, { headers: readHeaders }),
   ])
 
-  for (const r of ratings.data || []) spotIds.add(r.spot_id)
-  for (const c of comments.data || []) spotIds.add(c.spot_id)
-  for (const v of votes.data || []) spotIds.add(v.spot_id)
-  for (const f of favorites.data || []) spotIds.add(f.spot_id)
+  type SpotRow = { spot_id: string }
+  const [ratData, comData, votData, favData] = await Promise.all([
+    ratingsRes.ok ? ratingsRes.json() as Promise<SpotRow[]> : Promise.resolve([]),
+    commentsRes.ok ? commentsRes.json() as Promise<SpotRow[]> : Promise.resolve([]),
+    votesRes.ok ? votesRes.json() as Promise<SpotRow[]> : Promise.resolve([]),
+    favoritesRes.ok ? favoritesRes.json() as Promise<SpotRow[]> : Promise.resolve([]),
+  ])
+
+  for (const r of ratData) spotIds.add(r.spot_id)
+  for (const c of comData) spotIds.add(c.spot_id)
+  for (const v of votData) spotIds.add(v.spot_id)
+  for (const f of favData) spotIds.add(f.spot_id)
 
   return Array.from(spotIds)
 }
@@ -598,23 +638,26 @@ async function getInteractedSpotIds(userId: string): Promise<string[]> {
  */
 async function checkMetaAchievement(userId: string, requiredKeys: string[]): Promise<boolean> {
   // 取得所有 required keys 對應的 achievement ids
-  const { data: requiredAchievements } = await supabase
-    .from('achievements')
-    .select('id, key')
-    .in('key', requiredKeys)
+  const keysParam = requiredKeys.map(encodeURIComponent).join(',')
+  const achRes = await fetch(
+    `${SUPABASE_URL}/rest/v1/achievements?select=id,key&key=in.(${keysParam})`,
+    { headers: readHeaders }
+  )
+  if (!achRes.ok) return false
+  const requiredAchievements: { id: string; key: string }[] = await achRes.json()
 
   if (!requiredAchievements || requiredAchievements.length !== requiredKeys.length) return false
 
   const requiredIds = requiredAchievements.map(a => a.id)
+  const uid = encodeURIComponent(userId)
 
   // 檢查用戶是否已解鎖這些成就
-  const { data: unlocked } = await supabase
-    .from('user_achievements')
-    .select('achievement_id')
-    .eq('user_id', userId)
-    .in('achievement_id', requiredIds)
-
-  return (unlocked?.length || 0) >= requiredIds.length
+  const unlockedRes = await fetch(
+    `${SUPABASE_URL}/rest/v1/user_achievements?select=achievement_id&user_id=eq.${uid}&achievement_id=in.(${requiredIds.map(encodeURIComponent).join(',')})`,
+    { headers: countHeaders }
+  )
+  const count = parseCount(unlockedRes)
+  return count >= requiredIds.length
 }
 
 /**
@@ -630,14 +673,13 @@ async function checkAltitudeVariety(userId: string, bands: number[]): Promise<bo
   const batchSize = 50
   for (let i = 0; i < spotIds.length; i += batchSize) {
     const batch = spotIds.slice(i, i + batchSize)
-    const { data } = await supabase
-      .from('spots')
-      .select('elevation')
-      .in('id', batch)
-      .not('elevation', 'is', null)
-
-    if (data) {
-      elevations.push(...data.map(s => s.elevation as number))
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/spots?select=elevation&id=in.(${batch.map(encodeURIComponent).join(',')})&elevation=not.is.null`,
+      { headers: readHeaders }
+    )
+    if (res.ok) {
+      const data: { elevation: number }[] = await res.json()
+      elevations.push(...data.map(s => s.elevation))
     }
   }
 
@@ -658,13 +700,13 @@ async function checkAltitudeVariety(userId: string, bands: number[]): Promise<bo
  * 詳細評論：字數 >= minLength 的評論數
  */
 async function getDetailedCommentCount(userId: string, minLength: number): Promise<number> {
-  const { data } = await supabase
-    .from('comments')
-    .select('content')
-    .eq('user_id', userId)
-    .is('parent_id', null)
-
-  if (!data) return 0
+  const uid = encodeURIComponent(userId)
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/comments?select=content&user_id=eq.${uid}&parent_id=is.null`,
+    { headers: readHeaders }
+  )
+  if (!res.ok) return 0
+  const data: { content: string }[] = await res.json()
   return data.filter(c => c.content && c.content.length >= minLength).length
 }
 
@@ -686,12 +728,12 @@ async function getMaxCountyContributions(userId: string): Promise<number> {
   const batchSize = 50
   for (let i = 0; i < spotIds.length; i += batchSize) {
     const batch = spotIds.slice(i, i + batchSize)
-    const { data } = await supabase
-      .from('spots')
-      .select('address')
-      .in('id', batch)
-
-    if (data) {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/spots?select=address&id=in.(${batch.map(encodeURIComponent).join(',')})`,
+      { headers: readHeaders }
+    )
+    if (res.ok) {
+      const data: { address: string }[] = await res.json()
       for (const spot of data) {
         if (spot.address) {
           for (const county of allCounties) {
@@ -712,19 +754,29 @@ async function getMaxCountyContributions(userId: string): Promise<number> {
  * 連續使用天數（基於互動紀錄）
  */
 async function getConsecutiveDays(userId: string): Promise<number> {
+  const uid = encodeURIComponent(userId)
+  const base = `${SUPABASE_URL}/rest/v1`
+
   // 從各表取得最近的活動日期
-  const [ratings, comments, votes] = await Promise.all([
-    supabase.from('ratings').select('created_at').eq('user_id', userId).order('created_at', { ascending: false }).limit(60),
-    supabase.from('comments').select('created_at').eq('user_id', userId).order('created_at', { ascending: false }).limit(60),
-    supabase.from('feature_votes').select('created_at').eq('user_id', userId).order('created_at', { ascending: false }).limit(60),
+  const [ratingsRes, commentsRes, votesRes] = await Promise.all([
+    fetch(`${base}/ratings?user_id=eq.${uid}&select=created_at&order=created_at.desc&limit=60`, { headers: readHeaders }),
+    fetch(`${base}/comments?user_id=eq.${uid}&select=created_at&order=created_at.desc&limit=60`, { headers: readHeaders }),
+    fetch(`${base}/feature_votes?user_id=eq.${uid}&select=created_at&order=created_at.desc&limit=60`, { headers: readHeaders }),
+  ])
+
+  type DateRow = { created_at: string }
+  const [ratData, comData, votData] = await Promise.all([
+    ratingsRes.ok ? ratingsRes.json() as Promise<DateRow[]> : Promise.resolve([]),
+    commentsRes.ok ? commentsRes.json() as Promise<DateRow[]> : Promise.resolve([]),
+    votesRes.ok ? votesRes.json() as Promise<DateRow[]> : Promise.resolve([]),
   ])
 
   // 收集所有活動日期（以台灣時間的日期為單位）
   const daySet = new Set<string>()
   const allDates = [
-    ...(ratings.data || []).map(r => r.created_at),
-    ...(comments.data || []).map(c => c.created_at),
-    ...(votes.data || []).map(v => v.created_at),
+    ...ratData.map(r => r.created_at),
+    ...comData.map(c => c.created_at),
+    ...votData.map(v => v.created_at),
   ]
 
   for (const dateStr of allDates) {
@@ -757,11 +809,13 @@ async function getConsecutiveDays(userId: string): Promise<number> {
  * 四季探索者：春夏秋冬都使用過
  */
 async function hasAllSeasons(userId: string): Promise<boolean> {
-  const { data } = await supabase
-    .from('ratings')
-    .select('created_at')
-    .eq('user_id', userId)
-
+  const uid = encodeURIComponent(userId)
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/ratings?select=created_at&user_id=eq.${uid}`,
+    { headers: readHeaders }
+  )
+  if (!res.ok) return false
+  const data: { created_at: string }[] = await res.json()
   if (!data || data.length === 0) return false
 
   const seasons = new Set<number>()
@@ -793,10 +847,11 @@ export async function getNearlyUnlockedAchievements(userId: string): Promise<Ach
   if (!userId) return []
 
   const allAchievements = await getAllAchievements()
-  const { data: userAchievements } = await supabase
-    .from('user_achievements')
-    .select('achievement_id')
-    .eq('user_id', userId)
+  const uaRes = await fetch(
+    `${SUPABASE_URL}/rest/v1/user_achievements?select=achievement_id&user_id=eq.${encodeURIComponent(userId)}`,
+    { headers: readHeaders }
+  )
+  const userAchievements: { achievement_id: string }[] = uaRes.ok ? await uaRes.json() : []
 
   const unlockedIds = new Set((userAchievements || []).map((ua: { achievement_id: string }) => ua.achievement_id))
   const locked = allAchievements.filter(a => !unlockedIds.has(a.id))

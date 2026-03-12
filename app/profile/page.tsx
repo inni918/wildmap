@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/lib/auth-context'
-import { supabase } from '@/lib/supabase'
+import { supabase, SUPABASE_URL, SUPABASE_ANON_KEY } from '@/lib/supabase'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS } from '@/lib/icons'
 import { faTrophy, faChartLine, faPen, faLock, faUnlock } from '@fortawesome/free-solid-svg-icons'
@@ -64,31 +64,53 @@ export default function ProfilePage() {
     if (!user) return
     setLoading(true)
 
-    // Fetch stats in parallel
-    const [favResult, ratingResult, commentResult, photoResult] = await Promise.all([
-      supabase.from('favorites').select('id, spot_id, created_at').eq('user_id', user.id).order('created_at', { ascending: false }),
-      supabase.from('ratings').select('id, spot_id, score, created_at').eq('user_id', user.id).order('created_at', { ascending: false }),
-      supabase.from('comments').select('id, spot_id, content, created_at').eq('user_id', user.id).order('created_at', { ascending: false }),
-      supabase.from('spot_images').select('id').eq('user_id', user.id),
+    // Fetch stats in parallel using native fetch（繞開 auth lock）
+    const uid = encodeURIComponent(user.id)
+    const baseHeaders = {
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      'Accept': 'application/json',
+    }
+    const base = `${SUPABASE_URL}/rest/v1`
+
+    const [favRes, ratingRes, commentRes, photoRes] = await Promise.all([
+      fetch(`${base}/favorites?user_id=eq.${uid}&select=id,spot_id,created_at&order=created_at.desc`, { headers: baseHeaders }),
+      fetch(`${base}/ratings?user_id=eq.${uid}&select=id,spot_id,score,created_at&order=created_at.desc`, { headers: baseHeaders }),
+      fetch(`${base}/comments?user_id=eq.${uid}&select=id,spot_id,content,created_at&order=created_at.desc`, { headers: baseHeaders }),
+      fetch(`${base}/spot_images?user_id=eq.${uid}&select=id`, { headers: baseHeaders }),
+    ])
+
+    type FavRow = { id: string; spot_id: string; created_at: string }
+    type RatingRow = { id: string; spot_id: string; score: number; created_at: string }
+    type CommentRow = { id: string; spot_id: string; content: string; created_at: string }
+    type PhotoRow = { id: string }
+
+    const [favData, ratingData, commentData, photoData] = await Promise.all([
+      favRes.ok ? favRes.json() as Promise<FavRow[]> : Promise.resolve([]),
+      ratingRes.ok ? ratingRes.json() as Promise<RatingRow[]> : Promise.resolve([]),
+      commentRes.ok ? commentRes.json() as Promise<CommentRow[]> : Promise.resolve([]),
+      photoRes.ok ? photoRes.json() as Promise<PhotoRow[]> : Promise.resolve([]),
     ])
 
     setStats({
-      ratingsCount: ratingResult.data?.length || 0,
-      commentsCount: commentResult.data?.length || 0,
-      favoritesCount: favResult.data?.length || 0,
-      photosCount: photoResult.data?.length || 0,
+      ratingsCount: ratingData.length || 0,
+      commentsCount: commentData.length || 0,
+      favoritesCount: favData.length || 0,
+      photosCount: photoData.length || 0,
     })
 
     // Enrich favorites with spot names
-    if (favResult.data && favResult.data.length > 0) {
-      const spotIds = [...new Set(favResult.data.map(f => f.spot_id))]
-      const { data: spots } = await supabase
-        .from('spots')
-        .select('id, name, category, address')
-        .in('id', spotIds)
+    if (favData && favData.length > 0) {
+      const spotIds = [...new Set(favData.map(f => f.spot_id))]
+      const spotsRes = await fetch(
+        `${base}/spots?select=id,name,category,address&id=in.(${spotIds.map(encodeURIComponent).join(',')})`,
+        { headers: baseHeaders }
+      )
+      type SpotRow = { id: string; name: string; category: string; address?: string }
+      const spots: SpotRow[] = spotsRes.ok ? await spotsRes.json() : []
 
-      const spotMap = new Map(spots?.map(s => [s.id, s]) || [])
-      setFavorites(favResult.data.map(f => {
+      const spotMap = new Map(spots.map(s => [s.id, s]))
+      setFavorites(favData.map(f => {
         const spot = spotMap.get(f.spot_id)
         return {
           id: f.id,
@@ -104,15 +126,17 @@ export default function ProfilePage() {
     }
 
     // Enrich ratings with spot names
-    if (ratingResult.data && ratingResult.data.length > 0) {
-      const spotIds = [...new Set(ratingResult.data.map(r => r.spot_id))]
-      const { data: spots } = await supabase
-        .from('spots')
-        .select('id, name')
-        .in('id', spotIds)
+    if (ratingData && ratingData.length > 0) {
+      const spotIds = [...new Set(ratingData.map(r => r.spot_id))]
+      const spotsRes = await fetch(
+        `${base}/spots?select=id,name&id=in.(${spotIds.map(encodeURIComponent).join(',')})`,
+        { headers: baseHeaders }
+      )
+      type SpotNameRow = { id: string; name: string }
+      const spots: SpotNameRow[] = spotsRes.ok ? await spotsRes.json() : []
 
-      const spotMap = new Map(spots?.map(s => [s.id, s.name]) || [])
-      setRatings(ratingResult.data.map(r => ({
+      const spotMap = new Map(spots.map(s => [s.id, s.name]))
+      setRatings(ratingData.map(r => ({
         id: r.id,
         spot_id: r.spot_id,
         spot_name: spotMap.get(r.spot_id) || '未知地點',
@@ -124,15 +148,17 @@ export default function ProfilePage() {
     }
 
     // Enrich comments with spot names
-    if (commentResult.data && commentResult.data.length > 0) {
-      const spotIds = [...new Set(commentResult.data.map(c => c.spot_id))]
-      const { data: spots } = await supabase
-        .from('spots')
-        .select('id, name')
-        .in('id', spotIds)
+    if (commentData && commentData.length > 0) {
+      const spotIds = [...new Set(commentData.map(c => c.spot_id))]
+      const spotsRes = await fetch(
+        `${base}/spots?select=id,name&id=in.(${spotIds.map(encodeURIComponent).join(',')})`,
+        { headers: baseHeaders }
+      )
+      type SpotNameRow = { id: string; name: string }
+      const spots: SpotNameRow[] = spotsRes.ok ? await spotsRes.json() : []
 
-      const spotMap = new Map(spots?.map(s => [s.id, s.name]) || [])
-      setComments(commentResult.data.map(c => ({
+      const spotMap = new Map(spots.map(s => [s.id, s.name]))
+      setComments(commentData.map(c => ({
         id: c.id,
         spot_id: c.spot_id,
         spot_name: spotMap.get(c.spot_id) || '未知地點',

@@ -1,6 +1,6 @@
 'use client'
 
-import { supabase } from './supabase'
+import { supabase, SUPABASE_URL, SUPABASE_ANON_KEY } from './supabase'
 
 // ====== 常量 ======
 const BUFFER_KEY = 'wm_event_buffer'
@@ -109,7 +109,7 @@ export function track(event: TrackEvent) {
   }
 }
 
-// ====== Flush：批次寫入 Supabase ======
+// ====== Flush：批次寫入 Supabase（native fetch，繞開 auth lock）======
 let flushing = false
 
 async function flush() {
@@ -124,23 +124,47 @@ async function flush() {
 
   try {
     // 取得當前登入用戶（如果有的話）
-    const { data: { user } } = await supabase.auth.getUser()
-    const userId = user?.id || null
+    let userToken: string | null = null
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      userToken = session?.access_token || null
+    } catch {
+      // auth 取得失敗時沿用 anon key
+    }
+
+    const userId = userToken ? (() => {
+      try {
+        const payload = JSON.parse(atob(userToken!.split('.')[1]))
+        return payload.sub as string | null
+      } catch {
+        return null
+      }
+    })() : null
 
     const events = buffer.map((e) => ({
       ...e,
       user_id: userId,
     }))
 
-    const { error } = await supabase.from('user_events').insert(events)
-
-    if (error) {
-      // 寫入失敗，放回 buffer（避免資料遺失）
+    // 用 native fetch 插入，避免 CORS/auth lock 問題
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/user_events`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${userToken || SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal',
+        },
+        body: JSON.stringify(events),
+      })
+    } catch {
+      // CORS 或網路錯誤：silent fail，放回 buffer
       const currentBuffer = getBuffer()
       setBuffer([...buffer, ...currentBuffer])
     }
   } catch {
-    // 網路錯誤，放回 buffer
+    // 外層錯誤：放回 buffer
     const currentBuffer = getBuffer()
     setBuffer([...buffer, ...currentBuffer])
   } finally {
