@@ -9,7 +9,6 @@ interface SpotResult {
   id: string
   name: string
   address: string | null
-  county: string | null
   latitude: number
   longitude: number
 }
@@ -64,8 +63,8 @@ export default function SearchBar({
     setSearching(true)
     try {
       const params = new URLSearchParams()
-      params.set('select', 'id,name,address,county,latitude,longitude')
-      params.set('name', `ilike.*${query.trim()}*`)
+      params.set('select', 'id,name,address,latitude,longitude')
+      params.set('name', `ilike.%${query.trim()}%`)
       params.set('limit', '10')
       const url = `${SUPABASE_URL}/rest/v1/spots?${params.toString()}`
       const res = await fetch(url, {
@@ -165,7 +164,8 @@ export default function SearchBar({
       {showDropdown && results.length > 0 && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-surface border border-border rounded-2xl shadow-xl z-50 overflow-hidden">
           {results.map((spot) => {
-            const city = spot.county || null
+            // 從 address 取前兩個字作為縣市提示（例：「苗栗縣三義鄉...」→「苗栗縣」）
+            const city = spot.address ? spot.address.slice(0, 3) : null
             return (
               <button
                 key={spot.id}
