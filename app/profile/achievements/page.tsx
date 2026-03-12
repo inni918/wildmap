@@ -1,39 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/lib/auth-context'
-import { supabase } from '@/lib/supabase'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS } from '@/lib/icons'
 import AchievementGrid from '@/components/AchievementGrid'
 import MobileTabBar from '@/components/MobileTabBar'
-import type { User } from '@supabase/supabase-js'
 
 export default function AchievementsPage() {
-  const { user: contextUser, loading: authLoading } = useAuth()
-
-  // 直接 URL 導航時，AuthProvider 的 safety timeout 可能在 session 尚未完全
-  // 恢復前就將 loading 設為 false（user 仍為 null）。這裡用 client-side
-  // getUser() 做二次確認，避免誤判為未登入。
-  const [localUser, setLocalUser] = useState<User | null>(null)
-  const [localLoading, setLocalLoading] = useState(true)
-
-  useEffect(() => {
-    let cancelled = false
-    supabase.auth.getUser().then(({ data }) => {
-      if (!cancelled) {
-        setLocalUser(data.user ?? null)
-        setLocalLoading(false)
-      }
-    }).catch(() => {
-      if (!cancelled) setLocalLoading(false)
-    })
-    return () => { cancelled = true }
-  }, [])
-
-  const user = contextUser ?? localUser
-  const loading = authLoading && localLoading
+  const { user, loading } = useAuth()
 
   if (loading) {
     return (

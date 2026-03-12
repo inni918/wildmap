@@ -2,11 +2,13 @@
 
 import { createContext, useContext, useEffect, useState, useCallback, useRef, type ReactNode } from 'react'
 import { supabase, type UserProfile } from './supabase'
-import type { User } from '@supabase/supabase-js'
+import type { User, Session } from '@supabase/supabase-js'
 
 type AuthContextType = {
   user: User | null
   profile: UserProfile | null
+  session: Session | null
+  accessToken: string | null
   loading: boolean
   signInWithGoogle: () => Promise<void>
   signInWithEmail: (email: string, password: string) => Promise<{ error: string | null }>
@@ -20,6 +22,8 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType>({
   user: null,
   profile: null,
+  session: null,
+  accessToken: null,
   loading: true,
   signInWithGoogle: async () => {},
   signInWithEmail: async () => ({ error: null }),
@@ -32,6 +36,7 @@ const AuthContext = createContext<AuthContextType>({
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<UserProfile | null>(null)
+  const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
   const loadingResolved = useRef(false)
 
@@ -54,26 +59,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    // Safety timeout：如果 getSession() 因為 navigator.locks 卡住，
-    // 最多 3 秒後強制結束 loading 狀態（Supabase 的 lock timeout 是 5 秒，
-    // 我們比它早一步解除 UI 阻塞）
+    // Safety timeout：如果 getUser() 因為網路問題卡住，
+    // 最多 3 秒後強制結束 loading 狀態
     const safetyTimer = setTimeout(() => {
       if (!loadingResolved.current) {
-        console.warn('[AuthProvider] getSession() timed out after 3s, forcing loading=false')
+        console.warn('[AuthProvider] getUser() timed out after 3s, forcing loading=false')
         resolveLoading()
       }
     }, 3000)
 
-    // Get initial session
-    supabase.auth.getSession()
-      .then(({ data: { session } }) => {
+    // 用 getUser() 取代 getSession()：
+    // getUser() 直接打 Supabase API，不走 IndexedDB navigator.locks，
+    // 避免多個 getSession() 並發互搶 lock 的問題
+    supabase.auth.getUser()
+      .then(({ data: { user } }) => {
         if (cancelled) return
-        setUser(session?.user ?? null)
-        if (session?.user) fetchProfile(session.user.id)
+        setUser(user ?? null)
+        if (user) fetchProfile(user.id)
         resolveLoading()
       })
       .catch((err) => {
-        console.error('[AuthProvider] getSession() failed:', err)
+        console.error('[AuthProvider] getUser() failed:', err)
         if (!cancelled) {
           setUser(null)
           setProfile(null)
@@ -81,11 +87,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       })
 
-    // Listen for auth changes
+    // Listen for auth changes — onAuthStateChange 提供 session（含 access_token）
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
         if (cancelled) return
         setUser(session?.user ?? null)
+        setSession(session)
         if (session?.user) {
           await fetchProfile(session.user.id)
         } else {
@@ -167,12 +174,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await supabase.auth.signOut()
     setUser(null)
     setProfile(null)
+    setSession(null)
   }
 
   return (
     <AuthContext.Provider value={{
       user,
       profile,
+      session,
+      accessToken: session?.access_token ?? null,
       loading,
       signInWithGoogle,
       signInWithEmail,

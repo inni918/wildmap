@@ -1,6 +1,6 @@
 'use client'
 
-import { supabase, SUPABASE_URL, SUPABASE_ANON_KEY } from './supabase'
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from './supabase'
 
 // ====== 常量 ======
 const BUFFER_KEY = 'wm_event_buffer'
@@ -123,13 +123,23 @@ async function flush() {
   clearBuffer()
 
   try {
-    // 取得當前登入用戶（如果有的話）
+    // 從 localStorage 直接讀取 access_token，完全不走 navigator.locks
+    // Supabase 將 session 存在 localStorage 的 sb-*-auth-token 鍵值
     let userToken: string | null = null
     try {
-      const { data: { session } } = await supabase.auth.getSession()
-      userToken = session?.access_token || null
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i)
+        if (key && key.startsWith('sb-') && key.endsWith('-auth-token')) {
+          const raw = localStorage.getItem(key)
+          if (raw) {
+            const parsed = JSON.parse(raw)
+            userToken = parsed?.access_token || null
+          }
+          break
+        }
+      }
     } catch {
-      // auth 取得失敗時沿用 anon key
+      // 讀取失敗時沿用 anon key
     }
 
     const userId = userToken ? (() => {
