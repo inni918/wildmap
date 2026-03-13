@@ -59,7 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    // 保底 timer，8秒後強制結束 loading（正常不應觸發）
+    // 保底 timer，8秒後強制結束（正常不應觸發）
     const safetyTimer = setTimeout(() => {
       if (!loadingResolved.current) {
         console.warn('[AuthProvider] safety timer triggered after 8s')
@@ -67,8 +67,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }, 8000)
 
-    // 單一入口：onAuthStateChange 在 mount 時會立刻觸發 INITIAL_SESSION
-    // 不再呼叫 getUser()，避免 navigator.locks 競爭導致 auth lock timeout
+    // getSession() 讀 localStorage，不走 navigator.locks，安全
+    // 用來快速初始化 session，避免等 onAuthStateChange 的延遲
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (cancelled) return
+      if (session) {
+        setUser(session.user)
+        setSession(session)
+        fetchProfile(session.user.id)
+      }
+      resolveLoading()
+    }).catch(() => {
+      if (!cancelled) resolveLoading()
+    })
+
+    // onAuthStateChange 處理後續的 auth 狀態變化（登入/登出/refresh）
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (cancelled) return
@@ -79,7 +92,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } else {
           setProfile(null)
         }
-        // INITIAL_SESSION 或任何 auth 事件都代表 loading 完成
         resolveLoading()
       }
     )
