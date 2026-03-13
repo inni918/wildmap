@@ -59,37 +59,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    // Safety timeout：如果 getUser() 因為網路問題卡住，
-    // 最多 3 秒後強制結束 loading 狀態
+    // 保底 timer，8秒後強制結束 loading（正常不應觸發）
     const safetyTimer = setTimeout(() => {
       if (!loadingResolved.current) {
-        console.warn('[AuthProvider] getUser() timed out after 3s, forcing loading=false')
+        console.warn('[AuthProvider] safety timer triggered after 8s')
         resolveLoading()
       }
-    }, 3000)
+    }, 8000)
 
-    // 用 getUser() 取代 getSession()：
-    // getUser() 直接打 Supabase API，不走 IndexedDB navigator.locks，
-    // 避免多個 getSession() 並發互搶 lock 的問題
-    supabase.auth.getUser()
-      .then(({ data: { user } }) => {
-        if (cancelled) return
-        setUser(user ?? null)
-        if (user) fetchProfile(user.id)
-        resolveLoading()
-      })
-      .catch((err) => {
-        console.error('[AuthProvider] getUser() failed:', err)
-        if (!cancelled) {
-          setUser(null)
-          setProfile(null)
-          resolveLoading()
-        }
-      })
-
-    // Listen for auth changes — onAuthStateChange 提供 session（含 access_token）
+    // 單一入口：onAuthStateChange 在 mount 時會立刻觸發 INITIAL_SESSION
+    // 不再呼叫 getUser()，避免 navigator.locks 競爭導致 auth lock timeout
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
+      async (event, session) => {
         if (cancelled) return
         setUser(session?.user ?? null)
         setSession(session)
@@ -98,6 +79,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } else {
           setProfile(null)
         }
+        // INITIAL_SESSION 或任何 auth 事件都代表 loading 完成
         resolveLoading()
       }
     )
