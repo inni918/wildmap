@@ -28,10 +28,11 @@ export async function GET(request: NextRequest) {
   const targetType = searchParams.get('targetType') || ''
 
   try {
+    // 不使用 FK JOIN 查詢 users，避免 FK relationship 不存在時 500
     let query = supabaseAdmin
       .from('reports')
       .select(
-        'id, reason, description, target_type, target_id, status, created_at, resolved_at, resolution, reporter:reporter_id(display_name), resolver:resolved_by(display_name)',
+        'id, reason, description, target_type, target_id, status, created_at, resolved_at, resolution, reporter_id, resolved_by',
         { count: 'exact' }
       )
 
@@ -58,6 +59,23 @@ export async function GET(request: NextRequest) {
     if (error) {
       console.error('Reports query error:', error)
       return errorResponse('QUERY_ERROR', error.message, 500)
+    }
+
+    // 批次查詢所有相關 user display_name
+    const userIds = new Set<string>()
+    for (const r of data || []) {
+      if (r.reporter_id) userIds.add(r.reporter_id)
+      if (r.resolved_by) userIds.add(r.resolved_by)
+    }
+    const userMap: Record<string, string> = {}
+    if (userIds.size > 0) {
+      const { data: users } = await supabaseAdmin
+        .from('users')
+        .select('id, display_name')
+        .in('id', Array.from(userIds))
+      for (const u of users || []) {
+        if (u.display_name) userMap[u.id] = u.display_name
+      }
     }
 
     // 取得被檢舉目標名稱
@@ -87,21 +105,12 @@ export async function GET(request: NextRequest) {
           targetName = user?.display_name || '已刪除用戶'
         }
 
-        // Supabase join 可能回傳 object 或 array
-        const reporterData = report.reporter as unknown
-        const resolverData = report.resolver as unknown
-        const getDisplayName = (d: unknown): string | null => {
-          if (d && typeof d === 'object' && !Array.isArray(d)) return (d as { display_name: string }).display_name
-          if (Array.isArray(d) && d.length > 0) return (d[0] as { display_name: string }).display_name
-          return null
-        }
-
         return {
           ...report,
           target_name: targetName,
           priority: getPriority(report.reason),
-          reporter_name: getDisplayName(reporterData) || '匿名',
-          resolver_name: getDisplayName(resolverData),
+          reporter_name: userMap[report.reporter_id] || '匿名',
+          resolver_name: report.resolved_by ? (userMap[report.resolved_by] || null) : null,
         }
       })
     )

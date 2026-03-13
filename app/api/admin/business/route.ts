@@ -19,10 +19,11 @@ export async function GET(request: NextRequest) {
   const tab = searchParams.get('tab') || 'pending' // pending | approved | rejected
 
   try {
+    // 不使用 FK JOIN 查詢 users/spots，避免 FK 指向 auth.users 時 PostgREST 無法解析
     let query = supabaseAdmin
       .from('business_claims')
       .select(
-        'id, business_name, contact_phone, contact_email, proof_url, notes, status, rejection_reason, created_at, reviewed_at, spot_id, user_id, spots(name), users(display_name)',
+        'id, business_name, contact_phone, contact_email, proof_url, notes, status, rejection_reason, created_at, reviewed_at, spot_id, user_id',
         { count: 'exact' }
       )
 
@@ -45,24 +46,46 @@ export async function GET(request: NextRequest) {
       return errorResponse('QUERY_ERROR', error.message, 500)
     }
 
-    // 計算等待天數
+    // 批次查詢關聯的 spots 和 users
+    const spotIds = new Set<string>()
+    const userIds = new Set<string>()
+    for (const c of data || []) {
+      if (c.spot_id) spotIds.add(c.spot_id)
+      if (c.user_id) userIds.add(c.user_id)
+    }
+
+    const spotMap: Record<string, string> = {}
+    if (spotIds.size > 0) {
+      const { data: spots } = await supabaseAdmin
+        .from('spots')
+        .select('id, name')
+        .in('id', Array.from(spotIds))
+      for (const s of spots || []) {
+        if (s.name) spotMap[s.id] = s.name
+      }
+    }
+
+    const userMap: Record<string, string> = {}
+    if (userIds.size > 0) {
+      const { data: users } = await supabaseAdmin
+        .from('users')
+        .select('id, display_name')
+        .in('id', Array.from(userIds))
+      for (const u of users || []) {
+        if (u.display_name) userMap[u.id] = u.display_name
+      }
+    }
+
+    // 計算等待天數並合併資料
     const enrichedData = (data || []).map((claim) => {
       const waitDays = Math.ceil(
         (Date.now() - new Date(claim.created_at).getTime()) / (1000 * 60 * 60 * 24)
       )
-      // Supabase join 可能回傳 object 或 array
-      const spotsData = claim.spots as unknown
-      const usersData = claim.users as unknown
-      const getField = <T,>(d: unknown, field: string): T | null => {
-        if (d && typeof d === 'object' && !Array.isArray(d)) return (d as Record<string, T>)[field] ?? null
-        if (Array.isArray(d) && d.length > 0) return (d[0] as Record<string, T>)[field] ?? null
-        return null
-      }
       return {
         ...claim,
         wait_days: waitDays,
-        spot_name: getField<string>(spotsData, 'name') || '—',
-        applicant_name: getField<string>(usersData, 'display_name') || '—',
+        spot_name: spotMap[claim.spot_id] || '—',
+        applicant_name: userMap[claim.user_id] || '—',
       }
     })
 
