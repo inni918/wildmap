@@ -134,6 +134,7 @@ import {
   faPenToSquare,
   faDiamondTurnRight,
   faReply,
+  faFlag,
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
@@ -300,6 +301,7 @@ export const NAV_ICONS = {
   navigate:    faDiamondTurnRight,
   reply:       faReply,
   calendar:    faCalendarDays,
+  flag:        faFlag,
 } as const
 
 // Helper to get an icon for a feature key, with fallback

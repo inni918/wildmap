@@ -35,6 +35,7 @@ const PRIORITY_LABELS: Record<string, { label: string; icon: string }> = {
 const REASON_LABELS: Record<string, string> = {
   misinformation: '不實資訊',
   spam: '垃圾內容',
+  inappropriate: '不當內容',
   harassment: '騷擾',
   illegal: '違法',
   other: '其他',

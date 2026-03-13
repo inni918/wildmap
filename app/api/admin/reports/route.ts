@@ -11,7 +11,7 @@ import {
 // 自動優先度判斷
 function getPriority(type: string): 'high' | 'medium' | 'low' {
   if (['illegal', 'harassment'].includes(type)) return 'high'
-  if (['misinformation', 'spam'].includes(type)) return 'medium'
+  if (['misinformation', 'spam', 'inappropriate'].includes(type)) return 'medium'
   return 'low'
 }
 

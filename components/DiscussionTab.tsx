@@ -7,6 +7,14 @@ import { useAchievements } from '@/lib/achievement-context'
 import { NAV_ICONS } from '@/lib/icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
+const REPORT_REASONS = [
+  { value: 'spam', label: '垃圾訊息' },
+  { value: 'misinformation', label: '不實資訊' },
+  { value: 'inappropriate', label: '不當內容' },
+  { value: 'harassment', label: '騷擾' },
+  { value: 'other', label: '其他' },
+] as const
+
 interface Comment {
   id: string
   spot_id: string
@@ -37,6 +45,14 @@ export default function DiscussionTab({ spotId }: Props) {
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [loginHint, setLoginHint] = useState(false)
   const inputRef = useRef<HTMLTextAreaElement>(null)
+
+  // 舉報相關 state
+  const [reportingComment, setReportingComment] = useState<Comment | null>(null)
+  const [reportReason, setReportReason] = useState('')
+  const [reportDescription, setReportDescription] = useState('')
+  const [reportSubmitting, setReportSubmitting] = useState(false)
+  const [reportedIds, setReportedIds] = useState<Set<string>>(new Set())
+  const [reportToast, setReportToast] = useState(false)
 
   const fetchComments = useCallback(async () => {
     setLoading(true)
@@ -124,6 +140,52 @@ export default function DiscussionTab({ spotId }: Props) {
   useEffect(() => {
     fetchComments()
   }, [fetchComments])
+
+  // 載入已舉報過的留言 ID
+  useEffect(() => {
+    if (!user) return
+    const fetchReported = async () => {
+      const { data } = await supabase
+        .from('reports')
+        .select('target_id')
+        .eq('reporter_id', user.id)
+        .eq('target_type', 'comment')
+      if (data) {
+        setReportedIds(new Set(data.map(r => r.target_id)))
+      }
+    }
+    fetchReported()
+  }, [user])
+
+  // 舉報留言
+  const handleReport = async () => {
+    if (!user || !reportingComment || !reportReason || reportSubmitting) return
+    setReportSubmitting(true)
+
+    try {
+      const { error } = await supabase
+        .from('reports')
+        .insert({
+          target_type: 'comment',
+          target_id: reportingComment.id,
+          reason: reportReason,
+          description: reportDescription.trim() || null,
+          reporter_id: user.id,
+          status: 'pending',
+        })
+
+      if (!error) {
+        setReportedIds(prev => new Set(prev).add(reportingComment.id))
+        setReportingComment(null)
+        setReportReason('')
+        setReportDescription('')
+        setReportToast(true)
+        setTimeout(() => setReportToast(false), 3000)
+      }
+    } finally {
+      setReportSubmitting(false)
+    }
+  }
 
   const handleSubmit = async () => {
     if (!user || !newComment.trim() || submitting) return
@@ -363,6 +425,24 @@ export default function DiscussionTab({ spotId }: Props) {
                           <FontAwesomeIcon icon={NAV_ICONS.trash} className="text-[10px]" />
                         </button>
                       )}
+                      {user && user.id !== comment.user_id && (
+                        <button
+                          onClick={() => {
+                            setReportingComment(comment)
+                            setReportReason('')
+                            setReportDescription('')
+                          }}
+                          disabled={reportedIds.has(comment.id)}
+                          className={`ml-auto flex items-center gap-1 px-2 py-1 rounded-full text-[11px] transition-all cursor-pointer ${
+                            reportedIds.has(comment.id)
+                              ? 'text-text-secondary/30 cursor-not-allowed'
+                              : 'text-text-secondary/40 hover:text-orange-400 hover:bg-orange-50'
+                          }`}
+                          title={reportedIds.has(comment.id) ? '已舉報' : '舉報留言'}
+                        >
+                          <FontAwesomeIcon icon={NAV_ICONS.flag} className="text-[10px]" />
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -396,6 +476,24 @@ export default function DiscussionTab({ spotId }: Props) {
                                 className="ml-auto flex items-center gap-1 px-2 py-1 rounded-full text-[10px] text-text-secondary/40 hover:text-red-400 hover:bg-red-50 transition-all cursor-pointer disabled:opacity-30"
                               >
                                 <FontAwesomeIcon icon={NAV_ICONS.trash} className="text-[10px]" />
+                              </button>
+                            )}
+                            {user && user.id !== reply.user_id && (
+                              <button
+                                onClick={() => {
+                                  setReportingComment(reply)
+                                  setReportReason('')
+                                  setReportDescription('')
+                                }}
+                                disabled={reportedIds.has(reply.id)}
+                                className={`ml-auto flex items-center gap-1 px-2 py-1 rounded-full text-[10px] transition-all cursor-pointer ${
+                                  reportedIds.has(reply.id)
+                                    ? 'text-text-secondary/30 cursor-not-allowed'
+                                    : 'text-text-secondary/40 hover:text-orange-400 hover:bg-orange-50'
+                                }`}
+                                title={reportedIds.has(reply.id) ? '已舉報' : '舉報留言'}
+                              >
+                                <FontAwesomeIcon icon={NAV_ICONS.flag} className="text-[10px]" />
                               </button>
                             )}
                           </div>
@@ -488,6 +586,90 @@ export default function DiscussionTab({ spotId }: Props) {
           </div>
         )}
       </div>
+
+      {/* 舉報成功 Toast */}
+      {reportToast && (
+        <div className="fixed bottom-28 left-1/2 -translate-x-1/2 z-50 bg-gray-800/90 text-white text-sm px-4 py-2 rounded-full shadow-lg animate-fade-in whitespace-nowrap">
+          🚩 已舉報，我們會盡快處理
+        </div>
+      )}
+
+      {/* 舉報 Modal */}
+      {reportingComment && (
+        <div className="fixed inset-0 bg-black/40 flex items-end sm:items-center justify-center z-50" onClick={() => setReportingComment(null)}>
+          <div
+            className="bg-white rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-sm p-5 m-0 sm:m-4"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-base font-bold text-text-main">🚩 舉報留言</h3>
+              <button
+                onClick={() => setReportingComment(null)}
+                className="text-text-secondary hover:text-text-main p-1 cursor-pointer"
+              >
+                <FontAwesomeIcon icon={NAV_ICONS.close} />
+              </button>
+            </div>
+
+            {/* 被舉報的留言預覽 */}
+            <div className="bg-surface-alt rounded-lg px-3 py-2 mb-4 text-xs text-text-secondary">
+              <span className="font-medium text-text-main">{reportingComment.display_name}</span>
+              <p className="mt-1 line-clamp-2">{reportingComment.content}</p>
+            </div>
+
+            {/* 舉報原因 */}
+            <div className="space-y-2 mb-4">
+              <label className="block text-sm font-medium text-text-main">舉報原因</label>
+              {REPORT_REASONS.map(reason => (
+                <label
+                  key={reason.value}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg border cursor-pointer transition-colors text-sm ${
+                    reportReason === reason.value
+                      ? 'border-primary bg-primary/5'
+                      : 'border-border hover:bg-surface-alt'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="report-reason"
+                    value={reason.value}
+                    checked={reportReason === reason.value}
+                    onChange={e => setReportReason(e.target.value)}
+                    className="accent-primary"
+                  />
+                  <span>{reason.label}</span>
+                </label>
+              ))}
+            </div>
+
+            {/* 補充說明 */}
+            <textarea
+              placeholder="補充說明（選填）..."
+              value={reportDescription}
+              onChange={e => setReportDescription(e.target.value)}
+              className="w-full px-3 py-2 rounded-lg border border-border bg-surface text-sm mb-4 h-16 resize-none focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
+              maxLength={500}
+            />
+
+            {/* 送出 */}
+            <div className="flex gap-2">
+              <button
+                onClick={() => setReportingComment(null)}
+                className="flex-1 px-4 py-2.5 rounded-xl border border-border text-sm font-medium text-text-secondary hover:bg-surface-alt cursor-pointer transition-colors"
+              >
+                取消
+              </button>
+              <button
+                onClick={handleReport}
+                disabled={!reportReason || reportSubmitting}
+                className="flex-1 px-4 py-2.5 rounded-xl bg-orange-500 text-white text-sm font-medium hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors"
+              >
+                {reportSubmitting ? '送出中...' : '送出舉報'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
