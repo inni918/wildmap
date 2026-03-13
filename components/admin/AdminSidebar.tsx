@@ -19,6 +19,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: '地標管理', href: '/admin/spots', icon: '🏕️', group: '內容管理' },
   { label: '檢舉處理', href: '/admin/reports', icon: '🚩', group: '審核中心' },
   { label: '商家管理', href: '/admin/business', icon: '🏪', group: '審核中心' },
+  { label: '用戶回饋', href: '/admin/feedback', icon: '💬', group: '審核中心' },
 ]
 
 export default function AdminSidebar() {
@@ -29,7 +30,7 @@ export default function AdminSidebar() {
   // 取得待處理數量
   useEffect(() => {
     async function fetchBadges() {
-      const [reportsRes, businessRes] = await Promise.all([
+      const [reportsRes, businessRes, feedbackRes] = await Promise.all([
         supabase
           .from('reports')
           .select('id', { count: 'exact', head: true })
@@ -38,10 +39,15 @@ export default function AdminSidebar() {
           .from('business_claims')
           .select('id', { count: 'exact', head: true })
           .eq('status', 'pending'),
+        supabase
+          .from('feedback')
+          .select('id', { count: 'exact', head: true })
+          .eq('status', 'pending'),
       ])
       setBadges({
         '/admin/reports': reportsRes.count || 0,
         '/admin/business': businessRes.count || 0,
+        '/admin/feedback': feedbackRes.count || 0,
       })
     }
     fetchBadges()

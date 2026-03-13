@@ -191,6 +191,9 @@ interface UserStats {
   fiveStarRatings: number
   oneStarRatings: number
   currentHour: number
+  feedbackBugs: number
+  feedbackTotal: number
+  feedbackAdopted: number
 }
 
 async function fetchCount(url: string): Promise<number> {
@@ -216,6 +219,9 @@ async function getUserStats(userId: string): Promise<UserStats> {
     reports,
     fiveStarRatings,
     oneStarRatings,
+    feedbackBugs,
+    feedbackTotal,
+    feedbackAdopted,
   ] = await Promise.all([
     fetchCount(`${base}/spots?created_by=eq.${uid}&select=id`),
     fetchCount(`${base}/spot_images?user_id=eq.${uid}&select=id`),
@@ -228,6 +234,9 @@ async function getUserStats(userId: string): Promise<UserStats> {
     fetchCount(`${base}/reports?user_id=eq.${uid}&select=id`),
     fetchCount(`${base}/ratings?user_id=eq.${uid}&score=eq.5&select=id`),
     fetchCount(`${base}/ratings?user_id=eq.${uid}&score=eq.1&select=id`),
+    fetchCount(`${base}/feedback?user_id=eq.${uid}&type=eq.bug&select=id`),
+    fetchCount(`${base}/feedback?user_id=eq.${uid}&select=id`),
+    fetchCount(`${base}/feedback?user_id=eq.${uid}&status=eq.adopted&select=id`),
   ])
 
   const now = new Date()
@@ -248,6 +257,9 @@ async function getUserStats(userId: string): Promise<UserStats> {
     fiveStarRatings,
     oneStarRatings,
     currentHour: taiwanHour,
+    feedbackBugs,
+    feedbackTotal,
+    feedbackAdopted,
   }
 }
 
@@ -394,6 +406,16 @@ async function checkCriteria(
       }
       return false
     }
+
+    // === 回饋類 ===
+    case 'feedback_bugs':
+      return stats.feedbackBugs >= threshold
+
+    case 'feedback_total':
+      return stats.feedbackTotal >= threshold
+
+    case 'feedback_adopted':
+      return stats.feedbackAdopted >= threshold
 
     case 'vote_accuracy':
     case 'comment_helpful':
@@ -914,6 +936,15 @@ export async function getNearlyUnlockedAchievements(userId: string): Promise<Ach
         break
       case 'consecutive_days':
         current = await getConsecutiveDays(userId)
+        break
+      case 'feedback_bugs':
+        current = stats.feedbackBugs
+        break
+      case 'feedback_total':
+        current = stats.feedbackTotal
+        break
+      case 'feedback_adopted':
+        current = stats.feedbackAdopted
         break
       default:
         continue // 跳過無法計算進度的類型

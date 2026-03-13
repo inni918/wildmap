@@ -18,6 +18,7 @@ import { usePermission } from './PermissionGate'
 import { track } from '@/lib/tracker'
 import { useAuth } from '@/lib/auth-context'
 import SearchBar from './SearchBar'
+import FeedbackModal from './FeedbackModal'
 
 
 // ====== Timeout helper ======
@@ -226,6 +227,8 @@ export default function Map({
     latitude: 23.8,
     zoom: 7,
   })
+  // 回饋 Modal
+  const [feedbackOpen, setFeedbackOpen] = useState(false)
   // 收藏模式
   const [favoritesMode, setFavoritesMode] = useState(false)
   const [favoriteSpotIds, setFavoriteSpotIds] = useState<Set<string> | null>(null)
@@ -1368,6 +1371,25 @@ export default function Map({
       )}
 
       <OnboardingOverlay />
+
+      {/* 💬 回饋按鈕（左下角） */}
+      {viewMode === 'map' && !placingMode && (
+        <button
+          onClick={() => setFeedbackOpen(true)}
+          className="absolute left-4 z-20 flex items-center gap-1.5 px-3 py-2.5 bg-surface/95 backdrop-blur-sm text-text-secondary border border-border rounded-full shadow-lg hover:bg-surface hover:text-primary hover:border-primary/50 hover:shadow-xl transition-all cursor-pointer active:scale-95"
+          style={{ bottom: 36 }}
+          title="意見回饋"
+        >
+          <span className="text-base">💬</span>
+          <span className="text-xs font-medium hidden sm:inline">回饋</span>
+        </button>
+      )}
+
+      {/* 回饋 Modal */}
+      <FeedbackModal
+        open={feedbackOpen}
+        onClose={() => setFeedbackOpen(false)}
+      />
 
       {/* 底部免責通知 bar */}
       <div
