@@ -8,7 +8,7 @@ const TIPS = [
   { icon: '🗺️', text: '點擊地圖上的標記查看地點詳情' },
   { icon: '🔍', text: '用上方搜尋框尋找特定地點' },
   { icon: '🏕️', text: '用篩選按鈕篩選不同營地特性' },
-  { icon: '➕', text: '點擊地圖空白處新增地點' },
+  { icon: '➕', text: '點擊右下角「新增地點」按鈕貢獻地標' },
 ]
 
 export default function OnboardingOverlay() {
