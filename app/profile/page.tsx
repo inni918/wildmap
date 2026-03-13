@@ -64,11 +64,15 @@ export default function ProfilePage() {
     if (!user) return
     setLoading(true)
 
+    // 取得使用者的 session token（RLS 需要 auth.uid()）
+    const { data: sessionData } = await supabase.auth.getSession()
+    const accessToken = sessionData?.session?.access_token
+
     // Fetch stats in parallel using native fetch（繞開 auth lock）
     const uid = encodeURIComponent(user.id)
     const baseHeaders = {
       'apikey': SUPABASE_ANON_KEY,
-      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      'Authorization': `Bearer ${accessToken || SUPABASE_ANON_KEY}`,
       'Accept': 'application/json',
     }
     const base = `${SUPABASE_URL}/rest/v1`
