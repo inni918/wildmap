@@ -7,6 +7,7 @@ import { useAchievements } from '@/lib/achievement-context'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS } from '@/lib/icons'
 import { usePermission } from '@/components/PermissionGate'
+import { incrementStat, updateStreak } from '@/lib/stats-service'
 
 const REPORT_REASONS = [
   { value: 'spam', label: '垃圾訊息' },
@@ -186,6 +187,12 @@ export default function CommentsTab({ spotId, claimedBy }: Props) {
         setNewComment('')
         await fetchComments()
         earnReview(spotId, commentText)
+        // 成就系統 v2：累加留言計數器
+        if (user) {
+          incrementStat(user.id, 'comments_total')
+          if (commentText.length >= 100) incrementStat(user.id, 'detailed_comments')
+          updateStreak(user.id)
+        }
       }
     } finally {
       setSubmitting(false)
@@ -211,6 +218,11 @@ export default function CommentsTab({ spotId, claimedBy }: Props) {
         setReplyingTo(null)
         await fetchComments()
         earnAction('reply_discussion', spotId)
+        // 成就系統 v2：累加回覆計數器
+        if (user) {
+          incrementStat(user.id, 'replies_total')
+          updateStreak(user.id)
+        }
       }
     } finally {
       setSubmitting(false)

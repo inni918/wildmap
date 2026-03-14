@@ -7,6 +7,7 @@ import { useAuth } from '@/lib/auth-context'
 import { useAchievements } from '@/lib/achievement-context'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS } from '@/lib/icons'
+import { incrementStat } from '@/lib/stats-service'
 
 interface Props {
   spotId: string
@@ -57,6 +58,8 @@ export default function FavoriteButton({ spotId }: Props) {
           .insert({ spot_id: spotId, user_id: user.id })
         setIsFavorited(true)
         triggerCheck()
+        // 成就系統 v2：只在新增收藏時 +1（取消不 -1）
+        incrementStat(user.id, 'favorites_unique')
       }
     } finally {
       setLoading(false)

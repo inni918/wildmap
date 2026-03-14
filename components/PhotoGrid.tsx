@@ -6,6 +6,7 @@ import { useAuth } from '@/lib/auth-context'
 import { useAchievements } from '@/lib/achievement-context'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS } from '@/lib/icons'
+import { incrementStat, updateStreak } from '@/lib/stats-service'
 
 interface SpotImage {
   id: string
@@ -117,6 +118,11 @@ export default function PhotoGrid({ spotId }: Props) {
 
       await fetchImages()
       earnAction('upload_photo', spotId)
+      // 成就系統 v2：累加照片計數器
+      if (user) {
+        incrementStat(user.id, 'photos_total')
+        updateStreak(user.id)
+      }
     } finally {
       setUploading(false)
     }

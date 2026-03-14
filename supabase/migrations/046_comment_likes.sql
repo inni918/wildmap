@@ -14,9 +14,17 @@ CREATE TABLE IF NOT EXISTS comment_likes (
 -- RLS
 ALTER TABLE comment_likes ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY IF NOT EXISTS "任何人可查看留言讚" ON comment_likes FOR SELECT USING (true);
-CREATE POLICY IF NOT EXISTS "登入用戶可按讚" ON comment_likes FOR INSERT WITH CHECK (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "只能取消自己的讚" ON comment_likes FOR DELETE USING (auth.uid() = user_id);
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = '任何人可查看留言讚' AND tablename = 'comment_likes') THEN
+    CREATE POLICY "任何人可查看留言讚" ON comment_likes FOR SELECT USING (true);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = '登入用戶可按讚' AND tablename = 'comment_likes') THEN
+    CREATE POLICY "登入用戶可按讚" ON comment_likes FOR INSERT WITH CHECK (auth.uid() = user_id);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = '只能取消自己的讚' AND tablename = 'comment_likes') THEN
+    CREATE POLICY "只能取消自己的讚" ON comment_likes FOR DELETE USING (auth.uid() = user_id);
+  END IF;
+END $$;
 
 -- INDEX
 CREATE INDEX IF NOT EXISTS idx_comment_likes_comment_id ON comment_likes(comment_id);

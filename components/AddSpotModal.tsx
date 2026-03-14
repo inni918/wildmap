@@ -10,6 +10,7 @@ import {
   faCampground, faVanShuttle,
 } from '@fortawesome/free-solid-svg-icons'
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core'
+import { incrementStat, updateStreak } from '@/lib/stats-service'
 
 interface Props {
   lat: number
@@ -160,6 +161,10 @@ export default function AddSpotModal({ lat, lng, onClose, onAdded }: Props) {
 
     onAdded()
     earnAction('add_spot')
+    // 成就系統 v2：累加新增地點計數器
+    incrementStat(user.id, 'spots_total')
+    if (photos.length > 0) incrementStat(user.id, 'photos_total', photos.length)
+    updateStreak(user.id)
   }
 
   // 未登入畫面

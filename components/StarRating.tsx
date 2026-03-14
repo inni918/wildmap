@@ -6,6 +6,7 @@ import { useAuth } from '@/lib/auth-context'
 import { useAchievements } from '@/lib/achievement-context'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS } from '@/lib/icons'
+import { incrementStat, updateStreak } from '@/lib/stats-service'
 
 interface Props {
   spotId: string
@@ -65,6 +66,9 @@ export default function StarRating({ spotId }: Props) {
         await supabase
           .from('ratings')
           .insert({ spot_id: spotId, user_id: user.id, score })
+        // 成就系統 v2：只在新評分時累加（更新不算）
+        incrementStat(user.id, 'ratings_total')
+        updateStreak(user.id)
       }
       await fetchRatings()
       // 發放積分 + 成就檢查

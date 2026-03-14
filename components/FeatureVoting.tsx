@@ -8,6 +8,7 @@ import { getFeatureIcon } from '@/lib/icons'
 import { supabase } from '@/lib/supabase'
 import type { FeatureGroup } from '@/lib/supabase'
 import { useAchievements } from '@/lib/achievement-context'
+import { incrementStat, updateStreak } from '@/lib/stats-service'
 
 // ─── Constants ───────────────────────────────
 
@@ -222,6 +223,9 @@ function VoteButtons({
           vote,
         })
         earnAction('vote_helpful', feature.id)
+        // 成就系統 v2：累加投票計數器（只在新投票時）
+        incrementStat(userId, 'votes_total')
+        updateStreak(userId)
       }
     } catch {
       // Revert on error
@@ -323,6 +327,9 @@ function AddFeaturePanel({
         vote: true,
       })
       earnAction('vote_helpful', def.id)
+      // 成就系統 v2：累加投票計數器
+      incrementStat(userId, 'votes_total')
+      updateStreak(userId)
       onAdded()
       setOpen(false)
       setSearch('')
