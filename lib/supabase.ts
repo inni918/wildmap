@@ -120,6 +120,10 @@ export type UserProfile = {
   points: number
   credit_score: number
   created_at: string
+  /** 個人資料是否完成（頭像+暱稱） */
+  profile_completed?: boolean
+  /** 權限快取 JSONB */
+  permissions_cache?: Record<string, boolean>
 }
 
 // === Feature group display config ===

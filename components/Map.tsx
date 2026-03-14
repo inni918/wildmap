@@ -15,7 +15,7 @@ import Header from './Header'
 import FeatureFilter from './FeatureFilter'
 import OnboardingOverlay from './OnboardingOverlay'
 import BottomSheetCard from './BottomSheetCard'
-import { usePermission } from './PermissionGate'
+import { usePermission, usePermissionV2 } from './PermissionGate'
 import { track } from '@/lib/tracker'
 import { useAuth } from '@/lib/auth-context'
 import SearchBar from './SearchBar'
@@ -245,6 +245,8 @@ export default function Map({
   const router = useRouter()
   const { user } = useAuth()
   const addSpotPerm = usePermission('add_spot')
+  // v2 權限：需要 checkin_explorer 銅牌（打卡 3 個地點）+ 帳號 ≥ 7 天
+  const addSpotV2 = usePermissionV2('add_spot')
   const [spots, setSpots] = useState<SpotSummary[]>([])
   const [selectedSpot, setSelectedSpot] = useState<SpotSummary | null>(null)
   const [loading, setLoading] = useState(true)
@@ -1297,8 +1299,8 @@ export default function Map({
             <button
               onClick={() => {
                 // 還在載入中，等一下再試
-                if (addSpotPerm.isLoading) return
-                if (!addSpotPerm.allowed) {
+                if (addSpotPerm.isLoading || addSpotV2.isLoading) return
+                if (!addSpotPerm.allowed || !addSpotV2.allowed) {
                   setAddModal({ lat: 0, lng: 0 }) // 觸發權限不足提示
                   return
                 }
@@ -1416,7 +1418,7 @@ export default function Map({
       )}
 
       {addModal && viewMode === 'map' && (
-        addSpotPerm.allowed ? (
+        (addSpotPerm.allowed && addSpotV2.allowed) ? (
           <AddSpotModal
             lat={addModal.lat}
             lng={addModal.lng}
@@ -1427,9 +1429,11 @@ export default function Map({
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={() => setAddModal(null)}>
             <div className="bg-surface rounded-2xl border border-border p-6 mx-4 max-w-sm text-center shadow-xl" onClick={e => e.stopPropagation()}>
               <div className="text-3xl mb-3">🔒</div>
-              <h3 className="text-base font-bold text-text-main mb-2">需要更高等級</h3>
+              <h3 className="text-base font-bold text-text-main mb-2">功能未解鎖</h3>
               <p className="text-sm text-text-secondary mb-4">
-                新增地點需要 Lv.{addSpotPerm.requiredLevel} 才能使用。繼續累積積分升級吧！
+                {!addSpotV2.allowed
+                  ? (addSpotV2.unlockHint || '再探索幾個地點就能新增了')
+                  : `新增地點需要 Lv.${addSpotPerm.requiredLevel} 才能使用`}
               </p>
               <button
                 onClick={() => setAddModal(null)}

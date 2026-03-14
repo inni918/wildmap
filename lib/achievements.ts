@@ -23,6 +23,12 @@ export interface Achievement {
   tier: AchievementTier
   criteria: Record<string, unknown>
   sort_order: number
+  /** 模糊提示文案（未解鎖時顯示） */
+  hint_text?: string
+  /** 此成就解鎖什麼權限 */
+  unlock_permissions?: Record<string, boolean>
+  /** 分類範圍：common | {category} */
+  category_scope?: string
 }
 
 export interface UserAchievement {

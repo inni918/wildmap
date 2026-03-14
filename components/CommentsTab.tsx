@@ -6,7 +6,7 @@ import { useAuth } from '@/lib/auth-context'
 import { useAchievements } from '@/lib/achievement-context'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS } from '@/lib/icons'
-import { usePermission } from '@/components/PermissionGate'
+import { usePermission, usePermissionV2 } from '@/components/PermissionGate'
 import { incrementStat, updateStreak } from '@/lib/stats-service'
 
 const REPORT_REASONS = [
@@ -38,6 +38,9 @@ export default function CommentsTab({ spotId, claimedBy }: Props) {
   const { earnReview, earnAction } = useAchievements()
   const writeReviewPerm = usePermission('write_review')
   const replyPerm = usePermission('reply_comment')
+  // v2 權限：評論需要 profile_complete
+  const writeCommentV2 = usePermissionV2('write_comment')
+  const replyCommentV2 = usePermissionV2('reply_comment')
   const [comments, setComments] = useState<Comment[]>([])
   const [loading, setLoading] = useState(true)
   const [newComment, setNewComment] = useState('')
@@ -274,7 +277,7 @@ export default function CommentsTab({ spotId, claimedBy }: Props) {
     <div className="space-y-4">
       {/* New comment input */}
       {user ? (
-        writeReviewPerm.allowed ? (
+        (writeReviewPerm.allowed && writeCommentV2.allowed) ? (
           <div className="flex gap-2">
             <input
               type="text"
@@ -296,7 +299,9 @@ export default function CommentsTab({ spotId, claimedBy }: Props) {
         ) : (
           <div className="text-center py-3 bg-surface-alt rounded-xl border border-border">
             <p className="text-sm text-text-secondary">
-              🔒 需要 Lv.{writeReviewPerm.requiredLevel} 才能留言
+              🔒 {!writeCommentV2.allowed
+                ? (writeCommentV2.unlockHint || '完成個人資料即可留言')
+                : `需要 Lv.${writeReviewPerm.requiredLevel} 才能留言`}
             </p>
           </div>
         )

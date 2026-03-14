@@ -50,7 +50,7 @@ export default function AchievementsPage() {
             <FontAwesomeIcon icon={NAV_ICONS.back} className="text-text-secondary" />
             <span className="text-sm text-text-secondary">返回個人頁面</span>
           </Link>
-          <h1 className="text-base font-bold text-text-main">🏅 成就徽章</h1>
+          <h1 className="text-base font-bold text-text-main">🏅 成就牆</h1>
           <div className="w-16" />
         </div>
       </div>

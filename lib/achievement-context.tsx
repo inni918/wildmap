@@ -2,19 +2,30 @@
 
 import { createContext, useContext, useState, useCallback, type ReactNode } from 'react'
 import { checkAchievements, type UnlockedAchievement } from './achievements'
-import { earnPoints, earnReviewPoints, type EarnPointsResult } from './points-service'
-import { type PointAction } from './points'
 import { useAuth } from './auth-context'
 import { useLevelUp } from './level-context'
 import AchievementToast from '@/components/AchievementToast'
 import NearlyUnlockedHint from '@/components/NearlyUnlockedHint'
 
+/**
+ * 成就系統 v2 — 積分發放已移除，成就由觸發點直接驅動
+ * 保留 earnAction / earnReview 介面做向後相容（no-op）
+ */
+
+interface EarnPointsResult {
+  success: boolean
+  pointsEarned: number
+  newTotal: number
+  levelUp: null
+  reason?: string
+}
+
 interface AchievementContextType {
   /** 觸發成就檢查（在用戶做完動作後呼叫） */
   triggerCheck: () => Promise<void>
-  /** 發放積分 + 檢查成就 + 升級動效（統一入口） */
-  earnAction: (action: PointAction, targetId?: string, metadata?: Record<string, unknown>) => Promise<EarnPointsResult | null>
-  /** 評論專用積分（自動根據字數決定） */
+  /** 向後相容：原本發放積分，現在只觸發成就檢查 */
+  earnAction: (action: string, targetId?: string, metadata?: Record<string, unknown>) => Promise<EarnPointsResult | null>
+  /** 向後相容：原本發放評論積分，現在只觸發成就檢查 */
   earnReview: (spotId: string, content: string) => Promise<EarnPointsResult | null>
   /** 是否正在檢查中 */
   checking: boolean
@@ -46,7 +57,6 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
       if (newlyUnlocked.length > 0) {
         setToastQueue(prev => [...prev, ...newlyUnlocked])
       }
-      // 每次檢查後刷新「即將解鎖」提示
       setHintVersion(v => v + 1)
     } catch (err) {
       console.error('Achievement check failed:', err)
@@ -56,69 +66,63 @@ export function AchievementProvider({ children }: { children: ReactNode }) {
   }, [user, checking])
 
   /**
-   * 統一入口：發放積分 → 檢查成就 → 觸發升級動效
+   * 向後相容入口：不再發放積分，只觸發成就檢查
+   * 各元件呼叫 earnAction 後仍然會正常觸發成就
    */
   const earnAction = useCallback(async (
-    action: PointAction,
-    targetId?: string,
-    metadata?: Record<string, unknown>,
+    _action: string,
+    _targetId?: string,
+    _metadata?: Record<string, unknown>,
   ): Promise<EarnPointsResult | null> => {
     if (!user) return null
 
     try {
-      const result = await earnPoints(user.id, action, targetId, metadata)
-
-      // 如果升級，顯示動效
-      if (result.levelUp) {
-        showLevelUp(result.levelUp)
+      // 直接觸發成就檢查（不再發放積分）
+      const newlyUnlocked = await checkAchievements(user.id)
+      if (newlyUnlocked.length > 0) {
+        setToastQueue(prev => [...prev, ...newlyUnlocked])
       }
+      setHintVersion(v => v + 1)
 
-      // 發放積分後檢查成就
-      if (result.success) {
-        const newlyUnlocked = await checkAchievements(user.id)
-        if (newlyUnlocked.length > 0) {
-          setToastQueue(prev => [...prev, ...newlyUnlocked])
-        }
-        setHintVersion(v => v + 1)
+      return {
+        success: true,
+        pointsEarned: 0,
+        newTotal: 0,
+        levelUp: null,
       }
-
-      return result
     } catch (err) {
       console.error('Earn action failed:', err)
       return null
     }
-  }, [user, showLevelUp])
+  }, [user])
 
   /**
-   * 評論專用：根據字數自動決定積分類型
+   * 向後相容：評論專用
    */
   const earnReview = useCallback(async (
-    spotId: string,
-    content: string,
+    _spotId: string,
+    _content: string,
   ): Promise<EarnPointsResult | null> => {
     if (!user) return null
 
     try {
-      const result = await earnReviewPoints(user.id, spotId, content)
-
-      if (result.levelUp) {
-        showLevelUp(result.levelUp)
+      const newlyUnlocked = await checkAchievements(user.id)
+      if (newlyUnlocked.length > 0) {
+        setToastQueue(prev => [...prev, ...newlyUnlocked])
       }
+      setHintVersion(v => v + 1)
 
-      if (result.success) {
-        const newlyUnlocked = await checkAchievements(user.id)
-        if (newlyUnlocked.length > 0) {
-          setToastQueue(prev => [...prev, ...newlyUnlocked])
-        }
-        setHintVersion(v => v + 1)
+      return {
+        success: true,
+        pointsEarned: 0,
+        newTotal: 0,
+        levelUp: null,
       }
-
-      return result
     } catch (err) {
       console.error('Earn review failed:', err)
       return null
     }
-  }, [user, showLevelUp])
+  }, [user])
 
   const handleDismissToast = useCallback(() => {
     setToastQueue([])

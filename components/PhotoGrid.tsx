@@ -7,6 +7,7 @@ import { useAchievements } from '@/lib/achievement-context'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS } from '@/lib/icons'
 import { incrementStat, updateStreak } from '@/lib/stats-service'
+import { hasPermission } from '@/lib/permission-service'
 
 interface SpotImage {
   id: string
@@ -52,9 +53,20 @@ export default function PhotoGrid({ spotId }: Props) {
     fetchImages()
   }, [fetchImages])
 
+  const [permBlocked, setPermBlocked] = useState(false)
+
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file || !user) return
+
+    // v2 權限：需要 profile_complete 才能上傳照片
+    const canUpload = await hasPermission(user.id, 'upload_photo')
+    if (!canUpload) {
+      setPermBlocked(true)
+      setTimeout(() => setPermBlocked(false), 3000)
+      if (fileInputRef.current) fileInputRef.current.value = ''
+      return
+    }
 
     // Reset file input
     if (fileInputRef.current) {

@@ -7,13 +7,14 @@ import { useAuth } from '@/lib/auth-context'
 import { supabase, SUPABASE_URL, SUPABASE_ANON_KEY } from '@/lib/supabase'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NAV_ICONS } from '@/lib/icons'
-import { faTrophy, faChartLine, faPen, faLock, faUnlock } from '@fortawesome/free-solid-svg-icons'
+import { faTrophy, faPen } from '@fortawesome/free-solid-svg-icons'
 import MobileTabBar from '@/components/MobileTabBar'
 import AchievementGrid from '@/components/AchievementGrid'
 import FeaturedBadges from '@/components/FeaturedBadges'
 import ClaimStatus from '@/components/ClaimStatus'
-import { LEVELS, getLevel, getNextLevel, getLevelProgress, getPointsToNextLevel } from '@/lib/levels'
-import { getPermissionsForLevel, getNewPermissionsAtLevel, PERMISSION_MATRIX } from '@/lib/permissions'
+import SkillTree from '@/components/SkillTree'
+import ProfileCompleteModal from '@/components/ProfileCompleteModal'
+import { LEVELS, getLevel } from '@/lib/levels'
 
 interface UserStats {
   ratingsCount: number
@@ -47,6 +48,8 @@ interface CommentRecord {
   created_at: string
 }
 
+type ProfileTab = 'overview' | 'skills' | 'activity'
+
 export default function ProfilePage() {
   const { user, profile, loading: authLoading, signOut } = useAuth()
   const router = useRouter()
@@ -54,21 +57,30 @@ export default function ProfilePage() {
   const [favorites, setFavorites] = useState<FavoriteSpot[]>([])
   const [ratings, setRatings] = useState<RatingRecord[]>([])
   const [comments, setComments] = useState<CommentRecord[]>([])
+  const [activeTab, setActiveTab] = useState<ProfileTab>('overview')
   const [activeSection, setActiveSection] = useState<'favorites' | 'ratings' | 'comments'>('favorites')
   const [loading, setLoading] = useState(true)
   const [editingName, setEditingName] = useState(false)
   const [newDisplayName, setNewDisplayName] = useState('')
   const [savingName, setSavingName] = useState(false)
+  const [showProfileModal, setShowProfileModal] = useState(false)
+
+  // 檢查是否需要顯示個人資料引導
+  useEffect(() => {
+    if (profile && !profile.profile_completed) {
+      // 延遲一下再顯示，避免閃爍
+      const timer = setTimeout(() => setShowProfileModal(true), 500)
+      return () => clearTimeout(timer)
+    }
+  }, [profile])
 
   const fetchData = useCallback(async () => {
     if (!user) return
     setLoading(true)
 
-    // 取得使用者的 session token（RLS 需要 auth.uid()）
     const { data: sessionData } = await supabase.auth.getSession()
     const accessToken = sessionData?.session?.access_token
 
-    // Fetch stats in parallel using native fetch（繞開 auth lock）
     const uid = encodeURIComponent(user.id)
     const baseHeaders = {
       'apikey': SUPABASE_ANON_KEY,
@@ -192,13 +204,17 @@ export default function ProfilePage() {
       .eq('id', user.id)
     setEditingName(false)
     setSavingName(false)
-    // Reload page to refresh profile
     window.location.reload()
   }
 
   const handleSignOut = async () => {
     await signOut()
     router.push('/')
+  }
+
+  const handleProfileComplete = () => {
+    setShowProfileModal(false)
+    window.location.reload()
   }
 
   const formatDate = (dateStr: string) => {
@@ -242,14 +258,7 @@ export default function ProfilePage() {
 
   const userPoints = profile?.points || 0
   const currentLevel = getLevel(userPoints)
-  const nextLevel = getNextLevel(userPoints)
-  const progress = getLevelProgress(userPoints)
-  const pointsNeeded = getPointsToNextLevel(userPoints)
   const levelColor = currentLevel.color
-  const levelTitle = currentLevel.name
-
-  // 已解鎖功能
-  const unlockedPermissions = getPermissionsForLevel(currentLevel.level)
 
   return (
     <div className="min-h-screen bg-bg pb-20 md:pb-0">
@@ -261,7 +270,7 @@ export default function ProfilePage() {
             <span className="text-sm text-text-secondary">返回地圖</span>
           </Link>
           <h1 className="text-base font-bold text-text-main">個人頁面</h1>
-          <div className="w-16" /> {/* Spacer */}
+          <div className="w-16" />
         </div>
       </div>
 
@@ -335,16 +344,16 @@ export default function ProfilePage() {
               )}
 
               <div className="flex items-center gap-2 flex-wrap">
+                {/* 榮譽稱號（等級不綁權限） */}
                 <span
                   className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full text-white"
                   style={{ backgroundColor: levelColor }}
                 >
                   <span>{currentLevel.icon}</span>
-                  Lv.{currentLevel.level} {levelTitle}
+                  Lv.{currentLevel.level} {currentLevel.name}
                 </span>
-                <span className="text-xs text-text-secondary flex items-center gap-1">
-                  <FontAwesomeIcon icon={faChartLine} className="text-[10px]" />
-                  {userPoints} 積分
+                <span className="text-[10px] text-text-secondary/50 px-1.5 py-0.5 bg-surface-alt rounded-full">
+                  榮譽稱號
                 </span>
               </div>
 
@@ -353,121 +362,52 @@ export default function ProfilePage() {
               </p>
             </div>
           </div>
+        </div>
 
-          {/* 等級進度條 */}
-          <div className="mt-5 pt-4 border-t border-border">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-medium text-text-secondary">
-                {currentLevel.icon} Lv.{currentLevel.level} {currentLevel.name}
-              </span>
-              {nextLevel ? (
-                <span className="text-xs text-text-secondary">
-                  {nextLevel.icon} Lv.{nextLevel.level} {nextLevel.name}
-                </span>
-              ) : (
-                <span className="text-xs font-medium" style={{ color: levelColor }}>
-                  ⭐ 最高等級
-                </span>
-              )}
-            </div>
+        {/* 主要 Tabs：總覽 / 技能 / 活動 */}
+        <div className="bg-surface rounded-2xl border border-border overflow-hidden shadow-sm">
+          <div className="flex border-b border-border">
+            {([
+              { key: 'overview' as ProfileTab, label: '📊 總覽', },
+              { key: 'skills' as ProfileTab, label: '⚔️ 技能' },
+              { key: 'activity' as ProfileTab, label: '📋 活動' },
+            ]).map(tab => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                className={`flex-1 py-3 text-sm font-medium text-center border-b-2 transition-colors cursor-pointer min-h-[44px] ${
+                  activeTab === tab.key
+                    ? 'border-primary text-primary-dark'
+                    : 'border-transparent text-text-secondary hover:text-text-main'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
 
-            {/* Progress bar */}
-            <div className="relative h-3 bg-border/30 rounded-full overflow-hidden">
-              <div
-                className="absolute inset-y-0 left-0 rounded-full transition-all duration-700 ease-out"
-                style={{
-                  width: `${progress}%`,
-                  backgroundColor: levelColor,
-                  boxShadow: progress > 0 ? `0 0 8px ${levelColor}40` : undefined,
-                }}
+          <div className="p-4">
+            {activeTab === 'overview' && (
+              <OverviewTab
+                stats={stats}
+                loading={loading}
+                profile={profile}
               />
-            </div>
-
-            {/* 進度文字 */}
-            <div className="flex items-center justify-between mt-1.5">
-              <span className="text-[10px] text-text-secondary">
-                {progress}%
-              </span>
-              {pointsNeeded !== null ? (
-                <span className="text-[10px] text-text-secondary">
-                  還差 <span className="font-bold" style={{ color: levelColor }}>{pointsNeeded}</span> 分升級
-                </span>
-              ) : (
-                <span className="text-[10px] font-medium" style={{ color: levelColor }}>
-                  已達最高等級 🎉
-                </span>
-              )}
-            </div>
+            )}
+            {activeTab === 'skills' && <SkillTree />}
+            {activeTab === 'activity' && (
+              <ActivityTab
+                favorites={favorites}
+                ratings={ratings}
+                comments={comments}
+                stats={stats}
+                loading={loading}
+                activeSection={activeSection}
+                setActiveSection={setActiveSection}
+                formatDate={formatDate}
+              />
+            )}
           </div>
-        </div>
-
-        {/* 已解鎖功能 */}
-        <div className="bg-surface rounded-2xl border border-border p-4 shadow-sm">
-          <h3 className="text-sm font-bold text-text-main flex items-center gap-1.5 mb-3">
-            <FontAwesomeIcon icon={faUnlock} className="text-xs" style={{ color: levelColor }} />
-            已解鎖功能
-            <span className="text-xs text-text-secondary font-normal">
-              （{unlockedPermissions.length} 項）
-            </span>
-          </h3>
-
-          <div className="grid grid-cols-2 gap-2">
-            {LEVELS.map(lv => {
-              const permsAtLevel = getNewPermissionsAtLevel(lv.level)
-              if (permsAtLevel.length === 0) return null
-              const isUnlocked = currentLevel.level >= lv.level
-
-              return (
-                <div key={lv.level} className="space-y-1">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-xs">{lv.icon}</span>
-                    <span className={`text-[10px] font-bold ${isUnlocked ? 'text-text-main' : 'text-text-secondary/50'}`}>
-                      Lv.{lv.level} {lv.name}
-                    </span>
-                  </div>
-                  {permsAtLevel.slice(0, 4).map(perm => (
-                    <div
-                      key={perm}
-                      className={`flex items-center gap-1.5 pl-4 ${isUnlocked ? '' : 'opacity-40'}`}
-                    >
-                      <FontAwesomeIcon
-                        icon={isUnlocked ? faUnlock : faLock}
-                        className="text-[8px]"
-                        style={{ color: isUnlocked ? lv.color : undefined }}
-                      />
-                      <span className="text-[10px] text-text-secondary">
-                        {PERMISSION_MATRIX[perm].description}
-                      </span>
-                    </div>
-                  ))}
-                  {permsAtLevel.length > 4 && (
-                    <span className="text-[10px] text-text-secondary/60 pl-4">
-                      +{permsAtLevel.length - 4} 項更多...
-                    </span>
-                  )}
-                </div>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* Stats Cards */}
-        <div className="grid grid-cols-4 gap-3">
-          {[
-            { label: '評分', value: stats.ratingsCount, icon: NAV_ICONS.starSolid, color: '#D4A843' },
-            { label: '留言', value: stats.commentsCount, icon: NAV_ICONS.commentDots, color: '#2D6A4F' },
-            { label: '照片', value: stats.photosCount, icon: NAV_ICONS.camera, color: '#52B788' },
-            { label: '收藏', value: stats.favoritesCount, icon: NAV_ICONS.heartSolid, color: '#C1292E' },
-          ].map(stat => (
-            <div
-              key={stat.label}
-              className="bg-surface rounded-xl border border-border p-3 text-center"
-            >
-              <FontAwesomeIcon icon={stat.icon} className="text-sm mb-1" style={{ color: stat.color }} />
-              <div className="text-lg font-bold text-text-main">{stat.value}</div>
-              <div className="text-[10px] text-text-secondary">{stat.label}</div>
-            </div>
-          ))}
         </div>
 
         {/* 商家認證狀態 */}
@@ -495,135 +435,6 @@ export default function ProfilePage() {
           <AchievementGrid summary />
         </div>
 
-        {/* Content Sections */}
-        <div className="bg-surface rounded-2xl border border-border overflow-hidden shadow-sm">
-          {/* Section Tabs */}
-          <div className="flex border-b border-border">
-            {[
-              { key: 'favorites' as const, label: '收藏', count: stats.favoritesCount },
-              { key: 'ratings' as const, label: '評分', count: stats.ratingsCount },
-              { key: 'comments' as const, label: '留言', count: stats.commentsCount },
-            ].map(tab => (
-              <button
-                key={tab.key}
-                onClick={() => setActiveSection(tab.key)}
-                className={`flex-1 py-3 text-sm font-medium text-center border-b-2 transition-colors cursor-pointer min-h-[44px] ${
-                  activeSection === tab.key
-                    ? 'border-primary text-primary-dark'
-                    : 'border-transparent text-text-secondary hover:text-text-main'
-                }`}
-              >
-                {tab.label}
-                {tab.count > 0 && (
-                  <span className="ml-1 text-xs opacity-60">({tab.count})</span>
-                )}
-              </button>
-            ))}
-          </div>
-
-          {/* Content */}
-          <div className="p-4">
-            {loading ? (
-              <div className="flex items-center justify-center py-8">
-                <FontAwesomeIcon icon={NAV_ICONS.spinner} className="text-primary animate-spin mr-2" />
-                <span className="text-sm text-text-secondary">載入中...</span>
-              </div>
-            ) : activeSection === 'favorites' ? (
-              favorites.length === 0 ? (
-                <EmptyState
-                  icon={NAV_ICONS.heartRegular}
-                  title="還沒有收藏"
-                  description="在地圖上找到喜歡的地點，按下愛心收藏吧！"
-                />
-              ) : (
-                <div className="space-y-2">
-                  {favorites.map(fav => (
-                    <Link
-                      key={fav.id}
-                      href={`/map?spot=${fav.spot_id}`}
-                      className="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-alt transition-colors no-underline group"
-                    >
-                      <span className="text-xl flex-shrink-0">
-                        {fav.spot_category === 'camping' ? '🏕️' : '🚐'}
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-sm font-semibold text-text-main truncate group-hover:text-primary transition-colors">
-                          {fav.spot_name}
-                        </h4>
-                        {fav.spot_address && (
-                          <p className="text-xs text-text-secondary truncate">{fav.spot_address}</p>
-                        )}
-                      </div>
-                      <FontAwesomeIcon icon={NAV_ICONS.chevronRight} className="text-xs text-text-secondary/40 group-hover:text-primary transition-colors" />
-                    </Link>
-                  ))}
-                </div>
-              )
-            ) : activeSection === 'ratings' ? (
-              ratings.length === 0 ? (
-                <EmptyState
-                  icon={NAV_ICONS.starRegular}
-                  title="還沒有評分"
-                  description="到地點詳情頁幫忙評分，讓其他人知道好不好！"
-                />
-              ) : (
-                <div className="space-y-2">
-                  {ratings.map(r => (
-                    <Link
-                      key={r.id}
-                      href={`/map?spot=${r.spot_id}`}
-                      className="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-alt transition-colors no-underline group"
-                    >
-                      <div className="flex items-center gap-0.5 flex-shrink-0">
-                        {[1, 2, 3, 4, 5].map(star => (
-                          <FontAwesomeIcon
-                            key={star}
-                            icon={star <= r.score ? NAV_ICONS.starSolid : NAV_ICONS.starRegular}
-                            className={`text-xs ${star <= r.score ? 'text-accent' : 'text-border'}`}
-                          />
-                        ))}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-sm font-semibold text-text-main truncate group-hover:text-primary transition-colors">
-                          {r.spot_name}
-                        </h4>
-                        <p className="text-xs text-text-secondary">{formatDate(r.created_at)}</p>
-                      </div>
-                      <FontAwesomeIcon icon={NAV_ICONS.chevronRight} className="text-xs text-text-secondary/40" />
-                    </Link>
-                  ))}
-                </div>
-              )
-            ) : (
-              comments.length === 0 ? (
-                <EmptyState
-                  icon={NAV_ICONS.commentDots}
-                  title="還沒有留言"
-                  description="去地點詳情頁分享你的露營體驗吧！"
-                />
-              ) : (
-                <div className="space-y-3">
-                  {comments.map(c => (
-                    <Link
-                      key={c.id}
-                      href={`/map?spot=${c.spot_id}`}
-                      className="block p-3 rounded-xl hover:bg-surface-alt transition-colors no-underline group"
-                    >
-                      <div className="flex items-center justify-between mb-1">
-                        <h4 className="text-sm font-semibold text-text-main truncate group-hover:text-primary transition-colors">
-                          {c.spot_name}
-                        </h4>
-                        <span className="text-xs text-text-secondary flex-shrink-0 ml-2">{formatDate(c.created_at)}</span>
-                      </div>
-                      <p className="text-sm text-text-secondary line-clamp-2">{c.content}</p>
-                    </Link>
-                  ))}
-                </div>
-              )
-            )}
-          </div>
-        </div>
-
         {/* Logout */}
         <button
           onClick={handleSignOut}
@@ -635,6 +446,227 @@ export default function ProfilePage() {
       </div>
 
       <MobileTabBar />
+
+      {/* Profile Complete Modal */}
+      {showProfileModal && (
+        <ProfileCompleteModal
+          onComplete={handleProfileComplete}
+          onClose={() => setShowProfileModal(false)}
+        />
+      )}
+    </div>
+  )
+}
+
+// ============================================
+// 總覽 Tab（Stats + 簡要資訊）
+// ============================================
+
+function OverviewTab({
+  stats,
+  loading,
+  profile,
+}: {
+  stats: UserStats
+  loading: boolean
+  profile: ReturnType<typeof useAuth>['profile']
+}) {
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-8">
+        <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-4">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-4 gap-3">
+        {[
+          { label: '評分', value: stats.ratingsCount, icon: NAV_ICONS.starSolid, color: '#D4A843' },
+          { label: '留言', value: stats.commentsCount, icon: NAV_ICONS.commentDots, color: '#2D6A4F' },
+          { label: '照片', value: stats.photosCount, icon: NAV_ICONS.camera, color: '#52B788' },
+          { label: '收藏', value: stats.favoritesCount, icon: NAV_ICONS.heartSolid, color: '#C1292E' },
+        ].map(stat => (
+          <div
+            key={stat.label}
+            className="bg-surface-alt/30 rounded-xl p-3 text-center"
+          >
+            <FontAwesomeIcon icon={stat.icon} className="text-sm mb-1" style={{ color: stat.color }} />
+            <div className="text-lg font-bold text-text-main">{stat.value}</div>
+            <div className="text-[10px] text-text-secondary">{stat.label}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* 個人資料完成度提示 */}
+      {profile && !profile.profile_completed && (
+        <div className="bg-[#D4A843]/10 border border-[#D4A843]/30 rounded-xl p-3.5">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">📋</span>
+            <div className="flex-1">
+              <p className="text-xs font-bold text-text-main">完善冒險者檔案</p>
+              <p className="text-[10px] text-text-secondary mt-0.5">
+                完成個人資料即可解鎖評分、留言、上傳照片功能
+              </p>
+            </div>
+            <span className="text-xs text-[#D4A843] font-bold">→</span>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ============================================
+// 活動 Tab（收藏 / 評分 / 留言）
+// ============================================
+
+function ActivityTab({
+  favorites,
+  ratings,
+  comments,
+  stats,
+  loading,
+  activeSection,
+  setActiveSection,
+  formatDate,
+}: {
+  favorites: FavoriteSpot[]
+  ratings: RatingRecord[]
+  comments: CommentRecord[]
+  stats: UserStats
+  loading: boolean
+  activeSection: 'favorites' | 'ratings' | 'comments'
+  setActiveSection: (s: 'favorites' | 'ratings' | 'comments') => void
+  formatDate: (d: string) => string
+}) {
+  return (
+    <div className="space-y-3">
+      {/* Section Tabs */}
+      <div className="flex border-b border-border -mx-4 px-4">
+        {[
+          { key: 'favorites' as const, label: '收藏', count: stats.favoritesCount },
+          { key: 'ratings' as const, label: '評分', count: stats.ratingsCount },
+          { key: 'comments' as const, label: '留言', count: stats.commentsCount },
+        ].map(tab => (
+          <button
+            key={tab.key}
+            onClick={() => setActiveSection(tab.key)}
+            className={`flex-1 py-2.5 text-sm font-medium text-center border-b-2 transition-colors cursor-pointer ${
+              activeSection === tab.key
+                ? 'border-primary text-primary-dark'
+                : 'border-transparent text-text-secondary hover:text-text-main'
+            }`}
+          >
+            {tab.label}
+            {tab.count > 0 && (
+              <span className="ml-1 text-xs opacity-60">({tab.count})</span>
+            )}
+          </button>
+        ))}
+      </div>
+
+      {/* Content */}
+      {loading ? (
+        <div className="flex items-center justify-center py-8">
+          <FontAwesomeIcon icon={NAV_ICONS.spinner} className="text-primary animate-spin mr-2" />
+          <span className="text-sm text-text-secondary">載入中...</span>
+        </div>
+      ) : activeSection === 'favorites' ? (
+        favorites.length === 0 ? (
+          <EmptyState
+            icon={NAV_ICONS.heartRegular}
+            title="還沒有收藏"
+            description="在地圖上找到喜歡的地點，按下愛心收藏吧！"
+          />
+        ) : (
+          <div className="space-y-2">
+            {favorites.map(fav => (
+              <Link
+                key={fav.id}
+                href={`/map?spot=${fav.spot_id}`}
+                className="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-alt transition-colors no-underline group"
+              >
+                <span className="text-xl flex-shrink-0">
+                  {fav.spot_category === 'camping' ? '🏕️' : '🚐'}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-sm font-semibold text-text-main truncate group-hover:text-primary transition-colors">
+                    {fav.spot_name}
+                  </h4>
+                  {fav.spot_address && (
+                    <p className="text-xs text-text-secondary truncate">{fav.spot_address}</p>
+                  )}
+                </div>
+                <FontAwesomeIcon icon={NAV_ICONS.chevronRight} className="text-xs text-text-secondary/40 group-hover:text-primary transition-colors" />
+              </Link>
+            ))}
+          </div>
+        )
+      ) : activeSection === 'ratings' ? (
+        ratings.length === 0 ? (
+          <EmptyState
+            icon={NAV_ICONS.starRegular}
+            title="還沒有評分"
+            description="到地點詳情頁幫忙評分，讓其他人知道好不好！"
+          />
+        ) : (
+          <div className="space-y-2">
+            {ratings.map(r => (
+              <Link
+                key={r.id}
+                href={`/map?spot=${r.spot_id}`}
+                className="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-alt transition-colors no-underline group"
+              >
+                <div className="flex items-center gap-0.5 flex-shrink-0">
+                  {[1, 2, 3, 4, 5].map(star => (
+                    <FontAwesomeIcon
+                      key={star}
+                      icon={star <= r.score ? NAV_ICONS.starSolid : NAV_ICONS.starRegular}
+                      className={`text-xs ${star <= r.score ? 'text-accent' : 'text-border'}`}
+                    />
+                  ))}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-sm font-semibold text-text-main truncate group-hover:text-primary transition-colors">
+                    {r.spot_name}
+                  </h4>
+                  <p className="text-xs text-text-secondary">{formatDate(r.created_at)}</p>
+                </div>
+                <FontAwesomeIcon icon={NAV_ICONS.chevronRight} className="text-xs text-text-secondary/40" />
+              </Link>
+            ))}
+          </div>
+        )
+      ) : (
+        comments.length === 0 ? (
+          <EmptyState
+            icon={NAV_ICONS.commentDots}
+            title="還沒有留言"
+            description="去地點詳情頁分享你的露營體驗吧！"
+          />
+        ) : (
+          <div className="space-y-3">
+            {comments.map(c => (
+              <Link
+                key={c.id}
+                href={`/map?spot=${c.spot_id}`}
+                className="block p-3 rounded-xl hover:bg-surface-alt transition-colors no-underline group"
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <h4 className="text-sm font-semibold text-text-main truncate group-hover:text-primary transition-colors">
+                    {c.spot_name}
+                  </h4>
+                  <span className="text-xs text-text-secondary flex-shrink-0 ml-2">{formatDate(c.created_at)}</span>
+                </div>
+                <p className="text-sm text-text-secondary line-clamp-2">{c.content}</p>
+              </Link>
+            ))}
+          </div>
+        )
+      )}
     </div>
   )
 }
@@ -648,4 +680,9 @@ function EmptyState({ icon, title, description }: { icon: typeof NAV_ICONS.heart
       <p className="text-xs text-text-secondary/60 mt-1">{description}</p>
     </div>
   )
+}
+
+// re-export useAuth for TypeScript
+function useAuthProfile() {
+  return useAuth()
 }

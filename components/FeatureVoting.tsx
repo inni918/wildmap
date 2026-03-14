@@ -9,6 +9,7 @@ import { supabase } from '@/lib/supabase'
 import type { FeatureGroup } from '@/lib/supabase'
 import { useAchievements } from '@/lib/achievement-context'
 import { incrementStat, updateStreak } from '@/lib/stats-service'
+import { hasPermission } from '@/lib/permission-service'
 
 // ─── Constants ───────────────────────────────
 
@@ -155,11 +156,22 @@ function VoteButtons({
   const [voting, setVoting] = useState(false)
   const { earnAction } = useAchievements()
 
+  const [permBlocked, setPermBlocked] = useState(false)
+
   const handleVote = useCallback(async (vote: boolean) => {
     if (!userId) {
       onLoginRequired?.()
       return
     }
+
+    // v2 權限：需要 vote_feature（打卡 1 次）
+    const canVote = await hasPermission(userId, 'vote_feature')
+    if (!canVote) {
+      setPermBlocked(true)
+      setTimeout(() => setPermBlocked(false), 3000)
+      return
+    }
+
     if (voting) return
     setVoting(true)
 
@@ -263,6 +275,11 @@ function VoteButtons({
         <FontAwesomeIcon icon={faThumbsDown} className="text-[10px]" />
         {voteState.no_count}
       </button>
+      {permBlocked && (
+        <span className="text-[10px] text-text-secondary/70 bg-surface-alt px-2 py-1 rounded-full animate-fade-in">
+          🔒 先打卡一個地點
+        </span>
+      )}
     </div>
   )
 }
