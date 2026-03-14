@@ -1102,7 +1102,7 @@ export default function Map({
             bearing={0}
             pitch={0}
           >
-            <NavigationControl position="top-right" showCompass={false} />
+            <NavigationControl position="bottom-left" showCompass={false} />
 
             {/* ====== 圖層切換按鈕 ====== */}
             <div className="absolute right-4 z-20" style={{ bottom: selectedSpot ? '280px' : '148px', transition: 'bottom 0.3s ease' }}>
