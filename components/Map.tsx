@@ -1105,7 +1105,7 @@ export default function Map({
             <NavigationControl position="top-right" showCompass={false} />
 
             {/* ====== 圖層切換按鈕 ====== */}
-            <div className="absolute bottom-[88px] right-2 z-20" style={{ bottom: selectedSpot ? '228px' : '88px' }}>
+            <div className="absolute right-4 z-20" style={{ bottom: selectedSpot ? '280px' : '148px', transition: 'bottom 0.3s ease' }}>
               {layerPickerOpen && (
                 <div className="mb-2 flex flex-col gap-1 items-end">
                   {(Object.entries(MAP_LAYERS) as [MapLayer, typeof MAP_LAYERS[MapLayer]][]).map(([key, val]) => (
