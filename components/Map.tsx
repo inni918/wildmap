@@ -3,6 +3,7 @@
 import { useRef, useCallback, useState, useEffect, useMemo } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import ReactMapGL, { Marker, NavigationControl, MapRef, MapMouseEvent } from 'react-map-gl/maplibre'
+import type { StyleSpecification } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import Supercluster from 'supercluster'
 import { supabase, type SpotCategory, CATEGORY_EMOJI, CATEGORY_LABEL, SUPABASE_URL, SUPABASE_ANON_KEY } from '@/lib/supabase'
@@ -56,19 +57,60 @@ async function withRetry<T>(
   throw lastError
 }
 
-const MAP_STYLE = {
-  version: 8 as const,
-  sources: {
-    osm: {
-      type: 'raster' as const,
-      tiles: [
-        'https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
-      ],
-      tileSize: 512,
-      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
+// ====== 圖層設定 ======
+type MapLayer = 'road' | 'satellite' | 'terrain'
+
+const MAP_LAYERS: Record<MapLayer, { label: string; icon: string; style: StyleSpecification }> = {
+  road: {
+    label: '道路',
+    icon: '🗺️',
+    style: {
+      version: 8 as const,
+      sources: {
+        base: {
+          type: 'raster' as const,
+          tiles: ['https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png'],
+          tileSize: 512,
+          attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/attributions">CARTO</a>',
+        },
+      },
+      layers: [{ id: 'base', type: 'raster' as const, source: 'base' }],
     },
   },
-  layers: [{ id: 'osm', type: 'raster' as const, source: 'osm' }],
+  satellite: {
+    label: '衛星',
+    icon: '🛰️',
+    style: {
+      version: 8 as const,
+      sources: {
+        base: {
+          type: 'raster' as const,
+          tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],
+          tileSize: 256,
+          attribution: '© <a href="https://www.esri.com/">Esri</a>',
+          maxzoom: 19,
+        },
+      },
+      layers: [{ id: 'base', type: 'raster' as const, source: 'base' }],
+    },
+  },
+  terrain: {
+    label: '地形',
+    icon: '🏔️',
+    style: {
+      version: 8 as const,
+      sources: {
+        base: {
+          type: 'raster' as const,
+          tiles: ['https://tile.opentopomap.org/{z}/{x}/{y}.png'],
+          tileSize: 256,
+          attribution: '© <a href="https://opentopomap.org">OpenTopoMap</a> © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+          maxzoom: 17,
+        },
+      },
+      layers: [{ id: 'base', type: 'raster' as const, source: 'base' }],
+    },
+  },
 }
 
 const QUALITY_BADGE: Record<string, { label: string; color: string }> = {
@@ -227,6 +269,10 @@ export default function Map({
     latitude: 23.8,
     zoom: 7,
   })
+  // 圖層切換
+  const [activeLayer, setActiveLayer] = useState<MapLayer>('road')
+  const [layerPickerOpen, setLayerPickerOpen] = useState(false)
+
   // 回饋 Modal
   const [feedbackOpen, setFeedbackOpen] = useState(false)
   // 收藏模式
@@ -709,6 +755,7 @@ export default function Map({
   }, [(facilityKeys ?? []).join(',')])
 
   const handleMapClick = useCallback((e: MapMouseEvent) => {
+    setLayerPickerOpen(false)
     if (placingMode) {
       // 放置模式：記錄點擊座標，顯示確認 Popup
       setPendingLocation({ lat: e.lngLat.lat, lng: e.lngLat.lng })
@@ -1042,15 +1089,48 @@ export default function Map({
             onMove={handleMapMove}
             onClick={handleMapClick}
             style={{ width: '100%', height: '100%' }}
-            mapStyle={MAP_STYLE}
+            mapStyle={MAP_LAYERS[activeLayer].style}
             cursor={placingMode ? 'crosshair' : 'grab'}
             maxBounds={[
               [118.0, 21.0],  // 西南角（涵蓋金門）
               [123.0, 26.5],  // 東北角（涵蓋馬祖）
             ]}
             minZoom={6}
+            dragRotate={false}
+            touchPitch={false}
+            bearing={0}
+            pitch={0}
           >
-            <NavigationControl position="top-right" />
+            <NavigationControl position="top-right" showCompass={false} />
+
+            {/* ====== 圖層切換按鈕 ====== */}
+            <div className="absolute bottom-[88px] right-2 z-20" style={{ bottom: selectedSpot ? '228px' : '88px' }}>
+              {layerPickerOpen && (
+                <div className="mb-2 flex flex-col gap-1 items-end">
+                  {(Object.entries(MAP_LAYERS) as [MapLayer, typeof MAP_LAYERS[MapLayer]][]).map(([key, val]) => (
+                    <button
+                      key={key}
+                      onClick={() => { setActiveLayer(key); setLayerPickerOpen(false) }}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium shadow-md transition-all cursor-pointer
+                        ${activeLayer === key
+                          ? 'bg-primary text-white'
+                          : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
+                        }`}
+                    >
+                      <span>{val.icon}</span>
+                      <span>{val.label}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+              <button
+                onClick={() => setLayerPickerOpen(v => !v)}
+                className="w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center text-lg hover:bg-gray-50 transition-colors border border-gray-200 cursor-pointer"
+                title="切換圖層"
+              >
+                {layerPickerOpen ? '✕' : MAP_LAYERS[activeLayer].icon}
+              </button>
+            </div>
 
             {clusters.map(cluster => {
               const [longitude, latitude] = cluster.geometry.coordinates
