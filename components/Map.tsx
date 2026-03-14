@@ -69,9 +69,10 @@ const MAP_LAYERS: Record<MapLayer, { label: string; icon: string; style: StyleSp
       sources: {
         base: {
           type: 'raster' as const,
-          tiles: ['https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png'],
-          tileSize: 512,
-          attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/attributions">CARTO</a>',
+          tiles: ['https://wmts.nlsc.gov.tw/wmts/EMAP5/default/GoogleMapsCompatible/{z}/{y}/{x}'],
+          tileSize: 256,
+          attribution: '© <a href="https://www.nlsc.gov.tw/">國土測繪中心</a>',
+          maxzoom: 20,
         },
       },
       layers: [{ id: 'base', type: 'raster' as const, source: 'base' }],
