@@ -271,6 +271,7 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated, onOpenSpot 
     return (
       <div
         className="fixed inset-0 z-40 flex items-end justify-center bg-black/20 backdrop-blur-[2px]"
+        data-spot-detail="open"
         onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
       >
         <div className="bg-surface rounded-t-2xl w-full max-w-lg shadow-2xl flex flex-col items-center justify-center py-16">
@@ -302,6 +303,7 @@ export default function SpotDetail({ spotId, onClose, onSpotUpdated, onOpenSpot 
   return (
     <div
       className="fixed inset-0 z-40 flex items-end justify-center bg-black/20 backdrop-blur-[2px]"
+      data-spot-detail="open"
       onClick={(e) => { if (e.target === e.currentTarget) handleClose() }}
     >
       <div

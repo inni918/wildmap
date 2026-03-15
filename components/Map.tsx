@@ -780,7 +780,8 @@ export default function Map({
       return
     }
     // 如果 SpotDetail 開啟中，跳過（fixed panel 點擊穿透問題）
-    if (detailOpenRef.current) {
+    // 直接查 DOM，不依賴 ref（MapLibre onClick 與 React 事件系統完全獨立）
+    if (document.querySelector('[data-spot-detail="open"]')) {
       return
     }
     setSelectedSpot(null)
