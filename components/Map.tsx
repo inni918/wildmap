@@ -757,11 +757,19 @@ export default function Map({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [(facilityKeys ?? []).join(',')])
 
+  // Marker click 後短暫鎖住 handleMapClick，避免地圖 onClick 清掉 selectedSpot
+  const markerClickedRef = useRef(false)
+
   const handleMapClick = useCallback((e: MapMouseEvent) => {
     setLayerPickerOpen(false)
     if (placingMode) {
       // 放置模式：記錄點擊座標，顯示確認 Popup
       setPendingLocation({ lat: e.lngLat.lat, lng: e.lngLat.lng })
+      return
+    }
+    // 如果剛點了 marker，跳過清除（marker 的 stopPropagation 在 MapLibre 中無法阻止地圖 onClick）
+    if (markerClickedRef.current) {
+      markerClickedRef.current = false
       return
     }
     setSelectedSpot(null)
@@ -1154,6 +1162,7 @@ export default function Map({
                     anchor="center"
                     onClick={(e) => {
                       e.originalEvent.stopPropagation()
+                      markerClickedRef.current = true
                       handleClusterClick(cluster_id, longitude, latitude)
                     }}
                   >
@@ -1187,6 +1196,7 @@ export default function Map({
                   anchor="bottom"
                   onClick={(e) => {
                     e.originalEvent.stopPropagation()
+                    markerClickedRef.current = true
                     setSelectedSpot(spot)
                     setAddModal(null)
                   }}
