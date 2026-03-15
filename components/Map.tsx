@@ -256,7 +256,12 @@ export default function Map({
   // facilityKeys prop 篩選產生的 spot id 集合（獨立於 featureSpotIds）
   const [facilitySpotIds, setFacilitySpotIds] = useState<Set<string> | null>(null)
   const [addModal, setAddModal] = useState<{ lat: number; lng: number } | null>(null)
-  const [detailSpotId, setDetailSpotId] = useState<string | null>(null)
+  const [detailSpotId, setDetailSpotIdRaw] = useState<string | null>(null)
+  // 同步更新 detailOpenRef（ref 同步，避免 useEffect 延遲）
+  const setDetailSpotId = useCallback((id: string | null) => {
+    detailOpenRef.current = id !== null
+    setDetailSpotIdRaw(id)
+  }, [])
   const [placingMode, setPlacingMode] = useState(false) // 放置模式
   const [pendingLocation, setPendingLocation] = useState<{ lat: number; lng: number } | null>(null) // 待確認位置
   const [searchQuery, setSearchQuery] = useState('')
@@ -759,6 +764,8 @@ export default function Map({
 
   // Marker click 後短暫鎖住 handleMapClick，避免地圖 onClick 清掉 selectedSpot
   const markerClickedRef = useRef(false)
+  // SpotDetail 開啟中時，鎖住地圖 onClick（避免 fixed panel 內的點擊穿透到地圖）
+  const detailOpenRef = useRef(false)
 
   const handleMapClick = useCallback((e: MapMouseEvent) => {
     setLayerPickerOpen(false)
@@ -770,6 +777,10 @@ export default function Map({
     // 如果剛點了 marker，跳過清除（marker 的 stopPropagation 在 MapLibre 中無法阻止地圖 onClick）
     if (markerClickedRef.current) {
       markerClickedRef.current = false
+      return
+    }
+    // 如果 SpotDetail 開啟中，跳過（fixed panel 點擊穿透問題）
+    if (detailOpenRef.current) {
       return
     }
     setSelectedSpot(null)
