@@ -1483,7 +1483,7 @@ export default function Map({
         <button
           onClick={() => setFeedbackOpen(true)}
           className="absolute left-4 z-20 flex items-center gap-1.5 px-3 py-2.5 bg-surface/95 backdrop-blur-sm text-text-secondary border border-border rounded-full shadow-lg hover:bg-surface hover:text-primary hover:border-primary/50 hover:shadow-xl transition-all cursor-pointer active:scale-95"
-          style={{ bottom: 36 }}
+          style={{ bottom: 120 }}
           title="意見回饋"
         >
           <span className="text-base">💬</span>
