@@ -893,9 +893,8 @@ export default function Map({
     fetchTotalCount(activeFilter, effectiveSearchQuery, combinedFeatureIds, mapBounds, isFreeFilter)
   }, [mapBounds, activeFilter, effectiveSearchQuery, combinedFeatureIds, isFreeFilter, fetchViewportSpots, fetchTotalCount])
 
-  // SpotDetail 更新後重新 fetch viewport
+  // SpotDetail 更新後重新 fetch viewport（不關閉詳情頁，只更新資料）
   const handleSpotUpdated = useCallback(() => {
-    setDetailSpotId(null)
     fetchViewportSpots(mapBounds, activeFilter, effectiveSearchQuery, combinedFeatureIds, isFreeFilter)
     fetchTotalCount(activeFilter, effectiveSearchQuery, combinedFeatureIds, mapBounds, isFreeFilter)
   }, [mapBounds, activeFilter, effectiveSearchQuery, combinedFeatureIds, isFreeFilter, fetchViewportSpots, fetchTotalCount])
