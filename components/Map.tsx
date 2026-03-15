@@ -764,9 +764,6 @@ export default function Map({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [(facilityKeys ?? []).join(',')])
 
-  // Marker click 後短暫鎖住 handleMapClick，避免地圖 onClick 清掉 selectedSpot
-  const markerClickedRef = useRef(false)
-
   const handleMapClick = useCallback((e: MapMouseEvent) => {
     setLayerPickerOpen(false)
     if (placingMode) {
@@ -774,17 +771,8 @@ export default function Map({
       setPendingLocation({ lat: e.lngLat.lat, lng: e.lngLat.lng })
       return
     }
-    // 如果剛點了 marker，跳過清除（marker 的 stopPropagation 在 MapLibre 中無法阻止地圖 onClick）
-    if (markerClickedRef.current) {
-      markerClickedRef.current = false
-      return
-    }
-    // 如果 SpotDetail 開啟中，跳過（fixed panel 點擊穿透問題）
-    // 直接查 DOM，不依賴 ref（MapLibre onClick 與 React 事件系統完全獨立）
-    if (document.querySelector('[data-spot-detail="open"]')) {
-      return
-    }
-    setSelectedSpot(null)
+    // 方案 A：不再透過點地圖空白處關閉卡片/詳情頁
+    // 所有關閉操作只透過 X 按鈕（避免 MapLibre 事件穿透問題）
   }, [placingMode])
 
   // ====== Esc 鍵退出放置模式 ======
@@ -1173,7 +1161,6 @@ export default function Map({
                     anchor="center"
                     onClick={(e) => {
                       e.originalEvent.stopPropagation()
-                      markerClickedRef.current = true
                       handleClusterClick(cluster_id, longitude, latitude)
                     }}
                   >
@@ -1207,7 +1194,6 @@ export default function Map({
                   anchor="bottom"
                   onClick={(e) => {
                     e.originalEvent.stopPropagation()
-                    markerClickedRef.current = true
                     setSelectedSpot(spot)
                     setAddModal(null)
                   }}
