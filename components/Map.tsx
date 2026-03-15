@@ -257,6 +257,8 @@ export default function Map({
   const [facilitySpotIds, setFacilitySpotIds] = useState<Set<string> | null>(null)
   const [addModal, setAddModal] = useState<{ lat: number; lng: number } | null>(null)
   const [detailSpotId, setDetailSpotIdRaw] = useState<string | null>(null)
+  // detailOpenRef 必須在 setDetailSpotId 之前宣告，才能被 useCallback 正確捕獲
+  const detailOpenRef = useRef(false)
   // 同步更新 detailOpenRef（ref 同步，避免 useEffect 延遲）
   const setDetailSpotId = useCallback((id: string | null) => {
     detailOpenRef.current = id !== null
@@ -764,8 +766,6 @@ export default function Map({
 
   // Marker click 後短暫鎖住 handleMapClick，避免地圖 onClick 清掉 selectedSpot
   const markerClickedRef = useRef(false)
-  // SpotDetail 開啟中時，鎖住地圖 onClick（避免 fixed panel 內的點擊穿透到地圖）
-  const detailOpenRef = useRef(false)
 
   const handleMapClick = useCallback((e: MapMouseEvent) => {
     setLayerPickerOpen(false)
