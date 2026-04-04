@@ -26,7 +26,7 @@ export default async function AdminSpots() {
                 <td className="px-4 py-3 text-gray-500">{spot.city || '-'}</td>
                 <td className="px-4 py-3">
                   <span className={`px-2 py-0.5 rounded-full text-xs ${
-                    spot.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'
+                    spot.status === 'active' || spot.status === 'published' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'
                   }`}>{spot.status}</span>
                 </td>
                 <td className="px-4 py-3">{spot.gov_certified ? '🛡️' : '-'}</td>

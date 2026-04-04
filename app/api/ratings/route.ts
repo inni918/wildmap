@@ -8,7 +8,8 @@ export async function POST(request: Request) {
   if (error) return error
 
   const { spot_id, score } = await request.json()
-  if (!spot_id || !score) return apiError('缺少必要欄位')
+  if (!spot_id) return apiError('缺少 spot_id')
+  if (score === undefined || score === null) return apiError('缺少評分')
   if (score < 1 || score > 5) return apiError('評分必須在 1-5 之間')
 
   const supabase = await createClient()
