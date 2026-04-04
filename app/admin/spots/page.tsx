@@ -3,7 +3,7 @@ import { adminSupabase } from '@/lib/supabase/admin'
 export default async function AdminSpots() {
   const { data: spots } = await adminSupabase
     .from('spots')
-    .select('id, name, city, status, gov_certified, created_at')
+    .select('id, name, city, district, status, gov_certified, created_at')
     .order('created_at', { ascending: false })
     .limit(50)
 
@@ -14,7 +14,7 @@ export default async function AdminSpots() {
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b">
             <tr>
-              {['名稱', '縣市', '狀態', '合法', '建立時間'].map(h => (
+              {['名稱', '縣市', '鄉鎮區', '狀態', '合法', '建立時間'].map(h => (
                 <th key={h} className="px-4 py-3 text-left text-gray-600 font-medium">{h}</th>
               ))}
             </tr>
@@ -24,6 +24,7 @@ export default async function AdminSpots() {
               <tr key={spot.id} className="hover:bg-gray-50">
                 <td className="px-4 py-3 font-medium text-gray-900">{spot.name}</td>
                 <td className="px-4 py-3 text-gray-500">{spot.city || '-'}</td>
+                <td className="px-4 py-3 text-gray-500">{(spot as any).district || '-'}</td>
                 <td className="px-4 py-3">
                   <span className={`px-2 py-0.5 rounded-full text-xs ${
                     spot.status === 'active' || spot.status === 'published' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'
