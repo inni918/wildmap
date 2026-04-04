@@ -1,0 +1,386 @@
+[
+  {
+    "code": "profile_complete",
+    "name": "冒險者檔案",
+    "description": "完成個人資料設定",
+    "category": "contribution",
+    "category_scope": null,
+    "tiers": [{"tier": "bronze", "threshold": 1, "points": 10}],
+    "unlock_permissions": ["can_rate", "can_comment", "can_upload_photo"],
+    "hint_text": "讓大家認識你！",
+    "icon_name": "user-check",
+    "sort_order": 1
+  },
+  {
+    "code": "first_checkin",
+    "name": "初次紮營",
+    "description": "完成第一次 GPS 打卡",
+    "category": "exploration",
+    "category_scope": "camping",
+    "tiers": [{"tier": "bronze", "threshold": 1, "points": 10}],
+    "unlock_permissions": ["can_vote"],
+    "hint_text": "親自到訪一個地點！",
+    "icon_name": "map-pin",
+    "sort_order": 10
+  },
+  {
+    "code": "explorer_bronze",
+    "name": "探索者",
+    "description": "打卡不重複地點數達標",
+    "category": "exploration",
+    "category_scope": null,
+    "tiers": [
+      {"tier": "bronze", "threshold": 3, "points": 20},
+      {"tier": "silver", "threshold": 10, "points": 50},
+      {"tier": "gold", "threshold": 30, "points": 100}
+    ],
+    "unlock_permissions": [],
+    "hint_text": "探索更多地點！",
+    "icon_name": "compass",
+    "sort_order": 11
+  },
+  {
+    "code": "contributor_bronze",
+    "name": "貢獻者",
+    "description": "留言總數達標",
+    "category": "contribution",
+    "category_scope": null,
+    "tiers": [
+      {"tier": "bronze", "threshold": 3, "points": 15},
+      {"tier": "silver", "threshold": 10, "points": 40},
+      {"tier": "gold", "threshold": 30, "points": 80}
+    ],
+    "unlock_permissions": [],
+    "hint_text": "分享你的露營心得！",
+    "icon_name": "message-circle",
+    "sort_order": 20
+  },
+  {
+    "code": "photographer",
+    "name": "露營攝影師",
+    "description": "上傳照片總數達標",
+    "category": "contribution",
+    "category_scope": null,
+    "tiers": [
+      {"tier": "bronze", "threshold": 5, "points": 20},
+      {"tier": "silver", "threshold": 20, "points": 50},
+      {"tier": "gold", "threshold": 60, "points": 100}
+    ],
+    "unlock_permissions": [],
+    "hint_text": "記錄美麗的營地！",
+    "icon_name": "camera",
+    "sort_order": 30
+  },
+  {
+    "code": "voter",
+    "name": "特性達人",
+    "description": "特性投票總數達標",
+    "category": "contribution",
+    "category_scope": null,
+    "tiers": [
+      {"tier": "bronze", "threshold": 10, "points": 15},
+      {"tier": "silver", "threshold": 50, "points": 40},
+      {"tier": "gold", "threshold": 150, "points": 80}
+    ],
+    "unlock_permissions": [],
+    "hint_text": "幫助其他露營者了解地點！",
+    "icon_name": "thumbs-up",
+    "sort_order": 40
+  },
+  {
+    "code": "spot_creator",
+    "name": "地圖開拓者",
+    "description": "新增地標數達標",
+    "category": "contribution",
+    "category_scope": null,
+    "tiers": [
+      {"tier": "bronze", "threshold": 1, "points": 30},
+      {"tier": "silver", "threshold": 5, "points": 80},
+      {"tier": "gold", "threshold": 15, "points": 150}
+    ],
+    "unlock_permissions": ["can_create_spot"],
+    "hint_text": "在地圖上新增你發現的好地方！",
+    "icon_name": "map-plus",
+    "sort_order": 50
+  },
+  {
+    "code": "rater",
+    "name": "評審",
+    "description": "評分總數達標",
+    "category": "contribution",
+    "category_scope": null,
+    "tiers": [
+      {"tier": "bronze", "threshold": 5, "points": 15},
+      {"tier": "silver", "threshold": 20, "points": 40},
+      {"tier": "gold", "threshold": 60, "points": 80}
+    ],
+    "unlock_permissions": [],
+    "hint_text": "給你去過的地方評分！",
+    "icon_name": "star",
+    "sort_order": 60
+  },
+  {
+    "code": "early_adopter",
+    "name": "創始成員",
+    "description": "平台早期加入的成員",
+    "category": "special",
+    "category_scope": null,
+    "tiers": [{"tier": "gold", "threshold": 1, "points": 50}],
+    "unlock_permissions": [],
+    "hint_text": "感謝你的支持！",
+    "icon_name": "award",
+    "sort_order": 100
+  },
+  {
+    "code": "camping_novice",
+    "name": "露營新手",
+    "description": "第一次在露營地打卡",
+    "category": "exploration",
+    "category_scope": "camping",
+    "tiers": [{"tier": "bronze", "threshold": 1, "points": 10}],
+    "unlock_permissions": [],
+    "hint_text": "出發去你的第一個營地！",
+    "icon_name": "tent",
+    "sort_order": 110
+  },
+  {
+    "code": "camping_explorer",
+    "name": "露營探索者",
+    "description": "探索不同露營地",
+    "category": "exploration",
+    "category_scope": "camping",
+    "tiers": [
+      {"tier": "bronze", "threshold": 3, "points": 20},
+      {"tier": "silver", "threshold": 10, "points": 50},
+      {"tier": "gold", "threshold": 30, "points": 100}
+    ],
+    "unlock_permissions": [],
+    "hint_text": "探索更多露營地！",
+    "icon_name": "tent",
+    "sort_order": 111
+  },
+  {
+    "code": "mountain_camper",
+    "name": "山林露營家",
+    "description": "在高海拔（800m以上）露營地打卡",
+    "category": "exploration",
+    "category_scope": "camping",
+    "tiers": [
+      {"tier": "bronze", "threshold": 1, "points": 25},
+      {"tier": "silver", "threshold": 5, "points": 60},
+      {"tier": "gold", "threshold": 15, "points": 120}
+    ],
+    "unlock_permissions": [],
+    "hint_text": "挑戰高山營地！",
+    "icon_name": "mountain",
+    "sort_order": 112
+  },
+  {
+    "code": "seaside_camper",
+    "name": "海風露營家",
+    "description": "在海拔100m以下近海露營地打卡",
+    "category": "exploration",
+    "category_scope": "camping",
+    "tiers": [
+      {"tier": "bronze", "threshold": 1, "points": 20},
+      {"tier": "silver", "threshold": 5, "points": 50},
+      {"tier": "gold", "threshold": 15, "points": 100}
+    ],
+    "unlock_permissions": [],
+    "hint_text": "享受海邊露營的樂趣！",
+    "icon_name": "waves",
+    "sort_order": 113
+  },
+  {
+    "code": "weekend_warrior",
+    "name": "週末戰士",
+    "description": "在週末（六日）完成打卡",
+    "category": "exploration",
+    "category_scope": "camping",
+    "tiers": [
+      {"tier": "bronze", "threshold": 3, "points": 15},
+      {"tier": "silver", "threshold": 10, "points": 40},
+      {"tier": "gold", "threshold": 30, "points": 80}
+    ],
+    "unlock_permissions": [],
+    "hint_text": "週末就是要露營！",
+    "icon_name": "calendar",
+    "sort_order": 114
+  },
+  {
+    "code": "night_owl",
+    "name": "夜貓子營友",
+    "description": "在晚間（18:00後）完成打卡",
+    "category": "exploration",
+    "category_scope": "camping",
+    "tiers": [
+      {"tier": "bronze", "threshold": 1, "points": 15},
+      {"tier": "silver", "threshold": 5, "points": 40},
+      {"tier": "gold", "threshold": 15, "points": 80}
+    ],
+    "unlock_permissions": [],
+    "hint_text": "夜晚的營地別有風味！",
+    "icon_name": "moon",
+    "sort_order": 115
+  },
+  {
+    "code": "four_season",
+    "name": "四季露營家",
+    "description": "在不同季節（月份）完成打卡",
+    "category": "exploration",
+    "category_scope": "camping",
+    "tiers": [
+      {"tier": "bronze", "threshold": 2, "points": 25},
+      {"tier": "silver", "threshold": 3, "points": 60},
+      {"tier": "gold", "threshold": 4, "points": 120}
+    ],
+    "unlock_permissions": [],
+    "hint_text": "四季都去露營吧！",
+    "icon_name": "sun",
+    "sort_order": 116
+  },
+  {
+    "code": "social_butterfly",
+    "name": "社交蝴蝶",
+    "description": "在不同地點留言",
+    "category": "contribution",
+    "category_scope": null,
+    "tiers": [
+      {"tier": "bronze", "threshold": 3, "points": 15},
+      {"tier": "silver", "threshold": 10, "points": 40},
+      {"tier": "gold", "threshold": 25, "points": 80}
+    ],
+    "unlock_permissions": [],
+    "hint_text": "在更多地點留下你的足跡！",
+    "icon_name": "users",
+    "sort_order": 21
+  },
+  {
+    "code": "helpful_reviewer",
+    "name": "實用評論家",
+    "description": "留言被按讚次數達標",
+    "category": "contribution",
+    "category_scope": null,
+    "tiers": [
+      {"tier": "bronze", "threshold": 5, "points": 20},
+      {"tier": "silver", "threshold": 20, "points": 50},
+      {"tier": "gold", "threshold": 50, "points": 100}
+    ],
+    "unlock_permissions": [],
+    "hint_text": "寫出有幫助的留言！",
+    "icon_name": "heart",
+    "sort_order": 22
+  },
+  {
+    "code": "trailblazer",
+    "name": "開路先鋒",
+    "description": "成為地點的第一個打卡者",
+    "category": "exploration",
+    "category_scope": null,
+    "tiers": [
+      {"tier": "bronze", "threshold": 1, "points": 30},
+      {"tier": "silver", "threshold": 5, "points": 70},
+      {"tier": "gold", "threshold": 15, "points": 150}
+    ],
+    "unlock_permissions": [],
+    "hint_text": "搶先探索新地點！",
+    "icon_name": "flag",
+    "sort_order": 12
+  },
+  {
+    "code": "streak_3",
+    "name": "連續露營",
+    "description": "連續三天有打卡記錄",
+    "category": "exploration",
+    "category_scope": "camping",
+    "tiers": [
+      {"tier": "bronze", "threshold": 1, "points": 25},
+      {"tier": "silver", "threshold": 3, "points": 60},
+      {"tier": "gold", "threshold": 10, "points": 120}
+    ],
+    "unlock_permissions": [],
+    "hint_text": "連續幾天都去露營！",
+    "icon_name": "flame",
+    "sort_order": 117
+  },
+  {
+    "code": "region_collector",
+    "name": "區域收集家",
+    "description": "在不同縣市完成打卡",
+    "category": "exploration",
+    "category_scope": null,
+    "tiers": [
+      {"tier": "bronze", "threshold": 3, "points": 25},
+      {"tier": "silver", "threshold": 8, "points": 60},
+      {"tier": "gold", "threshold": 15, "points": 130}
+    ],
+    "unlock_permissions": [],
+    "hint_text": "走遍台灣各縣市！",
+    "icon_name": "map",
+    "sort_order": 13
+  },
+  {
+    "code": "campfire_story",
+    "name": "營火故事",
+    "description": "留言字數累計達標",
+    "category": "contribution",
+    "category_scope": "camping",
+    "tiers": [
+      {"tier": "bronze", "threshold": 500, "points": 15},
+      {"tier": "silver", "threshold": 2000, "points": 40},
+      {"tier": "gold", "threshold": 5000, "points": 80}
+    ],
+    "unlock_permissions": [],
+    "hint_text": "分享更多你的露營故事！",
+    "icon_name": "book-open",
+    "sort_order": 118
+  },
+  {
+    "code": "gear_expert",
+    "name": "裝備達人",
+    "description": "對裝備相關特性投票數達標",
+    "category": "contribution",
+    "category_scope": "camping",
+    "tiers": [
+      {"tier": "bronze", "threshold": 10, "points": 15},
+      {"tier": "silver", "threshold": 30, "points": 40},
+      {"tier": "gold", "threshold": 80, "points": 80}
+    ],
+    "unlock_permissions": [],
+    "hint_text": "幫大家了解營地設施！",
+    "icon_name": "wrench",
+    "sort_order": 119
+  },
+  {
+    "code": "family_camper",
+    "name": "親子露營家",
+    "description": "在適合親子的營地打卡",
+    "category": "exploration",
+    "category_scope": "camping",
+    "tiers": [
+      {"tier": "bronze", "threshold": 2, "points": 20},
+      {"tier": "silver", "threshold": 8, "points": 50},
+      {"tier": "gold", "threshold": 20, "points": 100}
+    ],
+    "unlock_permissions": [],
+    "hint_text": "帶家人一起露營！",
+    "icon_name": "baby",
+    "sort_order": 120
+  },
+  {
+    "code": "pet_friendly",
+    "name": "毛孩同行",
+    "description": "在寵物友善營地打卡",
+    "category": "exploration",
+    "category_scope": "camping",
+    "tiers": [
+      {"tier": "bronze", "threshold": 1, "points": 15},
+      {"tier": "silver", "threshold": 5, "points": 40},
+      {"tier": "gold", "threshold": 15, "points": 80}
+    ],
+    "unlock_permissions": [],
+    "hint_text": "帶毛孩一起露營！",
+    "icon_name": "paw-print",
+    "sort_order": 121
+  }
+]
