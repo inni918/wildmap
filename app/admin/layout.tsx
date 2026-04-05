@@ -22,6 +22,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <a href="/admin" className="hover:opacity-80">Dashboard</a>
           <a href="/admin/spots" className="hover:opacity-80">地標</a>
           <a href="/admin/users" className="hover:opacity-80">用戶</a>
+          <a href="/admin/comments" className="hover:opacity-80">留言</a>
           <a href="/admin/reports" className="hover:opacity-80">檢舉</a>
           <a href="/" className="hover:opacity-80">← 前台</a>
         </div>
