@@ -38,7 +38,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   try {
     await adminSupabase.from('admin_audit_log').insert({
       admin_id: user.id,
-      action_type: action === 'ban' ? 'ban_user' : 'unban_user',
+      action: action === 'ban' ? 'ban_user' : 'unban_user',
       target_type: 'user',
       target_id: id,
       details: { action }
